@@ -1,0 +1,35 @@
+<html>
+<head>
+    {% block head %}
+
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+        <link rel="shortcut icon" href="https://carto.com/favicon.ico"/>
+
+        <!-- Local CSS -->
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
+
+        <!-- Local JS -->
+        <script src="{{url_for('static', filename='js/app.js')}}"></script>
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+              integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+              crossorigin=""/>
+
+        <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
+                integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+                crossorigin=""></script>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.13/leaflet.draw.css"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.13/leaflet.draw.js"></script>
+    {% endblock %}
+</head>
+
+<body>
+
+<div id="content">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>
