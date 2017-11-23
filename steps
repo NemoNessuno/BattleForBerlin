@@ -19,6 +19,8 @@ Grob:
     CREATE EXTENSION address_standardizer_data_us;
     -- Enable US Tiger Geocoder
     CREATE EXTENSION postgis_tiger_geocode 
- 5. Importiere Daten von https://daten.berlin.de/datensaetze/geometrien-der-wahlbezirke-f%C3%BCr-die-bundestagswahl-berlin-2017
-    shp2pgsql -W "latin1" RBS_OD_UWB.shp <tabellennamme> | psql -h localhost -U <benutzername> -d <datenbankname>
+ 5. Importiere Daten von
+    https://daten.berlin.de/datensaetze/geometrien-der-wahlbezirke-f%C3%BCr-die-bundestagswahl-berlin-2017
+(wichtig! das pdf lesen da stehen die definitionen drinn)
+    shp2pgsql -s 2833 -W "latin1" RBS_OD_UWB.shp <tabellennamme> | psql -h localhost -U <benutzername> -d <datenbankname>
  6. Nehme Ergebnisse von https://www.wahlen-berlin.de/wahlen/BU2017/AFSPRAES/download/download.html

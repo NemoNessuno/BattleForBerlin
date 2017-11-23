@@ -5,6 +5,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             initMap();
+            {% for shape in shapes %}
+                initShape(JSON.parse({{shape|safe}}));
+            {% endfor %}
         }, false);
     </script>
 {% endblock %}
