@@ -1,10 +1,14 @@
 from flask import json
+import os
 from geoalchemy2 import functions
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-engine = create_engine('postgresql://postgres:postgres@localhost:5432/battle_for_berlin')
+DB_URL = os.environ.get('BFB_DB_URL', 'postgresql://postgres:postgres@localhost:5432/battle_for_berlin')
+
+engine = create_engine(DB_URL)
+
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
