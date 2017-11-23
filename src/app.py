@@ -9,13 +9,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def start():
-
-    return render_template('index.html', shapes=map(json.dumps, get_districts()))
+    return render_template('index.html')
 
 
 # Returns district shapes
+@app.route('/districts')
 def get_districts():
-    return db_session.query(functions.ST_AsGeoJSON(functions.ST_Transform(District.geom, 4326))).all()
+    return jsonify(db_session.query(functions.ST_AsGeoJSON(functions.ST_Transform(District.geom, 4326))).all())
 
 if __name__ == '__main__':
     app.debug = True
