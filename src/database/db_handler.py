@@ -1,3 +1,4 @@
+from flask import json
 from geoalchemy2 import functions
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -16,5 +17,5 @@ if __name__ == '__main__':
     # import all modules here that might define models so that
     # they will be registered properly on the metadata.
 
-    for district, geom in db_session.query(District, functions.ST_AsGeoJSON(functions.ST_Transform(District.geom, 4326))):
-        print district.geom
+    print "[" + ",".join([x[0] for x in db_session.query(functions.ST_AsGeoJSON(functions.ST_Transform(District.geom, 4326))).all()]) + "]"
+

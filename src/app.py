@@ -1,3 +1,4 @@
+import flask
 from flask import Flask, render_template, jsonify, json
 from geoalchemy2 import functions
 
@@ -15,7 +16,10 @@ def start():
 # Returns district shapes
 @app.route('/districts')
 def get_districts():
-    return jsonify(db_session.query(functions.ST_AsGeoJSON(functions.ST_Transform(District.geom, 4326))).all())
+    resp = flask.Response("[" + ",".join([x[0] for x in db_session.query(functions.ST_AsGeoJSON(functions.ST_Transform(District.geom, 4326))).all()]) + "]")
+    resp.headers["Content-Type"]="app/json"
+
+    return resp
 
 if __name__ == '__main__':
     app.debug = True
