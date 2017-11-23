@@ -1,0 +1,4 @@
+flask==0.12.2
+sqlalchemy==1.1.15
+geoalchemy2==0.4.0
+psycopg2==2.7.3
