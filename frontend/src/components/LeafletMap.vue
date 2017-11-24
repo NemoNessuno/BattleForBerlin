@@ -9,9 +9,13 @@
   const accessToken = 'pk.eyJ1IjoibmVtb25lc3N1bm8iLCJhIjoiY2phM3FvbGRkM2x6MTM0cGN1M3h6dHcyYiJ9.Gie5hDNbis60D17BFvH31Q'
   export default {
     name: 'leaflet-map',
+    props: {
+      uwb: {type: Array, required: true}
+    },
     data () {
       return {
-        map: undefined
+        map: undefined,
+        uwbLayer: undefined
       }
     },
     mounted () {
@@ -35,6 +39,25 @@
         maxzoom: 13,
         layers: [tileLayer]
       })
+      this.$nextTick(function () {
+        this.updateUWB(this.uwb)
+      }.bind(this))
+    },
+    methods: {
+      updateUWB (urnenWahlbezirke) {
+        if (this.uwbLayer) {
+          this.uwbLayer.remove()
+        }
+        this.uwbLayer = L.layerGroup(urnenWahlbezirke.map((wahlbezirk, idx) => {
+          return L.geoJSON(wahlbezirk, {color: '#FF7800', weight: 1, opacity: 0.65})
+        }))
+        this.uwbLayer.addTo(this.map)
+      }
+    },
+    watch: {
+      uwb (newVal, oldVal) {
+        this.updateUWB(newVal)
+      }
     }
   }
 </script>

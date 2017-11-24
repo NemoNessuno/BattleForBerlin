@@ -13,7 +13,7 @@
     </v-toolbar>
     <v-content>
       <onboarding v-if="route === 'onboarding'" @skip="skipOnboarding" />
-      <leaflet-map v-if="route === 'map'" />
+      <leaflet-map v-if="route === 'map'" :uwb="urnenWahlbezirke || []" />
     </v-content>
     <v-footer>
       <span>&copy; 2017, S&ouml;ren Titze, Christian Windolf</span>
@@ -28,8 +28,20 @@ export default {
   name: 'app',
   data () {
     return {
-      route: 'onboarding'
+      route: 'onboarding',
+      urnenWahlbezirke: undefined
     }
+  },
+  created () {
+    fetch('/districts').then(function (response) {
+      if (response.ok) {
+        response.json().then(function (uwb) {
+          this.urnenWahlbezirke = uwb
+        }.bind(this))
+      } else {
+        throw Error('Something went wrong when fetching the data')
+      }
+    }.bind(this))
   },
   methods: {
     skipOnboarding () {
