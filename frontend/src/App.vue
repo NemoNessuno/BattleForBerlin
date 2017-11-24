@@ -12,6 +12,7 @@
       </v-toolbar-items>
     </v-toolbar>
     <v-content>
+      <onboarding />
     </v-content>
     <v-footer>
       <span>&copy; 2017, S&ouml;ren Titze, Christian Windolf</span>
@@ -20,8 +21,10 @@
 </template>
 
 <script>
+import Onboarding from './components/Onboarding'
 export default {
-  name: 'app'
+  name: 'app',
+  components: {Onboarding}
 }
 </script>
 
