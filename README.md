@@ -43,8 +43,8 @@ flask run #will block your terminal
 And finally the shiny frontend:
 ```bash
 cd ./frontend
-yarn
-yarn dev
+yarn # or npm i
+yarn dev # or npm run dev
 ```
 
-Open your `localhost:8080` and have fun!
+Open your browser at `localhost:8080` and have fun!
