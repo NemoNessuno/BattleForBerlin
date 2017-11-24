@@ -7,7 +7,7 @@ Before you start, please make sure the following is installed on
 your machine:
 
 * Python 2.7
-* Node 8.9 or higher
+* Node 8.9 or higher (and yarn package manager)
 * Postgres 9.5/PostGIS 2.4 *(in the following guide it will be set up via diocker)*
 
 You can install the Postgres/PostGIS via package management of
