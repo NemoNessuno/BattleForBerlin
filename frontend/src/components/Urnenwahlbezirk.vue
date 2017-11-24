@@ -37,7 +37,6 @@
   left: 1em;
   top: 10em;
   width: 30em;
-  height: 50em;
   z-index: 1000;
 }
 </style>
