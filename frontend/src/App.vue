@@ -12,7 +12,8 @@
       </v-toolbar-items>
     </v-toolbar>
     <v-content>
-      <onboarding />
+      <onboarding v-if="route === 'onboarding'" @skip="skipOnboarding" />
+      <leaflet-map v-if="route === 'map'" />
     </v-content>
     <v-footer>
       <span>&copy; 2017, S&ouml;ren Titze, Christian Windolf</span>
@@ -22,15 +23,22 @@
 
 <script>
 import Onboarding from './components/Onboarding'
+import LeafletMap from './components/LeafletMap'
 export default {
   name: 'app',
-  components: {Onboarding}
+  data () {
+    return {
+      route: 'onboarding'
+    }
+  },
+  methods: {
+    skipOnboarding () {
+      this.route = 'map'
+    }
+  },
+  components: {Onboarding, LeafletMap}
 }
 </script>
-
-<style>
-@import 'vuetify/dist/vuetify.min.css'
-</style>
 
 <style>
 .github-link-img {

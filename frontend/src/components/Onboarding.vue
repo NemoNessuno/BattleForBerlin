@@ -66,7 +66,7 @@
         this.step -= 1
       },
       skip () {
-
+        this.$emit('skip')
       }
     },
     components: {OnboardingCard}
