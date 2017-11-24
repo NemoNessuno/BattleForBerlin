@@ -41,6 +41,7 @@
       })
       this.$nextTick(function () {
         this.updateUWB(this.uwb)
+        L.control.layers({'Urnenwahlbezirke': this.uwbLayer}).addTo(this.map)
       }.bind(this))
     },
     methods: {
