@@ -15,7 +15,7 @@ def start():
 # Returns district shapes
 @app.route('/districts')
 def get_districts():
-    resp = Response("[" + ",".join([x[0] for x in db_session.query(functions.ST_AsGeoJSON(functions.ST_Transform(District.geom, 4326))).all()]) + "]")
+    resp = Response("[" + ",".join([x[0] for x in db_session.query(functions.ST_AsGeoJSON(functions.ST_Transform(District.geom2, 4326))).all()]) + "]")
     resp.headers["Content-Type"]="app/json"
 
     return resp
