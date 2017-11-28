@@ -1,45 +1,60 @@
+# coding=utf-8
 from geoalchemy2 import Geometry
-from sqlalchemy import Column, Integer, String, text
+from sqlalchemy import Column, Integer, String
 
 from db_handler import Base
 
 
 class District(Base):
     __tablename__ = 'districts'
-
-    to_geojson = text('ST_AsGeoJSON(districts.geom)')
-    gid = Column(Integer, unique=True, primary_key=True)
-
-    fid_1 = Column(String(200))
-    uwb = Column(String(200))
-    uwb3 = Column(String(3))
-    bwb = Column(String(4))
-    bwb2 = Column(String(200))
-    awk = Column(String(4))
-    bez = Column(String(2))
+    identifier = Column(String(4), unique=True, primary_key=True)
     bezname = Column(String(200))
     bwk = Column(String(3))
-    ow = Column(String(200))
     geom = Column(Geometry('POLYGON'))
+    bez_type = Column('type', String(8))
 
-    def get_id(self):
-        return self.gid
-
-    def __init__(self, did=0, fid_1=None, uwb=None, uwb3=None,
-                 bwb=None, bwb2=None, awk=None, bez=None, bezname=None,
-                 bwk=None, ow=None, geom=None):
-        self.gid = did
-        self.fid_1 = fid_1
-        self.uwb = uwb
-        self.uwb3 = uwb3
-        self.bwb = bwb
-        self.bwb2 = bwb2
-        self.awk = awk
-        self.bez = bez
+    def __init__(self, identifier=None, bezname=None,
+                 bwk=None, geom=None, bez_type=None):
+        self.identifier = identifier
         self.bezname = bezname
         self.bwk = bwk
-        self.ow = ow
         self.geom = geom
+        self.bez_type = bez_type
 
     def __repr__(self):
-        return '<District %d %s>' % (self.gid, self.geom)
+        return '<District %s %s>' % (self.identifier, self.geom)
+
+
+class Result(Base):
+    __tablename__ = 'results'
+    identifier = Column(String(5), unique=True, primary_key=True)
+    bwk = Column(String(3))
+    voters = Column(Integer)
+    valid = Column(Integer)
+    invalid = Column(Integer)
+    cdu = Column(Integer)
+    spd = Column(Integer)
+    die_linke = Column(Integer)
+    gruene = Column(Integer)
+    afd = Column(Integer)
+    fdp = Column(Integer)
+
+    def __init__(self, identifier=None, bwk=None,
+                 voters=0, valid=0, invalid=0,
+                 cdu=0, spd=0, die_linke=0,
+                 gruene=0, afd=0, fdp=0):
+        self.identifier = identifier
+        self.bwk = bwk
+        self.voters = voters
+        self.valid = valid
+        self.invalid = invalid
+        self.cdu = cdu
+        self.spd = spd
+        self.die_linke = die_linke
+        self.gruene = gruene
+        self.afd = afd
+        self.fdp = fdp
+
+    def __repr__(self):
+        return '<Result %s CDU: %d  SPD: %d  Die Linke: %d  Grüne: %d FDP: %d AFD: %d>' % \
+               (self.identifier, self.cdu, self.spd, self.die_linke, self.gruene, self.fdp, self.afd)
