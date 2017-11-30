@@ -6,10 +6,10 @@
       </v-toolbar-title>
       <v-spacer />
       <v-toolbar-items class="hidden-sm-and-down">
-        <v-btn @click="route = 'onboarding'" icon v-if="route === 'map'">
+        <v-btn @click="route = 'onboarding'" icon large v-if="route === 'map'">
           <v-icon>info_outline</v-icon>
         </v-btn>
-        <v-btn @click="route = 'map'" icon v-if="route === 'onboarding'">
+        <v-btn @click="route = 'map'" icon large v-if="route === 'onboarding'">
           <v-icon>map</v-icon>
         </v-btn>
         <v-btn href="https://github.com/NemoNessuno/BattleForBerlin" flat>
