@@ -2,7 +2,7 @@ from flask import Flask, render_template, jsonify, json, Response
 from geoalchemy2 import functions
 
 from database.db_handler import db_session
-from database.models import District
+from database.models import District, LetterDistrict, UrnDistrict
 
 app = Flask(__name__)
 
@@ -12,13 +12,25 @@ def start():
     return render_template('index.html')
 
 
-# Returns district shapes
-@app.route('/districts')
-def get_districts():
-    resp = Response("[" + ",".join([x[0] for x in db_session.query(functions.ST_AsGeoJSON(functions.ST_Transform(District.geom2, 4326))).all()]) + "]")
-    resp.headers["Content-Type"]="app/json"
+@app.route('/urn_districts')
+def urn_districts():
+    return json.dumps(get_geojson(db_session.query(UrnDistrict, functions.ST_AsGeoJSON(UrnDistrict.geom))))
 
-    return resp
+
+@app.route('/letter_districts')
+def letter_districts():
+    return json.dumps(get_geojson(db_session.query(LetterDistrict, functions.ST_AsGeoJSON(LetterDistrict.geom))))
+
+
+def get_geojson(query):
+    geojsons = []
+    for district, geom in query.all():
+        geojson = json.loads(geom)
+        geojson["properties"] = district.get_geojson_dict()
+        geojsons.append(geojson)
+
+    return geojsons
+
 
 if __name__ == '__main__':
     app.debug = True
