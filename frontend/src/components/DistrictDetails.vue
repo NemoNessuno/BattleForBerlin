@@ -6,6 +6,15 @@
         <h4 class="subheading"> Bezirkswahlkreis {{bwk}} </h4>
       </v-card-title>
       <v-card-text>
+        <v-data-table
+          :headers="headers"
+          :items="results"
+          hide-actions>
+          <template slot="items" slot-scope="props">
+            <td> {{props.item.name}}</td>
+            <td> {{props.item.result}}</td>
+          </template>
+        </v-data-table>
       </v-card-text>
       <v-card-actions>
         <v-spacer />
@@ -21,9 +30,27 @@
     props: {
       district: {type: Object, required: true}
     },
+    data () {
+      return {
+        headers: [
+          {text: 'Partei', align: 'left', value: 'name'},
+          {text: 'Stimmen', align: 'right', value: 'result'}
+        ]
+      }
+    },
     computed: {
       bwk () { return this.district.bwk },
-      bezirk () { return this.district.bezname }
+      bezirk () { return this.district.bezname },
+      results () {
+        return [
+          {name: 'CDU', value: false, result: this.district.result.cdu},
+          {name: 'SPD', value: false, result: this.district.result.spd},
+          {name: 'Die Grünen', value: false, result: this.district.result.gruene},
+          {name: 'AFD', value: false, result: this.district.result.afd},
+          {name: 'FDP', value: false, result: this.district.result.fdp},
+          {name: 'Die Linke', value: false, result: this.district.result.die_linke}
+        ]
+      }
     },
     methods: {
       close () {
