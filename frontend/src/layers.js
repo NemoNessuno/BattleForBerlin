@@ -1,5 +1,7 @@
 import L from 'leaflet'
 
+import {maxProp} from './helpers'
+
 const PARTY_COLORS = {
   afd: '#2B9FDB',
   gruene: '#4E8935',
@@ -55,13 +57,6 @@ export class DistrictLayer {
 
 function styleDistrict ({geometry}) {
   const {properties} = geometry
-  let partyMax = ''
-  let resultMax = 0
-  Object.keys(properties.result).forEach(function (party) {
-    if (properties.result[party] > resultMax) {
-      partyMax = party
-      resultMax = properties.result[party]
-    }
-  })
-  return {color: PARTY_COLORS[partyMax], weight: 1, opacity: 0.65}
+  const winner = maxProp(properties.result)
+  return {color: PARTY_COLORS[winner], weight: 1, opacity: 0.65}
 }
