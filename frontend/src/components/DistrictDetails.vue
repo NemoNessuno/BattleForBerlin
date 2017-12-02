@@ -1,12 +1,11 @@
 <template>
   <div id="sidebar" class="detail-wrapper">
-    <v-card  elevation-24>
+    <v-card  class="elevation-12">
       <v-card-title>
         <h3 class="headline">{{bezirk}} </h3>
         <h4 class="subheading"> Bezirkswahlkreis {{bwk}} </h4>
       </v-card-title>
       <v-card-text>
-
       </v-card-text>
       <v-card-actions>
         <v-spacer />
