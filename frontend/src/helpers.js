@@ -1,4 +1,4 @@
-export function maxProp(obj) {
+export function maxProp (obj) {
   let maxKey = ''
   let maxVal = -Infinity
   Object.keys(obj).forEach(key => {

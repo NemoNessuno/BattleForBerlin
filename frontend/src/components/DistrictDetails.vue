@@ -12,8 +12,10 @@
           :items="results"
           hide-actions>
           <template slot="items" slot-scope="props">
-            <td> {{props.item.name}}</td>
-            <td> {{props.item.result}}</td>
+            <td v-if="props.item.winner" style="font-weight: bold"> {{props.item.name}}</td>
+            <td v-if="!props.item.winner"> {{props.item.name}}</td>
+            <td v-if="props.item.winner" style="font-weight: bold"> {{props.item.result}}</td>
+            <td v-if="!props.item.winner">{{props.item.result}}</td>
           </template>
         </v-data-table>
       </v-card-text>
@@ -26,6 +28,7 @@
 </template>
 
 <script>
+  import {maxProp} from '@/helpers'
   export default {
     name: 'DistrictDetails',
     props: {
@@ -42,15 +45,16 @@
     computed: {
       bwk () { return this.district.bwk },
       bezirk () { return this.district.bezname },
-      districtId () { return this.district.identifier},
+      districtId () { return this.district.identifier },
+      winner () { return maxProp(this.district.result) },
       results () {
         return [
-          {name: 'CDU', value: false, result: this.district.result.cdu},
-          {name: 'SPD', value: false, result: this.district.result.spd},
-          {name: 'Die Grünen', value: false, result: this.district.result.gruene},
-          {name: 'AFD', value: false, result: this.district.result.afd},
-          {name: 'FDP', value: false, result: this.district.result.fdp},
-          {name: 'Die Linke', value: false, result: this.district.result.die_linke}
+          {name: 'CDU', result: this.district.result.cdu, winner: this.winner === 'cdu'},
+          {name: 'SPD', result: this.district.result.spd, winner: this.winner === 'spd'},
+          {name: 'Die Grünen', result: this.district.result.gruene, winner: this.winner === 'gruene'},
+          {name: 'AFD', result: this.district.result.afd, winner: this.winner === 'afd'},
+          {name: 'FDP', result: this.district.result.fdp, winner: this.winnner === 'fdp'},
+          {name: 'Die Linke', result: this.district.result.die_linke, winner: this.winner === 'die_linke'}
         ]
       }
     },
@@ -65,6 +69,9 @@
 <style scoped>
 h3.headline, h4.subheading {
   width: 100%
+}
+.winner {
+  font-weight: bold
 }
 .detail-wrapper {
   padding: 1em;
