@@ -1,8 +1,9 @@
-from flask import Flask, render_template, jsonify, json, Response
+import json
+from flask import Flask, render_template, jsonify
 from geoalchemy2 import functions
 
 from database.db_handler import db_session
-from database.models import District, LetterDistrict, UrnDistrict
+from database.models import LetterDistrict, UrnDistrict
 
 app = Flask(__name__)
 

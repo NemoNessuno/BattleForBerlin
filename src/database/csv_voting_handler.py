@@ -1,5 +1,4 @@
 import csv
-import os
 
 from src.database.db_handler import db_session
 from src.database.models import Result
