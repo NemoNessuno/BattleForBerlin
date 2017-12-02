@@ -12,6 +12,7 @@ const PARTY_COLORS = {
 export class DistrictLayer {
   constructor (districts, config) {
     this.config = config || {}
+    this._cb = function () {}
     this.config.defaultStyle = this.config.defaultStyle || {
       style: styleDistrict
     }
@@ -31,11 +32,13 @@ export class DistrictLayer {
   selectDistrict (layer) {
     if (this._selectedLayer === layer) {
       this.reset()
+      this._cb(undefined)
       return
     }
     this.reset()
     this._selectedLayer = layer
     layer.setStyle(this.config.emphazisedStyle.style(layer.feature))
+    this._cb(layer.feature)
   }
 
   reset () {
@@ -43,6 +46,10 @@ export class DistrictLayer {
       this._selectedLayer.setStyle(this.config.defaultStyle.style(this._selectedLayer.feature))
     }
     this._selectedLayer = undefined
+  }
+
+  onSelection (cb) {
+    this._cb = cb
   }
 }
 
