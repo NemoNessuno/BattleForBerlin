@@ -15,13 +15,12 @@ def start():
 
 @app.route('/urn_districts')
 def urn_districts():
-    return json.dumps(get_geojson(db_session.query(UrnDistrict, functions.ST_AsGeoJSON(UrnDistrict.geom))))
+    return jsonify(get_geojson(db_session.query(UrnDistrict, functions.ST_AsGeoJSON(UrnDistrict.geom))))
 
 
 @app.route('/letter_districts')
 def letter_districts():
-    return json.dumps(get_geojson(db_session.query(LetterDistrict, functions.ST_AsGeoJSON(LetterDistrict.geom))))
-
+    return jsonify(get_geojson(db_session.query(LetterDistrict, functions.ST_AsGeoJSON(LetterDistrict.geom))))
 
 def get_geojson(query):
     geojsons = []
