@@ -4,6 +4,7 @@
       <v-card-title>
         <h3 class="headline">{{bezirk}} </h3>
         <h4 class="subheading"> Bezirkswahlkreis {{bwk}} </h4>
+        <h4 class="subheading"> Wahlbezirk {{districtId}} </h4>
       </v-card-title>
       <v-card-text>
         <v-data-table
@@ -41,6 +42,7 @@
     computed: {
       bwk () { return this.district.bwk },
       bezirk () { return this.district.bezname },
+      districtId () { return this.district.identifier},
       results () {
         return [
           {name: 'CDU', value: false, result: this.district.result.cdu},

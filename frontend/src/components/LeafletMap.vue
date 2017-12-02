@@ -58,11 +58,20 @@
         this.ballotLayer.onSelection(function (values) {
           if (values) {
             this.selectedDistrict = values.geometry.properties
+            this.selectedDistrict.type = 'ballot'
           } else {
             this.selectedDistrict = undefined
           }
         }.bind(this))
         this.letterLayer = new DistrictLayer(letters)
+        this.letterLayer.onSelection(function (values) {
+          if (values) {
+            this.selectedDistrict = values.geometry.properties
+            this.selectedDistrict.type = 'letter'
+          } else {
+            this.selectedDistrict = undefined
+          }
+        }.bind(this))
         if (this.controls) {
           this.controls.remove()
         }
