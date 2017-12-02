@@ -19,7 +19,7 @@
     </v-toolbar>
     <v-content>
       <onboarding v-if="route === 'onboarding'" @skip="skipOnboarding" />
-      <leaflet-map v-if="route === 'map'" :uwb="urnenWahlbezirke || []" :lwb="briefWahlbezirke || []" />
+      <leaflet-map v-if="route === 'map'" :districts="districts || {}" />
     </v-content>
     <v-footer>
       <span>&copy; 2017, S&ouml;ren Titze, Christian Windolf</span>
@@ -30,34 +30,21 @@
 <script>
 import Onboarding from './components/Onboarding'
 import LeafletMap from './components/LeafletMap'
+import {fetchDistricts} from './backend'
 export default {
   name: 'app',
   data () {
     return {
       route: 'onboarding',
-      urnenWahlbezirke: undefined,
-      briefWahlbezirke: undefined
+      districts: undefined
     }
   },
   created () {
-    fetch('/api/districts/ballot').then(function (response) {
-      if (response.ok) {
-        response.json().then(function (uwb) {
-          this.urnenWahlbezirke = uwb
-        }.bind(this))
-      } else {
-        throw Error('Something went wrong when fetching the data')
-      }
-    }.bind(this))
-    fetch('/api/districts/letters').then(function (response) {
-      if (response.ok) {
-        response.json().then(function (lwb) {
-          this.briefWahlbezirke = lwb
-        }.bind(this))
-      } else {
-        throw Error('Something went wrong when fetching the data')
-      }
-    }.bind(this))
+    fetchDistricts().then(function (districts) {
+      this.districts = districts
+    }.bind(this)).catch(function () {
+      throw new Error('loading of data failed')
+    })
   },
   methods: {
     skipOnboarding () {
