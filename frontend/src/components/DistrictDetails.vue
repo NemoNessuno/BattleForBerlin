@@ -4,9 +4,10 @@
       <v-card-title>
         <h3 class="headline">{{bezirk}} </h3>
         <h4 class="subheading"> Bezirkswahlkreis {{bwk}} </h4>
-        <h4 class="subheading"> Wahlbezirk {{districtId}} </h4>
+        <h4 class="subheading"> Wahlbezirk {{districtId}} {{type}} </h4>
       </v-card-title>
       <v-card-text>
+        <stacked-bar-chart :result="district.result" />
         <v-data-table
           :headers="headers"
           :items="results"
@@ -29,6 +30,7 @@
 
 <script>
   import {maxProp} from '@/helpers'
+  import StackedBarChart from './StackedBarChart'
   export default {
     name: 'DistrictDetails',
     props: {
@@ -47,6 +49,7 @@
       bezirk () { return this.district.bezname },
       districtId () { return this.district.identifier },
       winner () { return maxProp(this.district.result) },
+      type () { return this.district.type === 'ballot' ? 'Briefwahl' : 'Urnenwahl' },
       results () {
         return [
           {name: 'CDU', result: this.district.result.cdu, winner: this.winner === 'cdu'},
@@ -62,7 +65,8 @@
       close () {
         this.$emit('close')
       }
-    }
+    },
+    components: {StackedBarChart}
   }
 </script>
 

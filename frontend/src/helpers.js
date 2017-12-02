@@ -9,3 +9,12 @@ export function maxProp (obj) {
   })
   return maxKey
 }
+
+export const PARTY_COLORS = {
+  afd: '#2B9FDB',
+  gruene: '#4E8935',
+  spd: '#DB0E2A',
+  cdu: '#000000',
+  fdp: '#FEE943',
+  die_linke: '#D8101F'
+}

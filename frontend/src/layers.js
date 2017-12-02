@@ -1,15 +1,6 @@
 import L from 'leaflet'
 
-import {maxProp} from './helpers'
-
-const PARTY_COLORS = {
-  afd: '#2B9FDB',
-  gruene: '#4E8935',
-  spd: '#DB0E2A',
-  cdu: '#000000',
-  fdp: '#FEE943',
-  die_linke: '#D8101F'
-}
+import {maxProp, PARTY_COLORS} from './helpers'
 
 export class DistrictLayer {
   constructor (districts, config) {
