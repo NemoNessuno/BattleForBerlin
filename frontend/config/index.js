@@ -11,9 +11,12 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/districts': {
+      '/urn_districts': {
         target: 'http://localhost:5000'
-      }
+      },
+      '/letter_districts': {
+        target: 'http://localhost:5000'
+      },
     },
 
     // Various Dev Server settings

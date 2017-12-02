@@ -7,6 +7,10 @@
       <v-card-text>
         In diesem Wahlbezirk sind ist die Pizza besonders {{pizzaQuality}}
       </v-card-text>
+      <v-card-text>
+        Ergebnisse:
+        {{properties.result}}
+      </v-card-text>
       <v-card-actions>
         <v-spacer />
         <v-btn @click="$emit('close')">Close</v-btn>
@@ -18,7 +22,10 @@
 <script>
   export default {
     name: 'urnenwahlbezirk',
-    props: {uwbId: {type: Number, required: true}},
+    props: {
+      uwbId: {type: Number, required: true},
+      properties: {type: Object, required: true}
+    },
     computed: {
       pizzaQuality () {
         if (this.uwbId % 2 === 0) {

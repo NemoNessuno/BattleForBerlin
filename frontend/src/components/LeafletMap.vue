@@ -23,6 +23,7 @@
       return {
         map: undefined,
         uwbLayer: undefined,
+        lwbLayer: undefined,
         sidebar: undefined,
         selectedLayer: undefined,
         selectedDistrict: -1
