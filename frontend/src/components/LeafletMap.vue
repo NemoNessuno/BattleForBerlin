@@ -1,5 +1,9 @@
 <template>
   <div id="map" name="slide-in">
+    <district-details
+      v-if="selectedDistrict"
+      @close="unselect"
+      :district="selectedDistrict" />
   </div>
 </template>
 
@@ -19,7 +23,8 @@
         map: undefined,
         ballotLayer: undefined,
         letterLayer: undefined,
-        controls: undefined
+        controls: undefined,
+        selectedDistrict: undefined
       }
     },
     mounted () {
@@ -50,6 +55,13 @@
       updateLayers () {
         const {ballot, letters} = this.districts
         this.ballotLayer = new DistrictLayer(ballot)
+        this.ballotLayer.onSelection(function (values) {
+          if (values) {
+            this.selectedDistrict = values.geometry.properties
+          } else {
+            this.selectedDistrict = undefined
+          }
+        }.bind(this))
         this.letterLayer = new DistrictLayer(letters)
         if (this.controls) {
           this.controls.remove()
@@ -59,6 +71,11 @@
           'Urnenwahlbezirke': this.ballotLayer.layers,
           'Briefwahlbezirke': this.letterLayer.layers
         }, {}, {collapsed: false}).addTo(this.map)
+      },
+      unselect () {
+        this.ballotLayer.reset()
+        this.letterLayer.reset()
+        this.selectedDistrict = undefined
       }
     },
     watch: {

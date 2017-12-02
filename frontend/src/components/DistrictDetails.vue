@@ -2,18 +2,15 @@
   <div id="sidebar" class="detail-wrapper">
     <v-card  elevation-24>
       <v-card-title>
-        <h3 class="headline">Wahlbezirk {{uwbId}}</h3>
+        <h3 class="headline">{{bezirk}} </h3>
+        <h4 class="subheading"> Bezirkswahlkreis {{bwk}} </h4>
       </v-card-title>
       <v-card-text>
-        In diesem Wahlbezirk sind ist die Pizza besonders {{pizzaQuality}}
-      </v-card-text>
-      <v-card-text>
-        Ergebnisse:
-        {{properties.result}}
+
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn @click="$emit('close')">Close</v-btn>
+        <v-btn @click.native="close">Close</v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -23,21 +20,24 @@
   export default {
     name: 'DistrictDetails',
     props: {
-      uwbId: {type: Number, required: true},
-      properties: {type: Object, required: true}
+      district: {type: Object, required: true}
     },
     computed: {
-      pizzaQuality () {
-        if (this.uwbId % 2 === 0) {
-          return 'gut'
-        }
-        return 'schlecht'
+      bwk () { return this.district.bwk },
+      bezirk () { return this.district.bezname }
+    },
+    methods: {
+      close () {
+        this.$emit('close')
       }
     }
   }
 </script>
 
 <style scoped>
+h3.headline, h4.subheading {
+  width: 100%
+}
 .detail-wrapper {
   padding: 1em;
   position: absolute;
