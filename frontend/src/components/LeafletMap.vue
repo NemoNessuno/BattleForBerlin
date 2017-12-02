@@ -41,6 +41,7 @@
         center: [52.5200, 13.4050],
         zoom: 10,
         maxzoom: 13,
+        doubleClickZoom: false,
         layers: [tileLayer]
       })
       this.updateLayers()
