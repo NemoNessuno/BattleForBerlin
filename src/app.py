@@ -13,12 +13,12 @@ def start():
     return render_template('index.html')
 
 
-@app.route('/urn_districts')
+@app.route('/api/districts/ballot')
 def urn_districts():
     return jsonify(get_geojson(db_session.query(UrnDistrict, functions.ST_AsGeoJSON(UrnDistrict.geom))))
 
 
-@app.route('/letter_districts')
+@app.route('/api/districts/letters')
 def letter_districts():
     return jsonify(get_geojson(db_session.query(LetterDistrict, functions.ST_AsGeoJSON(LetterDistrict.geom))))
 

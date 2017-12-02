@@ -40,7 +40,7 @@ export default {
     }
   },
   created () {
-    fetch('/urn_districts').then(function (response) {
+    fetch('/api/districts/ballot').then(function (response) {
       if (response.ok) {
         response.json().then(function (uwb) {
           this.urnenWahlbezirke = uwb
@@ -49,7 +49,7 @@ export default {
         throw Error('Something went wrong when fetching the data')
       }
     }.bind(this))
-    fetch('/letter_districts').then(function (response) {
+    fetch('/api/districts/letters').then(function (response) {
       if (response.ok) {
         response.json().then(function (lwb) {
           this.briefWahlbezirke = lwb
