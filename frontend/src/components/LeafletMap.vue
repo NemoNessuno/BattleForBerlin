@@ -1,6 +1,6 @@
 <template>
   <div id="map" name="slide-in">
-    <urnenwahlbezirk
+    <district-details
       v-if="selectedDistrict > -1"
       :uwb-id="selectedDistrict"
       @close="unselectDistrict" />
@@ -9,7 +9,7 @@
 
 <script>
   import L from 'leaflet'
-  import Urnenwahlbezirk from './Urnenwahlbezirk'
+  import DistrictDetails from './DistrictDetails'
   const tileLayerAPI = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}'
   const accessToken = 'pk.eyJ1IjoibmVtb25lc3N1bm8iLCJhIjoiY2phM3FvbGRkM2x6MTM0cGN1M3h6dHcyYiJ9.Gie5hDNbis60D17BFvH31Q'
   const DEFAULT_STYLE = {color: '#FF7800', weight: 1, opacity: 0.65}
@@ -89,7 +89,7 @@
         this.updateUWB(newVal)
       }
     },
-    components: {Urnenwahlbezirk}
+    components: {DistrictDetails}
   }
 </script>
 

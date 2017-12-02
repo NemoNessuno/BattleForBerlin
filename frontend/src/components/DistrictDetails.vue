@@ -21,7 +21,7 @@
 
 <script>
   export default {
-    name: 'urnenwahlbezirk',
+    name: 'DistrictDetails',
     props: {
       uwbId: {type: Number, required: true},
       properties: {type: Object, required: true}
