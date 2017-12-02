@@ -23,6 +23,10 @@ export class DistrictLayer {
   }
 
   selectDistrict (layer) {
+    if (this._selectedLayer === layer) {
+      this.reset()
+      return
+    }
     this.reset()
     this._selectedLayer = layer
     layer.setStyle(this.config.emphazisedStyle.style())
