@@ -1,32 +1,30 @@
 <template>
   <div id="map" name="slide-in">
-    <urnenwahlbezirk
-      v-if="selectedDistrict > -1"
-      :uwb-id="selectedDistrict"
-      @close="unselectDistrict" />
+    <district-details
+      v-if="selectedDistrict"
+      @close="unselect"
+      :district="selectedDistrict" />
   </div>
 </template>
 
 <script>
   import L from 'leaflet'
-  import Urnenwahlbezirk from './Urnenwahlbezirk'
+  import DistrictDetails from './DistrictDetails'
+  import {DistrictLayer} from '@/layers'
   const tileLayerAPI = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}'
   const accessToken = 'pk.eyJ1IjoibmVtb25lc3N1bm8iLCJhIjoiY2phM3FvbGRkM2x6MTM0cGN1M3h6dHcyYiJ9.Gie5hDNbis60D17BFvH31Q'
-  const DEFAULT_STYLE = {color: '#FF7800', weight: 1, opacity: 0.65}
-  const EMPHAZISED_STYLE = {color: '#0078FF', weight: 1, opacity: 0.7}
   export default {
     name: 'leaflet-map',
     props: {
-      uwb: {type: Array, required: true}
+      districts: {type: Object, required: true}
     },
     data () {
       return {
         map: undefined,
-        uwbLayer: undefined,
-        lwbLayer: undefined,
-        sidebar: undefined,
-        selectedLayer: undefined,
-        selectedDistrict: -1
+        ballotLayer: undefined,
+        letterLayer: undefined,
+        controls: undefined,
+        selectedDistrict: undefined
       }
     },
     mounted () {
@@ -48,48 +46,53 @@
         center: [52.5200, 13.4050],
         zoom: 10,
         maxzoom: 13,
+        doubleClickZoom: false,
         layers: [tileLayer]
       })
-      this.$nextTick(function () {
-        this.updateUWB(this.uwb)
-        L.control.layers({'Urnenwahlbezirke': this.uwbLayer}).addTo(this.map)
-      }.bind(this))
+      this.updateLayers()
     },
     methods: {
-      updateUWB (urnenWahlbezirke) {
-        const $this = this
-        if (this.uwbLayer) {
-          this.uwbLayer.remove()
+      updateLayers () {
+        const {ballot, letters} = this.districts
+        this.ballotLayer = new DistrictLayer(ballot)
+        this.ballotLayer.onSelection(function (values) {
+          if (values) {
+            this.selectedDistrict = values.geometry.properties
+            this.selectedDistrict.type = 'ballot'
+          } else {
+            this.selectedDistrict = undefined
+          }
+        }.bind(this))
+        this.letterLayer = new DistrictLayer(letters)
+        this.letterLayer.onSelection(function (values) {
+          if (values) {
+            this.selectedDistrict = values.geometry.properties
+            this.selectedDistrict.type = 'letter'
+          } else {
+            this.selectedDistrict = undefined
+          }
+        }.bind(this))
+        if (this.controls) {
+          this.controls.remove()
         }
-        this.uwbLayer = L.layerGroup(urnenWahlbezirke.map((wahlbezirk, idx) => {
-          const layer = L.geoJSON(wahlbezirk, DEFAULT_STYLE)
-          layer.on('click', function ({layer}) {
-            $this.unselectLayer()
-            $this.selectedLayer = layer
-            layer.setStyle(EMPHAZISED_STYLE)
-            $this.selectedDistrict = idx
-          })
-          return layer
-        }))
-        this.uwbLayer.addTo(this.map)
+        this.ballotLayer.layers.addTo(this.map)
+        this.controls = L.control.layers({
+          'Urnenwahlbezirke': this.ballotLayer.layers,
+          'Briefwahlbezirke': this.letterLayer.layers
+        }, {}, {collapsed: false}).addTo(this.map)
       },
-      unselectLayer () {
-        if (this.selectedLayer) {
-          this.selectedLayer.setStyle(DEFAULT_STYLE)
-        }
-        this.selectedLayer = undefined
-      },
-      unselectDistrict () {
-        this.unselectLayer()
-        this.selectedDistrict = -1
+      unselect () {
+        this.ballotLayer.reset()
+        this.letterLayer.reset()
+        this.selectedDistrict = undefined
       }
     },
     watch: {
-      uwb (newVal, oldVal) {
-        this.updateUWB(newVal)
+      districts (newVal, oldVal) {
+        this.updateLayers()
       }
     },
-    components: {Urnenwahlbezirk}
+    components: {DistrictDetails}
   }
 </script>
 
