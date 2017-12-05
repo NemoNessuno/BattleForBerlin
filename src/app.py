@@ -4,6 +4,7 @@ from geoalchemy2 import functions
 
 from database.db_handler import db_session
 from database.models import LetterDistrict, UrnDistrict
+from database.db_helper import get_district_geojson, get_county_geojson
 
 app = Flask(__name__)
 
@@ -15,21 +16,17 @@ def start():
 
 @app.route('/api/districts/ballot')
 def urn_districts():
-    return jsonify(get_geojson(db_session.query(UrnDistrict, functions.ST_AsGeoJSON(UrnDistrict.geom))))
+    return jsonify(get_district_geojson(UrnDistrict))
 
 
 @app.route('/api/districts/letters')
 def letter_districts():
-    return jsonify(get_geojson(db_session.query(LetterDistrict, functions.ST_AsGeoJSON(LetterDistrict.geom))))
+    return jsonify(get_district_geojson(LetterDistrict))
 
-def get_geojson(query):
-    geojsons = []
-    for district, geom in query.all():
-        geojson = json.loads(geom)
-        geojson["properties"] = district.get_geojson_dict()
-        geojsons.append(geojson)
 
-    return geojsons
+@app.route('/api/counties')
+def counties():
+    return jsonify(get_county_geojson())
 
 
 if __name__ == '__main__':
