@@ -45,11 +45,14 @@
       }
     },
     computed: {
-      bwk () { return this.district.bwk },
-      bezirk () { return this.district.bezname },
-      districtId () { return this.district.identifier },
+      bwk () { return this.district.bwk || '' },
+      bezirk () { return this.district.bezname || '' },
+      districtId () { return this.district.identifier || '' },
       winner () { return maxProp(this.district.result) },
-      type () { return this.district.type === 'ballot' ? 'Briefwahl' : 'Urnenwahl' },
+      type () {
+        const types = {ballot: 'Urnenwahl', letters: 'Briefwahl', counties: 'Wahlbezirk'}
+        return types[this.district.type]
+      },
       results () {
         return [
           {name: 'CDU', result: this.district.result.cdu, winner: this.winner === 'cdu'},

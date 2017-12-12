@@ -23,6 +23,7 @@
         map: undefined,
         ballotLayer: undefined,
         letterLayer: undefined,
+        countyLayer: undefined,
         controls: undefined,
         selectedDistrict: undefined
       }
@@ -53,7 +54,7 @@
     },
     methods: {
       updateLayers () {
-        const {ballot, letters} = this.districts
+        const {ballot, letters, counties} = this.districts
         this.ballotLayer = new DistrictLayer(ballot)
         this.ballotLayer.onSelection(function (values) {
           if (values) {
@@ -72,13 +73,23 @@
             this.selectedDistrict = undefined
           }
         }.bind(this))
+        this.countyLayer = new DistrictLayer(counties)
+        this.countyLayer.onSelection(function (values) {
+          if (values) {
+            this.selectedDistrict = values.geometry.properties
+            this.selectedDistrict.type = 'county'
+          } else {
+            this.selectedDistrict = undefined
+          }
+        }.bind(this))
         if (this.controls) {
           this.controls.remove()
         }
         this.ballotLayer.layers.addTo(this.map)
         this.controls = L.control.layers({
           'Urnenwahlbezirke': this.ballotLayer.layers,
-          'Briefwahlbezirke': this.letterLayer.layers
+          'Briefwahlbezirke': this.letterLayer.layers,
+          'Wahlkreise': this.countyLayer.layers
         }, {}, {collapsed: false}).addTo(this.map)
       },
       unselect () {
