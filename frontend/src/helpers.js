@@ -16,5 +16,5 @@ export const PARTY_COLORS = {
   spd: '#DB0E2A',
   cdu: '#000000',
   fdp: '#FEE943',
-  die_linke: '#D8101F'
+  die_linke: '#CC008A'
 }
