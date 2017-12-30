@@ -1,4 +1,4 @@
-CREATE TABLE merged_districts AS
+CREATE TABLE IF NOT EXISTS merged_districts AS
   SELECT
     l.identifier identifier,
     l.bwk bwk,
@@ -26,3 +26,28 @@ CREATE TABLE merged_districts AS
       (l.identifier = '114H' and u.identifier = '11422')
   GROUP BY
     l.identifier;
+
+
+CREATE TABLE IF NOT EXISTS diffs (
+  identifier varchar(20) primary key,
+  bwk varchar(20)
+);
+
+CREATE VIEW counties AS
+  SELECT
+    CASE WHEN d.bwk IS NULL THEN m.bwk ELSE d.bwk END bwk,
+    ST_Union(m.geom) geom,
+    sum(m.spd) spd,
+    sum(m.cdu) cdu,
+    sum(m.gruene) gruene,
+    sum(m.fdp) fdp,
+    sum(m.die_linke) die_linke,
+    sum(m.afd) afd
+  FROM
+    merged_districts m
+  LEFT OUTER JOIN
+    diffs d
+  ON
+    m.identifier = d.identifier
+  GROUP BY
+    CASE WHEN d.bwk IS NULL THEN m.bwk ELSE d.bwk END
