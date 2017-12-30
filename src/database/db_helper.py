@@ -5,6 +5,10 @@ from sqlalchemy import func
 from db_handler import db_session
 from models import LetterDistrict, UrnDistrict
 
+PARTIES = [
+    "cdu", "spd", "gruene", "die_linke", "fdp", "afd"
+]
+
 
 def get_district_geojson(district):
     query = db_session.query(district, functions.ST_AsGeoJSON(district.geom))
@@ -19,10 +23,6 @@ def get_district_geojson(district):
 
 
 def get_county_geojson():
-    labels = [
-        "cdu", "spd", "gruene", "die_linke", "fdp", "afd"
-    ]
-
     l_query = db_session.query(
         LetterDistrict.bwk,
         functions.ST_AsGeoJSON(functions.ST_Union(LetterDistrict.geom)).label("geom"),
@@ -42,15 +42,12 @@ def get_county_geojson():
         u_result = u_dict[row.bwk]
         geojson["properties"] = {
             "bwk": row.bwk,
-            "u_result": dict((label, getattr(u_result, label)) for label in labels),
-            "l_result": dict((label, getattr(row, label)) for label in labels)
+            "u_result": dict((party, getattr(u_result, party)) for party in PARTIES),
+            "l_result": dict((party, getattr(row, party)) for party in PARTIES)
         }
         geojsons.append(geojson)
 
     return geojsons
 
 def sum_party_results(model):
-    parties = [
-        "cdu", "spd", "gruene", "die_linke", "fdp", "afd"
-    ]
-    return [func.sum(getattr(model, party)).label(party) for party in parties]
+    return [func.sum(getattr(model, party)).label(party) for party in PARTIES]
