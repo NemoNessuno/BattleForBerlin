@@ -60,3 +60,6 @@ class UrnDistrict(District, Base):
 
 class LetterDistrict(District, Base):
     __tablename__ = 'letter_districts'
+
+class MergedDistrict(District, Base):
+    __tablename__ = 'merged_districts'
