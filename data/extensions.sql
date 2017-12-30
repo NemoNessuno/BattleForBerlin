@@ -33,21 +33,39 @@ CREATE TABLE IF NOT EXISTS diffs (
   bwk varchar(20)
 );
 
-CREATE VIEW counties AS
+DROP VIEW IF EXISTS counties_diff;
+DROP VIEW IF EXISTS merged_districts_diff;
+
+CREATE VIEW merged_districts_diff AS
   SELECT
-    CASE WHEN d.bwk IS NULL THEN m.bwk ELSE d.bwk END bwk,
-    ST_Union(m.geom) geom,
-    sum(m.spd) spd,
-    sum(m.cdu) cdu,
-    sum(m.gruene) gruene,
-    sum(m.fdp) fdp,
-    sum(m.die_linke) die_linke,
-    sum(m.afd) afd
+    m.identifier identifier,
+    CASE WHEN d.bwk is NULL THEN m.bwk ELSE d.bwk END bwk,
+    m.geom geom,
+    m.bezname bezname,
+    m.spd spd,
+    m.cdu cdu,
+    m.gruene gruene,
+    m.fdp fdp,
+    m.die_linke die_linke,
+    m.afd afd
   FROM
     merged_districts m
   LEFT OUTER JOIN
     diffs d
   ON
-    m.identifier = d.identifier
+    m.identifier = d.identifier;
+
+CREATE VIEW counties_diff AS
+  SELECT
+    bwk,
+    ST_Union(geom) geom,
+    sum(spd) spd,
+    sum(cdu) cdu,
+    sum(gruene) gruene,
+    sum(fdp) fdp,
+    sum(die_linke) die_linke,
+    sum(afd) afd
+  FROM
+    merged_districts_diff
   GROUP BY
-    CASE WHEN d.bwk IS NULL THEN m.bwk ELSE d.bwk END
+    bwk;
