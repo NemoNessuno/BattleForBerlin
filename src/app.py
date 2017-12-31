@@ -1,7 +1,7 @@
 import json
 from flask import Flask, render_template, jsonify
 
-from database.models import LetterDistrict, UrnDistrict, MergedDistrict
+from database.models import LetterDistrict, UrnDistrict, MergedDistrict, MergedDistrictDiff
 from database.db_helper import get_district_geojson, get_county_geojson
 
 app = Flask(__name__)
@@ -22,6 +22,10 @@ def letter_districts():
 @app.route('/api/districts/merged')
 def merged_districts():
     return jsonify(get_district_geojson(MergedDistrict))
+
+@app.route('/api/districts/merged_diff')
+def merged_districts_diff():
+    return jsonify(get_district_geojson(MergedDistrictDiff))
 
 @app.route('/api/counties')
 def counties():
