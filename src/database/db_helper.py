@@ -3,7 +3,7 @@ from geoalchemy2 import functions
 from sqlalchemy import func
 
 from db_handler import db_session
-from models import MergedDistrictDiff
+from models import MergedDistrictDiff, Diff
 
 PARTIES = [
     "cdu", "spd", "gruene", "die_linke", "fdp", "afd"
@@ -48,3 +48,10 @@ def get_county_geojson():
 
 def sum_party_results(model):
     return [func.sum(getattr(model, party)).label(party) for party in PARTIES]
+
+def upsert_diff(identifier, bwk):
+    diff = db_session.query(Diff).filter(Diff.identifier == identifier).first()
+    diff = diff or Diff(identifier=identifier)
+    diff.bwk = bwk
+    db_session.add(diff)
+    db_session.commit()
