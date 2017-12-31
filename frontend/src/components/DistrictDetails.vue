@@ -84,8 +84,21 @@ h3.headline, h4.subheading {
   padding: 1em;
   position: absolute;
   left: 1em;
-  top: 10em;
   width: 30em;
   z-index: 1000;
 }
+
+@media(min-height: 800px) {
+  .detail-wrapper{
+    top: 10em;
+  }
+}
+@media(max-height: 800px) {
+  .detail-wrapper {
+    top: 8em;
+    height: 37em;
+    overflow-y: scroll;
+  }
+}
+
 </style>
