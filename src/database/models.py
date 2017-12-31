@@ -67,7 +67,7 @@ class MergedDistrict(District, Base):
 class MergedDistrictDiff(District, Base):
     __tablename__ = 'merged_districts_diff'
 
-class Diffs(Base):
+class Diff(Base):
     __tablename__ = 'diffs'
     identifier = Column(String(4), primary_key=True)
     bwk = Column(String(4))
