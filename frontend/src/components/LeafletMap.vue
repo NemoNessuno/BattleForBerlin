@@ -97,7 +97,7 @@
 
 <style>
 #map {
-  height: calc(100vh - 10em);
+  height: calc(100vh - 70px);
   margin: 0.3em;
   border-radius: 5pt;
 }
