@@ -21,7 +21,7 @@
       <onboarding v-if="route === 'onboarding'" @skip="skipOnboarding" />
       <leaflet-map v-if="route === 'map'" :districts="districts || {}" />
     </v-content>
-    <v-footer>
+    <v-footer v-if="route !== 'map'">
       <span>&copy; 2017, S&ouml;ren Titze, Christian Windolf</span>
     </v-footer>
   </v-app>
