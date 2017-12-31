@@ -63,3 +63,6 @@ class LetterDistrict(District, Base):
 
 class MergedDistrict(District, Base):
     __tablename__ = 'merged_districts'
+
+class MergedDistrictDiff(District, Base):
+    __tablename__ = 'merged_districts_diff'

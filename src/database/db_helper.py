@@ -3,7 +3,7 @@ from geoalchemy2 import functions
 from sqlalchemy import func
 
 from db_handler import db_session
-from models import MergedDistrict
+from models import MergedDistrictDiff
 
 PARTIES = [
     "cdu", "spd", "gruene", "die_linke", "fdp", "afd"
@@ -23,10 +23,10 @@ def get_district_geojson(district):
 
 def get_county_geojson():
     query = db_session.query(
-        MergedDistrict.bwk,
-        functions.ST_AsGeoJSON(functions.ST_Union(MergedDistrict.geom)).label("geom"),
-        *sum_party_results(MergedDistrict)
-    ).group_by(MergedDistrict.bwk)
+        MergedDistrictDiff.bwk,
+        functions.ST_AsGeoJSON(functions.ST_Union(MergedDistrictDiff.geom)).label("geom"),
+        *sum_party_results(MergedDistrictDiff)
+    ).group_by(MergedDistrictDiff.bwk)
 
     geojsons = []
     for bwk, geom, cdu, spd, gruene, die_linke, fdp, afd in query.all():
