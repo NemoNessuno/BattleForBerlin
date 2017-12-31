@@ -21,8 +21,7 @@
     data () {
       return {
         map: undefined,
-        ballotLayer: undefined,
-        letterLayer: undefined,
+        mergedLayer: undefined,
         countyLayer: undefined,
         controls: undefined,
         selectedDistrict: undefined
@@ -54,21 +53,12 @@
     },
     methods: {
       updateLayers () {
-        const {ballot, letters, counties} = this.districts
-        this.ballotLayer = new DistrictLayer(ballot)
-        this.ballotLayer.onSelection(function (values) {
+        const {merged, counties} = this.districts
+        this.mergedLayer = new DistrictLayer(merged)
+        this.mergedLayer.onSelection(function (values) {
           if (values) {
             this.selectedDistrict = values.geometry.properties
-            this.selectedDistrict.type = 'ballot'
-          } else {
-            this.selectedDistrict = undefined
-          }
-        }.bind(this))
-        this.letterLayer = new DistrictLayer(letters)
-        this.letterLayer.onSelection(function (values) {
-          if (values) {
-            this.selectedDistrict = values.geometry.properties
-            this.selectedDistrict.type = 'letter'
+            this.selectedDistrict.type = 'merged'
           } else {
             this.selectedDistrict = undefined
           }
@@ -85,16 +75,14 @@
         if (this.controls) {
           this.controls.remove()
         }
-        this.ballotLayer.layers.addTo(this.map)
+        this.mergedLayer.layers.addTo(this.map)
         this.controls = L.control.layers({
-          'Urnenwahlbezirke': this.ballotLayer.layers,
-          'Briefwahlbezirke': this.letterLayer.layers,
+          'Wahlbezirke': this.mergedLayer.layers,
           'Wahlkreise': this.countyLayer.layers
         }, {}, {collapsed: false}).addTo(this.map)
       },
       unselect () {
-        this.ballotLayer.reset()
-        this.letterLayer.reset()
+        this.mergedLayer.reset()
         this.selectedDistrict = undefined
       }
     },
