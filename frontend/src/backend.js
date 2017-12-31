@@ -6,3 +6,12 @@ export function fetchDistricts () {
     return {merged, counties}
   })
 }
+
+export function changeDistrict (districtId, bwk) {
+  const body = JSON.stringify({identifier: districtId, bwk})
+  const headers = new Headers({
+    'Content-Type': 'application/json',
+    'Accept': 'application/json, text/plain, */*'
+  })
+  return fetch('/api/diff/create', {method: 'post', body, headers})
+}
