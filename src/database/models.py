@@ -6,7 +6,7 @@ from db_handler import Base
 
 
 class District:
-    identifier = Column(String(4), unique=True, primary_key=True)
+    identifier = Column(String(5), unique=True, primary_key=True)
     bezname = Column(String(200))
     bwk = Column(String(3))
     geom = Column(Geometry('POLYGON'))

@@ -38,12 +38,18 @@ def get_county_geojson():
     geojsons = []
     for row in l_query.all():
         geojson = json.loads(row.geom)
-        u_result = next(x for x in u_results if lambda result: result.bwk == row.bwk)
+
+        for loc_u_result in u_results:
+            if loc_u_result.bwk == row.bwk:
+                u_result = loc_u_result
+                break
+
         geojson["properties"] = {
             "bwk": row.bwk,
             "u_result": dict((label, getattr(u_result, label)) for label in labels),
             "l_result": dict((label, getattr(row, label)) for label in labels)
         }
+
         geojsons.append(geojson)
 
     return geojsons

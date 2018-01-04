@@ -1,0 +1,25 @@
+
+==============================================================================================================================
+Import shapefiles:
+
+copy files via:
+  sudo docker cp <folder> <container>:/tmp
+  (Check they are there with sudo docker exec <container> ls /tmp/<folder>
+
+create .pgpass (if you haven't) to make stuff easier:
+ sudo echo "<host>:<port>:*:<user>:<password>" > /var/lib/postgresql/.pgpass
+ sudo chown postgres:postgres /var/lib/postgresql/.pgpass
+ sudo chmod 0600 /var/lib/postgresql/.pgpass 
+
+execute an interactive shell with:
+  sudo docker exec -i -t <container> /bin/bash
+
+and then call from within:
+  shp2pgsql -s 25833 -W "latin1" <shape_file>.shp <table_name> | psql -h <host> -U <username> -d <database_name>
+
+In our example this would be (yes the db name is the same as the container
+name. sue me :p):
+  shp2pgsql -s 25833 -W "latin1" /tmp/shapes/RBS_OD_UWB.shp shapes | psql -h localhost -U postgres -d battle_for_berlin
+
+then open pgadmin and be happy - and import it as new layer in qgis
+==============================================================================================================================

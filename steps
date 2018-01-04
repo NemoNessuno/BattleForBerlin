@@ -22,14 +22,20 @@ Grob:
  5. Importiere Daten von
     https://daten.berlin.de/datensaetze/geometrien-der-wahlbezirke-f%C3%BCr-die-bundestagswahl-berlin-2017
 (wichtig! das pdf lesen da stehen die definitionen drinn)
-    shp2pgsql -s 2833 -W "latin1" RBS_OD_UWB.shp <tabellennamme> | psql -h localhost -U <benutzername> -d <datenbankname>
- 5a. Versuche die Shapes automatisch zu reparieren mit (vorher spalte geom2
+    shp2pgsql -s 25833 -W "latin1" RBS_OD_UWB.shp <tabellennamme> | psql -h localhost -U <benutzername> -d <datenbankname>
+( 5a. Versuche die Shapes automatisch zu reparieren mit (vorher spalte geom2
      manuell anlegen):
      UPDATE public.urn_districts SET geom2 = geom;
-     UPDATE urn_districts SET geom2=ST_Buffer(geom2, 0) WHERE NOT ST_isValid(geom2);
+     UPDATE urn_districts SET geom2=ST_Buffer(geom2, 0) WHERE NOT
+ST_isValid(geom2);) <- Tu das lieber nicht das macht die shapes kaputt!
  5b. Repariere die beiden Bezirke die kaputt sind in QGIS (um herauszufinden
      welche die beiden nicht automatisch reperablen Bezirke sind Vergleiche
      Layer geom2 mit geom)
+ 5c. Transformiere in WebMercator (macht später alles einfacher)
+  Lege neue column vom type geometry mit namen geom2 an
+  UPDATE urn_districts
+  SET geom2 = ST_Transform(ST_SetSRID(geom,25833), 3857)
+  Lösche geom und bennene geom2 in geom um
  5c. Erstelle Briefwahllayer mit (ohne reperatur kann man einige geometrien
      nicht mergen!)
     SELECT 
@@ -40,5 +46,6 @@ Grob:
       public.urn_districts as d
     GROUP BY
       d.bwb, d.bezname, d.bwk;
+
 
  6. Nehme Ergebnisse von https://www.wahlen-berlin.de/wahlen/BU2017/AFSPRAES/download/download.html
