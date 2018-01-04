@@ -5,6 +5,10 @@ from sqlalchemy import func
 from db_handler import db_session
 from models import LetterDistrict, UrnDistrict
 
+PARTIES = [
+    "cdu", "spd", "gruene", "die_linke", "fdp", "afd"
+]
+
 
 def get_district_geojson(district):
     query = db_session.query(district, functions.ST_AsGeoJSON(district.geom))
@@ -19,37 +23,33 @@ def get_district_geojson(district):
 
 
 def get_county_geojson():
-    labels = [
-        "cdu", "spd", "gruene", "die_linke", "fdp", "afd"
-    ]
-
     l_query = db_session.query(
         LetterDistrict.bwk,
         functions.ST_AsGeoJSON(functions.ST_Union(LetterDistrict.geom)).label("geom"),
-        *[func.sum(getattr(LetterDistrict, label_name)).label(label_name) for label_name in labels]
+        *sum_party_results(LetterDistrict)
     ).group_by(LetterDistrict.bwk)
 
     u_query = db_session.query(
         UrnDistrict.bwk,
-        *[func.sum(getattr(UrnDistrict, label_name)).label(label_name) for label_name in labels]
+        *sum_party_results(UrnDistrict)
     ).group_by(UrnDistrict.bwk)
 
     u_results = u_query.all()
+    u_dict = {r[0]:r for r in u_results}
     geojsons = []
     for row in l_query.all():
         geojson = json.loads(row.geom)
-
-        for loc_u_result in u_results:
-            if loc_u_result.bwk == row.bwk:
-                u_result = loc_u_result
-                break
-
+        u_result = u_dict[row.bwk]
         geojson["properties"] = {
             "bwk": row.bwk,
-            "u_result": dict((label, getattr(u_result, label)) for label in labels),
-            "l_result": dict((label, getattr(row, label)) for label in labels)
+            "u_result": dict((party, getattr(u_result, party)) for party in PARTIES),
+            "l_result": dict((party, getattr(row, party)) for party in PARTIES)
         }
 
         geojsons.append(geojson)
 
     return geojsons
+
+
+def sum_party_results(model):
+    return [func.sum(getattr(model, party)).label(party) for party in PARTIES]
