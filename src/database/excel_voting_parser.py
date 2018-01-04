@@ -1,7 +1,7 @@
 # coding=utf-8
 import pandas as pd
 
-from src.database.db_handler import db_session, engine
+from src.database.db_handler import db_session
 from src.database.models import UrnDistrict, LetterDistrict
 
 

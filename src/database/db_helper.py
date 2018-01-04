@@ -35,7 +35,7 @@ def get_county_geojson():
     ).group_by(UrnDistrict.bwk)
 
     u_results = u_query.all()
-    u_dict = {r[0]:r for r in u_results}
+    u_dict = {r[0]: r for r in u_results}
     geojsons = []
     for row in l_query.all():
         geojson = json.loads(row.geom)
