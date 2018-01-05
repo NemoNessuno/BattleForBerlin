@@ -1,0 +1,16 @@
+version: '3'
+services:
+  database:
+    build: ./data
+  backend:
+    build: ./src
+    depends_on:
+      - database
+    environment:
+      - 'BFB_DB_URL=postgres://postgres:postgres@database/battle_for_berlin'
+  frontend:
+    build: ./frontend
+    ports:
+      - 80:80
+    depends_on:
+      - backend
