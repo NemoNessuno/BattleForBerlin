@@ -24,7 +24,7 @@ export default {
         {text: '080 - Charlottenburg/Wilmersdorf', value: '080'},
         {text: '081 - Tempelhof/Schöneberg', value: '081'},
         {text: '082 - Neukölln', value: '082'},
-        {text: '083 - Friedrichshain/Kreuzb./Prenzlb-Ost',  value: '083'},
+        {text: '083 - Friedrichshain/Kreuzb./Prenzlb-Ost', value: '083'},
         {text: '084 - Treptow/Köpenick', value: '084'},
         {text: '085 - Marzahn/Hellersdorf', value: '085'},
         {text: '086 - Lichtenberg', value: '086'}
