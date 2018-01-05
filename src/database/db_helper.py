@@ -56,3 +56,7 @@ def upsert_diff(identifier, bwk):
     diff.bwk = bwk
     db_session.add(diff)
     db_session.commit()
+
+def truncate_diffs():
+    db_session.execute('TRUNCATE TABLE diffs')
+    db_session.commit()
