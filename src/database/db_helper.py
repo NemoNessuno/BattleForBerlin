@@ -3,7 +3,7 @@ from geoalchemy2 import functions
 from sqlalchemy import func
 
 from db_handler import db_session
-from models import MergedDistrictDiff, Diff
+from models import MergedDistrictDiff, Diff, MergedDistrict
 
 PARTIES = [
     "cdu", "spd", "gruene", "die_linke", "fdp", "afd"
@@ -46,6 +46,12 @@ def get_county_geojson():
 
     return geojsons
 
+def get_simplified_json(bwk):
+    query = db_session.query(
+        functions.ST_AsGeoJSON(functions.ST_Simplify(functions.ST_Union(MergedDistrict.geom), 0.001, True))
+    ).filter(MergedDistrict.bwk == bwk)
+    result = query.all()
+    return list(result)[0]
 
 def sum_party_results(model):
     return [func.sum(getattr(model, party)).label(party) for party in PARTIES]
@@ -60,3 +66,19 @@ def upsert_diff(identifier, bwk):
 def truncate_diffs():
     db_session.execute('TRUNCATE TABLE diffs')
     db_session.commit()
+
+def get_results():
+    return {
+        'real': get_results_from_table(MergedDistrict),
+        'diff': get_results_from_table(MergedDistrictDiff)
+    }
+
+def get_results_from_table(table):
+    query = db_session.query(
+        table.bwk,
+        *sum_party_results(table)
+    ).group_by(table.bwk)
+    result = {}
+    for row in query.all():
+        result[row[0]] = dict(zip(PARTIES, [int(p) for p in row[1:]]))
+    return result
