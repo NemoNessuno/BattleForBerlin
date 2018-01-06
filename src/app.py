@@ -6,7 +6,13 @@ from database.models import (
     UrnDistrict,
     MergedDistrict,
     MergedDistrictDiff)
-from database.db_helper import get_district_geojson, get_county_geojson, upsert_diff, get_simplified_json
+from database.db_helper import (
+    get_district_geojson,
+    get_county_geojson,
+    upsert_diff,
+    get_simplified_json,
+    get_results
+)
 
 app = Flask(__name__)
 
@@ -44,6 +50,10 @@ def create_diff():
     payload = request.get_json()
     upsert_diff(payload['identifier'], payload['bwk'])
     return jsonify({'msg': 'district changed'})
+
+@app.route('/api/results')
+def results():
+    return jsonify(get_results())
 
 if __name__ == '__main__':
     app.debug = True

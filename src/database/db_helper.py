@@ -62,3 +62,14 @@ def upsert_diff(identifier, bwk):
     diff.bwk = bwk
     db_session.add(diff)
     db_session.commit()
+
+def get_results():
+    real_query = db_session.query(
+        MergedDistrict.bwk,
+        *sum_party_results(MergedDistrict)
+    ).group_by(MergedDistrict.bwk)
+
+    real_result = {}
+    for row in real_query.all():
+        real_result[row[0]] = dict(zip(PARTIES, [int(p) for p in row[1:]]))
+    return {'real': real_result}
