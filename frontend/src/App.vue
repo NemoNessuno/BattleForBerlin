@@ -5,7 +5,7 @@
         Battle For Berlin
       </v-toolbar-title>
       <v-spacer />
-      <v-btn icon>
+      <v-btn icon @click="resetDiff">
         <v-icon>restore_page</v-icon>
       </v-btn>
       <v-btn @click="route = 'onboarding'" icon v-if="route === 'map'">
@@ -31,7 +31,7 @@
 <script>
 import Onboarding from './components/Onboarding'
 import LeafletMap from './components/LeafletMap'
-import {fetchDistricts} from './backend'
+import {fetchDistricts, reset} from './backend'
 export default {
   name: 'app',
   data () {
@@ -50,6 +50,9 @@ export default {
   methods: {
     skipOnboarding () {
       this.route = 'map'
+    },
+    resetDiff () {
+      reset()
     }
   },
   components: {Onboarding, LeafletMap}

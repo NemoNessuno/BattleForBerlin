@@ -15,3 +15,11 @@ export function changeDistrict (districtId, bwk) {
   })
   return fetch('/api/diff/create', {method: 'post', body, headers})
 }
+
+export function reset () {
+  const body = ''
+  const headers = new Headers({
+    'Accept': 'application/json'
+  })
+  return fetch('/api/diff/reset', {method: 'post', body, headers})
+}
