@@ -59,9 +59,10 @@ export default {
 }
 </script>
 
-<style>
-.github-link-img {
-  height: 1.5em;
-  width: 1.5em;
-}
+<style lang="sass">
+@import 'leaflet.pm/dist/leaflet.pm.css'
+
+.github-link-img
+  height: 1.5em
+  width: 1.5em
 </style>
