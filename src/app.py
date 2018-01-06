@@ -35,7 +35,7 @@ def merged_districts_diff():
 def counties():
     return jsonify(get_county_geojson())
 
-@app.route('/api/reset', methods=['POST'])
+@app.route('/api/diff/reset', methods=['POST'])
 def reset():
     truncate_diffs()
     return jsonify({'msg': 'diffs deleted'})
