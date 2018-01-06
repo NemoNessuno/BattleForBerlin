@@ -3,7 +3,7 @@ import L from 'leaflet'
 import {maxProp, PARTY_COLORS} from './helpers'
 
 export class DistrictLayer {
-  constructor (districts, config) {
+  constructor (districts, config, editable = false) {
     this.config = config || {}
     this._cb = function () {}
     this.config.defaultStyle = this.config.defaultStyle || {
@@ -28,6 +28,7 @@ export class DistrictLayer {
       this._cb(undefined)
       return
     }
+    layer.pm.enable({draggable: false, allowSelfIntersection: false})
     this.reset()
     this._selectedLayer = layer
     layer.setStyle(this.config.emphazisedStyle.style(layer.feature))

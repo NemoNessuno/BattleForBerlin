@@ -9,6 +9,7 @@
 
 <script>
   import L from 'leaflet'
+  import 'leaflet.pm'
   import DistrictDetails from './DistrictDetails'
   import {DistrictLayer} from '@/layers'
   const tileLayerAPI = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}'
@@ -63,7 +64,7 @@
             this.selectedDistrict = undefined
           }
         }.bind(this))
-        this.countyLayer = new DistrictLayer(counties)
+        this.countyLayer = new DistrictLayer(counties, undefined, true)
         this.countyLayer.onSelection(function (values) {
           if (values) {
             this.selectedDistrict = values.geometry.properties
