@@ -66,7 +66,7 @@
         } else {
           this.selectedDistrict = undefined
         }
-      })
+      }.bind(this))
       this.controls = L.control.layers(this.map)
       this.controls = L.control.layers({
         'Wahlbezirke': this.mergedWrapper.layers,
