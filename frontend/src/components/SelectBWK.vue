@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import {changeDistrict} from '@/backend'
+import {store} from '@/backend'
 export default {
   name: 'select-bwk',
   props: {bwk: {type: String, required: true}, identifier: {type: String, required: true}},
@@ -33,7 +33,7 @@ export default {
   },
   watch: {
     value (newVal) {
-      changeDistrict(this.identifier, newVal).then(console.log)
+      store.changeDistrict(this.identifier, newVal).then(console.log)
     }
   }
 }

@@ -12,20 +12,17 @@
   import 'leaflet.pm'
   import DistrictDetails from './DistrictDetails'
   import {DistrictLayer} from '@/layers'
+  import {store} from '@/backend'
   const tileLayerAPI = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}'
   const accessToken = 'pk.eyJ1IjoibmVtb25lc3N1bm8iLCJhIjoiY2phM3FvbGRkM2x6MTM0cGN1M3h6dHcyYiJ9.Gie5hDNbis60D17BFvH31Q'
   export default {
     name: 'leaflet-map',
-    props: {
-      districts: {type: Object, required: true}
-    },
     data () {
       return {
         map: undefined,
-        mergedLayer: undefined,
-        countyLayer: undefined,
         controls: undefined,
-        selectedDistrict: undefined
+        selectedDistrict: undefined,
+        mergedWrapper: undefined
       }
     },
     mounted () {
@@ -50,46 +47,37 @@
         doubleClickZoom: false,
         layers: [tileLayer]
       })
-      this.updateLayers()
+      this.mergedWrapper = new DistrictLayer()
+      this.mergedWrapper.setDistricts(store.districts)
+      this.mergedWrapper.onSelection(function (values) {
+        if (values) {
+          this.selectedDistrict = values.geometry.properties
+          this.selectedDistrict.type = 'merged'
+        } else {
+          this.selectedDistrict = undefined
+        }
+      }.bind(this))
+      this.countyWrapper = new DistrictLayer()
+      this.countyWrapper.setDistricts(store.counties)
+      this.countyWrapper.onSelection(function (values) {
+        if (values) {
+          this.selectedDistrict = values.geometry.properties
+          this.selectedDistrict.type = 'county'
+        } else {
+          this.selectedDistrict = undefined
+        }
+      })
+      this.controls = L.control.layers(this.map)
+      this.controls = L.control.layers({
+        'Wahlbezirke': this.mergedWrapper.layers,
+        'Wahlkreise': this.countyWrapper.layers
+      }, {}, {collapsed: false}).addTo(this.map)
     },
     methods: {
-      updateLayers () {
-        const {merged, counties} = this.districts
-        this.mergedLayer = new DistrictLayer(merged)
-        this.mergedLayer.onSelection(function (values) {
-          if (values) {
-            this.selectedDistrict = values.geometry.properties
-            this.selectedDistrict.type = 'merged'
-          } else {
-            this.selectedDistrict = undefined
-          }
-        }.bind(this))
-        this.countyLayer = new DistrictLayer(counties, undefined, true)
-        this.countyLayer.onSelection(function (values) {
-          if (values) {
-            this.selectedDistrict = values.geometry.properties
-            this.selectedDistrict.type = 'county'
-          } else {
-            this.selectedDistrict = undefined
-          }
-        }.bind(this))
-        if (this.controls) {
-          this.controls.remove()
-        }
-        this.mergedLayer.layers.addTo(this.map)
-        this.controls = L.control.layers({
-          'Wahlbezirke': this.mergedLayer.layers,
-          'Wahlkreise': this.countyLayer.layers
-        }, {}, {collapsed: false}).addTo(this.map)
-      },
       unselect () {
-        this.mergedLayer.reset()
         this.selectedDistrict = undefined
-      }
-    },
-    watch: {
-      districts (newVal, oldVal) {
-        this.updateLayers()
+        this.mergedWrapper.reset()
+        this.countyWrapper.reset()
       }
     },
     components: {DistrictDetails}

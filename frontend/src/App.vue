@@ -20,7 +20,7 @@
     </v-toolbar>
     <v-content>
       <onboarding v-if="route === 'onboarding'" @skip="skipOnboarding" />
-      <leaflet-map v-if="route === 'map'" :districts="districts || {}" />
+      <leaflet-map v-if="route === 'map'" />
     </v-content>
     <v-footer v-if="route !== 'map'">
       <span>&copy; 2017, S&ouml;ren Titze, Christian Windolf</span>
@@ -31,7 +31,7 @@
 <script>
 import Onboarding from './components/Onboarding'
 import LeafletMap from './components/LeafletMap'
-import {fetchDistricts, reset} from './backend'
+import {reset} from './backend'
 export default {
   name: 'app',
   data () {
@@ -39,13 +39,6 @@ export default {
       route: 'onboarding',
       districts: undefined
     }
-  },
-  created () {
-    fetchDistricts().then(function (districts) {
-      this.districts = districts
-    }.bind(this)).catch(function () {
-      throw new Error('loading of data failed')
-    })
   },
   methods: {
     skipOnboarding () {
