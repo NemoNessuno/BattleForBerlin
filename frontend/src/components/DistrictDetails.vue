@@ -4,9 +4,13 @@
       <v-card-title>
         <h3 class="headline">{{bezirk}} </h3>
         <h4 class="subheading"> Bezirkswahlkreis {{bwk}} </h4>
-        <h4 class="subheading"> Wahlbezirk {{districtId}} {{type}} </h4>
       </v-card-title>
       <v-card-text>
+        <select-bwk
+          v-if="district.type === 'merged'"
+          :bwk="bwk"
+          :identifier="districtId"
+          />
         <stacked-bar-chart :result="district.result" />
         <v-data-table
           :headers="headers"
@@ -31,6 +35,7 @@
 <script>
   import {maxProp} from '@/helpers'
   import StackedBarChart from './StackedBarChart'
+  import SelectBwk from './SelectBWK'
   export default {
     name: 'DistrictDetails',
     props: {
@@ -69,7 +74,7 @@
         this.$emit('close')
       }
     },
-    components: {StackedBarChart}
+    components: {StackedBarChart, SelectBwk}
   }
 </script>
 
@@ -84,8 +89,21 @@ h3.headline, h4.subheading {
   padding: 1em;
   position: absolute;
   left: 1em;
-  top: 10em;
   width: 30em;
   z-index: 1000;
 }
+
+@media(min-height: 800px) {
+  .detail-wrapper{
+    top: 10em;
+  }
+}
+@media(max-height: 800px) {
+  .detail-wrapper {
+    top: 8em;
+    height: 37em;
+    overflow-y: scroll;
+  }
+}
+
 </style>

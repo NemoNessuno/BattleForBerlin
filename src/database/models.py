@@ -60,3 +60,24 @@ class UrnDistrict(District, Base):
 
 class LetterDistrict(District, Base):
     __tablename__ = 'letter_districts'
+
+
+class MergedDistrict(District, Base):
+    __tablename__ = 'merged_districts'
+
+
+class MergedDistrictDiff(District, Base):
+    __tablename__ = 'merged_districts_diff'
+
+
+class Diff(Base):
+    __tablename__ = 'diffs'
+    identifier = Column(String(4), primary_key=True)
+    bwk = Column(String(4))
+
+    def __init__(self, identifier=None, bwk=None):
+        self.identifier = identifier
+        self.bwk = bwk
+
+    def __repr__(self):
+        return '<Diff %s %s>' % (self.identifier, self.bwk)
