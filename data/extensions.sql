@@ -54,18 +54,3 @@ CREATE VIEW merged_districts_diff AS
     diffs d
   ON
     m.identifier = d.identifier;
-
-CREATE VIEW counties_diff AS
-  SELECT
-    bwk,
-    ST_Union(geom) geom,
-    sum(spd) spd,
-    sum(cdu) cdu,
-    sum(gruene) gruene,
-    sum(fdp) fdp,
-    sum(die_linke) die_linke,
-    sum(afd) afd
-  FROM
-    merged_districts_diff
-  GROUP BY
-    bwk;
