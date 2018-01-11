@@ -102,7 +102,8 @@ class Candidate(Base):
         }
 
     def get_description(self):
-            return get_description_json(self.description_url)
+        #return get_description_json(self.description_url)
+        return {}
 
     def get_full_name(self):
         return "{} {}".format(self.surname, self.name)
