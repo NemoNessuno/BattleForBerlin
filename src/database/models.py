@@ -46,12 +46,12 @@ class District:
 
     def get_result_dict(self):
         return {
-            "cdu": self.cdu,
-            "spd": self.spd,
-            "die_linke": self.die_linke,
-            "gruene": self.gruene,
-            "afd": self.afd,
-            "fdp": self.fdp
+            'cdu': self.cdu,
+            'spd': self.spd,
+            'die_linke': self.die_linke,
+            'gruene': self.gruene,
+            'afd': self.afd,
+            'fdp': self.fdp
         }
 
     def __repr__(self):
