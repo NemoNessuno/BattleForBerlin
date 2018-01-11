@@ -2,8 +2,8 @@
 import pandas as pd
 import json
 
-from src.database.data_extraction_helper import get_http_request, extract_afd_fraction, extract_spd_neukoelln_fraction, \
-    extract_fdp_cw_fraction
+from src.database.data_extraction_helper import get_http_request, extract_afd_fraction, \
+    extract_spd_neukoelln_fraction, extract_fdp_cw_fraction
 from src.database.db_handler import engine, db_session
 from src.database.models import Candidate
 

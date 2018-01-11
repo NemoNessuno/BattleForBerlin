@@ -1,9 +1,6 @@
-import json
 from flask import Flask, render_template, jsonify, request
 
 from database.models import (
-    LetterDistrict,
-    UrnDistrict,
     MergedDistrict,
     MergedDistrictDiff)
 
