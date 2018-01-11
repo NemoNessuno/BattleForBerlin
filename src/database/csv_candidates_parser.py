@@ -68,7 +68,7 @@ def update_or_insert(path):
 
     for index, candidate in par_candidates.iterrows():
         party = candidate[party_list] if pd.notna(candidate[party_list]) else candidate[party_county]
-        bwk = candidate[county_index] if pd.notna(candidate[county_index]) else None
+        bwk = '0' + str(int(candidate[county_index])) if pd.notna(candidate[county_index]) else None
         liste = candidate[list_index] if pd.notna(candidate[list_index]) else -1
         name = candidate['Name']
         surname = candidate['Vorname']

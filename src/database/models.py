@@ -57,14 +57,6 @@ class District:
         return '<District %s %s>' % (self.identifier, self.geom)
 
 
-class UrnDistrict(District, Base):
-    __tablename__ = 'urn_districts'
-
-
-class LetterDistrict(District, Base):
-    __tablename__ = 'letter_districts'
-
-
 class MergedDistrict(District, Base):
     __tablename__ = 'merged_districts'
 
