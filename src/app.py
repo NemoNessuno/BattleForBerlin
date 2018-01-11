@@ -21,16 +21,6 @@ def start():
     return render_template('index.html')
 
 
-@app.route('/api/districts/ballot')
-def urn_districts():
-    return jsonify(get_district_geojson(UrnDistrict))
-
-
-@app.route('/api/districts/letters')
-def letter_districts():
-    return jsonify(get_district_geojson(LetterDistrict))
-
-
 @app.route('/api/districts/merged')
 def merged_districts():
     return jsonify(get_district_geojson(MergedDistrict))
