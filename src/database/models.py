@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import unicode_literals
 from geoalchemy2 import Geometry
 from sqlalchemy import Column, Integer, String
 
