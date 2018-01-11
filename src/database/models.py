@@ -36,11 +36,11 @@ class District:
     def get_geojson_dict(self):
         candidates = db_session.query(Candidate).filter(Candidate.bwk == self.bwk)
         return {
-            "identifier": self.identifier,
-            "bezname": self.bezname,
-            "bwk": self.bwk,
-            "candidates": {candidate.full_name(): candidate.get_json() for candidate in candidates},
-            "result": self.get_result_dict()
+            'identifier': self.identifier,
+            'bezname': self.bezname,
+            'bwk': self.bwk,
+            'candidates': {candidate.full_name(): candidate.get_json() for candidate in candidates},
+            'result': self.get_result_dict()
         }
 
     def get_result_dict(self):
