@@ -3,7 +3,7 @@ from geoalchemy2 import functions
 from sqlalchemy import func
 
 from db_handler import db_session
-from models import MergedDistrictDiff, Diff, MergedDistrict
+from models import MergedDistrictDiff, Diff, MergedDistrict, Candidate
 
 PARTIES = [
     "cdu", "spd", "gruene", "die_linke", "fdp", "afd"
@@ -11,7 +11,7 @@ PARTIES = [
 
 
 def get_district_geojson(district):
-    query = db_session.query(district, functions.ST_AsGeoJSON(district.geom))
+    query = db_session.query(district, functions.ST_AsGeoJSON(functions.ST_Transform(district.geom, 4326)))
 
     geojsons = []
     for district, geom in query.all():
@@ -47,15 +47,17 @@ def get_county_geojson():
 
     query = db_session.query(
         MergedDistrictDiff.bwk,
-        functions.ST_AsGeoJSON(functions.ST_Union(MergedDistrictDiff.geom)).label("geom"),
+        functions.ST_AsGeoJSON(functions.ST_Union(functions.ST_Transform(MergedDistrictDiff.geom, 4326))).label("geom"),
         *sum_party_results(MergedDistrictDiff)
     ).group_by(MergedDistrictDiff.bwk)
 
     geojsons = []
     for bwk, geom, cdu, spd, gruene, die_linke, fdp, afd in query.all():
+        candidates = db_session.query(Candidate).filter(Candidate.bwk == bwk)
         geojson = json.loads(geom)
         geojson['properties'] = {
                 'bwk': bwk,
+                'candidates': {candidate.get_full_name(): candidate.get_json() for candidate in candidates},
                 'result': {
                     'cdu': int(cdu),
                     'spd': int(spd),
