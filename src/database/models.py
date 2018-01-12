@@ -40,7 +40,7 @@ class District:
             'identifier': self.identifier,
             'bezname': self.bezname,
             'bwk': self.bwk,
-            'candidates': {candidate.full_name(): candidate.get_json() for candidate in candidates},
+            'candidates': {candidate.party: candidate.get_json() for candidate in candidates},
             'result': self.get_result_dict()
         }
 
@@ -56,6 +56,16 @@ class District:
 
     def __repr__(self):
         return '<District %s %s>' % (self.identifier, self.geom)
+
+
+class Neighbours(Base):
+    __tablename__ = 'neighbours'
+    identifier = Column(String(5), primary_key=True, unique=True)
+    neighbours = Column(String(128))
+
+    def __init__(self, identifier=None, neighbours=None):
+        self.identifier = identifier
+        self.neighbours = neighbours
 
 
 class MergedDistrict(District, Base):
@@ -93,17 +103,17 @@ class Candidate(Base):
 
     def get_json(self):
         return {
+            "name": self.get_full_name(),
             "party": self.party,
             "list index": self.liste,
             "bwk": self.bwk,
             "image": self.img_url,
             "profile_url": self.profile_url,
-            "description": self.get_description()
+            "description": self.description_url
         }
 
     def get_description(self):
-        #return get_description_json(self.description_url)
-        return {}
+        return get_description_json(self.description_url)
 
     def get_full_name(self):
         return "{} {}".format(self.surname, self.name)

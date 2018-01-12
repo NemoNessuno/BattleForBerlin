@@ -49,3 +49,17 @@ ST_isValid(geom2);) <- Tu das lieber nicht das macht die shapes kaputt!
 
 
  6. Nehme Ergebnisse von https://www.wahlen-berlin.de/wahlen/BU2017/AFSPRAES/download/download.html
+ 7. Schreibe Parser für Ergebnisse (excel_voting_parser.py) um die district
+    tabelle zu erweitern
+ 8. Berechne alle Nachbarn der einzelnen Bezirke mit:
+    CREATE TABLE neighbours
+    AS SELECT d1.identifier, string_agg(d2.identifier, ', ') as neighbours
+    FROM merged_districts d1, merged_districts d2
+    WHERE ST_Touches(d1.geom, d2.geom)
+    AND d1 != d2
+    GROUP BY d1.identifier
+    und erweitere die district Tabelle mit:
+    UPDATE merged_districts
+    SET neighbours = neighbours.neighbours
+    FROM neighbours
+    WHERE neighbours.identifier = identifier
