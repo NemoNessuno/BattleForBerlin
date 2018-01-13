@@ -37,6 +37,7 @@ export class DistrictStore {
 
   get counties () {
     if (!this._counties && !this._fetchingCounties) {
+      this._fetchCounties()
     }
     return this._counties$.asObservable()
   }
@@ -45,6 +46,7 @@ export class DistrictStore {
     this._fetchingCounties = true
     fetch('/api/counties').then(resp => resp.json())
       .then(districts => {
+        this._fetchingCounties = false
         this._counties = districts
         this._counties$.next(districts)
       })
@@ -85,6 +87,7 @@ export class DistrictStore {
     return fetch('/api/diff/reset', {method: 'post', body, headers}).then((resp) => {
       this._diffCount = 0
       this._diffCount$.next(0)
+      this._fetchCounties()
       return resp
     })
   }
