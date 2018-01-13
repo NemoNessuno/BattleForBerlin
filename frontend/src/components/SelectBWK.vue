@@ -6,19 +6,15 @@
       v-model="value"
       >
     </v-select>
-    <v-transition name="fade">
-      <v-progress-linear :indeterminate="true" v-if="waiting" style="height: 3px" ></v-progress-linear>
-    </v-transition>
+    <v-progress-linear :indeterminate="true" v-if="waiting" style="height: 3px" ></v-progress-linear>
   </div>
 </template>
 
 <script>
 import {store} from '@/backend'
+import {minAwait} from '@/helpers'
 import {Observable} from 'rxjs/Observable'
-import 'rxjs/add/observable/merge'
 import 'rxjs/add/observable/fromPromise'
-import 'rxjs/add/observable/timer'
-import 'rxjs/add/operator/last'
 export default {
   name: 'select-bwk',
   props: {bwk: {type: String, required: true}, identifier: {type: String, required: true}},
@@ -47,10 +43,9 @@ export default {
   watch: {
     value (newVal) {
       this.waiting = true
-      const prom1 = Observable.fromPromise(store.changeDistrict(this.identifier, newVal))
-      const prom2 = Observable.timer(500)
-      const final = Observable.merge(prom1, prom2).last().subscribe(
-        function () {this.waiting = false}.bind(this),
+      const fetcher = Observable.fromPromise(store.changeDistrict(this.identifier, newVal))
+      minAwait(fetcher).subscribe(
+        function () { this.waiting = false }.bind(this),
         function (error) {
           this.waiting = false
           console.log('Failed changing district')
