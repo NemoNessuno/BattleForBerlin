@@ -4,7 +4,7 @@ MAINTAINER Christian Windolf <christianwindolf@web.de>
 
 WORKDIR /data
 
-COPY database.tar.gz extensions.sql ./
+COPY database.tar.gz ./
 
 RUN mkdir -p /docker-entrypoint-initdb.d/ && \
   tar xf database.tar.gz
