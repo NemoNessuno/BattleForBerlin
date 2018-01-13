@@ -1,7 +1,7 @@
 <template>
   <map-overlay :result="district.result" @close="close">
     <v-toolbar dark slot="title" card>
-      <v-btn icon>
+      <v-btn icon @click.native="close">
         <v-icon>close</v-icon>
       </v-btn>
       <v-toolbar-title>{{district.bwk}} - {{bezirk}}</v-toolbar-title>
