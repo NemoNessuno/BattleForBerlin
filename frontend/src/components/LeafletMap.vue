@@ -71,6 +71,7 @@
         'Wahlbezirke': this.mergedWrapper.layers,
         'Wahlkreise': this.countyWrapper.layers
       }, {}, {collapsed: false}).addTo(this.map)
+      this.mergedWrapper.layers.addTo(this.map)
     },
     methods: {
       unselect () {
