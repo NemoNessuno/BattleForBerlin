@@ -4,12 +4,17 @@
       v-if="selectedDistrict"
       @close="unselect"
       :district="selectedDistrict" />
+    <county-details
+      v-if="selectedCounty"
+      @close="unselect"
+      :district="selectedCounty" />
   </div>
 </template>
 
 <script>
   import L from 'leaflet'
   import DistrictDetails from './DistrictDetails'
+  import CountyDetails from './CountyDetails'
   import {DistrictLayer} from '@/layers'
   import {store} from '@/backend'
   const tileLayerAPI = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}'
@@ -21,6 +26,7 @@
         map: undefined,
         controls: undefined,
         selectedDistrict: undefined,
+        selectedCounty: undefined,
         mergedWrapper: undefined
       }
     },
@@ -51,19 +57,21 @@
       this.mergedWrapper.onSelection(function (values) {
         if (values) {
           this.selectedDistrict = values.geometry.properties
-          this.selectedDistrict.type = 'merged'
+          this.selectedCounty = undefined
         } else {
           this.selectedDistrict = undefined
+          this.selectedCounty = undefined
         }
       }.bind(this))
       this.countyWrapper = new DistrictLayer()
       this.countyWrapper.setDistricts(store.counties)
       this.countyWrapper.onSelection(function (values) {
         if (values) {
-          this.selectedDistrict = values.geometry.properties
-          this.selectedDistrict.type = 'county'
+          this.selectedDistrict = undefined
+          this.selectedCounty = values.geometry.properties
         } else {
           this.selectedDistrict = undefined
+          this.selectedCounty = undefined
         }
       }.bind(this))
       this.controls = L.control.layers(this.map)
@@ -76,11 +84,12 @@
     methods: {
       unselect () {
         this.selectedDistrict = undefined
+        this.selectedCounty = undefined
         this.mergedWrapper.reset()
         this.countyWrapper.reset()
       }
     },
-    components: {DistrictDetails}
+    components: {DistrictDetails, CountyDetails}
   }
 </script>
 
