@@ -18,6 +18,7 @@ export class DistrictLayer {
     this.layers = L.layerGroup([])
     const $this = this
     this.subscription = districts$.subscribe(districts => {
+      this.layers.clearLayers()
       districts.forEach(function (district) {
         const layer = L.geoJSON(district, this.config.defaultStyle)
         layer.on('click', function ({layer}) {
