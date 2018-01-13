@@ -4,6 +4,7 @@
       :items="items"
       label="Wahlbezirk"
       v-model="value"
+      @change="changeBwk"
       >
     </v-select>
     <v-progress-linear :indeterminate="true" v-if="waiting" style="height: 3px" ></v-progress-linear>
@@ -29,10 +30,10 @@ export default {
       })
     }
   },
-  watch: {
-    value (newVal) {
+  methods: {
+    changeBwk (val) {
       this.waiting = true
-      const fetcher = Observable.fromPromise(store.changeDistrict(this.identifier, newVal))
+      const fetcher = Observable.fromPromise(store.changeDistrict(this.identifier, val))
       minAwait(fetcher).subscribe(
         function () { this.waiting = false }.bind(this),
         function (error) {
@@ -41,6 +42,11 @@ export default {
           console.error(error)
         }.bind(this)
       )
+    }
+  },
+  watch: {
+    bwk (newVal) {
+      this.value = newVal
     }
   }
 }
