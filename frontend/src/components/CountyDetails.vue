@@ -11,10 +11,12 @@
 
 <script>
 import MapOverlay from './MapOverlay'
+import closeActionMixin from '@/mixins/closeActionMixin'
 import {BWK_NAMES} from '@/helpers'
 export default {
   name: 'county-details',
   props: {district: {type: Object, required: true}},
+  mixins: [closeActionMixin],
   computed: {
     bezirk () {
       return BWK_NAMES[this.district.bwk]
