@@ -34,10 +34,6 @@ export class DistrictLayer {
       this._cb(undefined)
       return
     }
-    // uncomment the line below to make polygon editable.
-    // Warning: Performance issues, freezing > 20 secs even on fast CPU systems
-    // layer.pm.enable({draggable: false, allowSelfIntersection: false})
-
     this.reset()
     this._selectedLayer = layer
     layer.setStyle(this.config.emphazisedStyle.style(layer.feature))
