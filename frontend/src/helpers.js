@@ -24,6 +24,21 @@ export const PARTY_COLORS = {
   die_linke: '#CC008A'
 }
 
+export const BWK_NAMES = {
+  '075': 'Mitte',
+  '076': 'Pankow',
+  '077': 'Reinickendorf',
+  '078': 'Spandau',
+  '079': 'Steglitz/Zehlendorf',
+  '080': 'Charlottenburg/Wilmersdorf',
+  '081': 'Tempelhof/Schöneberg',
+  '082': 'Neukölln',
+  '083': 'Friedrichshain/Kreuzb.',
+  '084': 'Treptow/Köpenick',
+  '085': 'Marzahn/Hellersdorf',
+  '086': 'Lichtenberg'
+}
+
 export function minAwait (observable, timeout = 500) {
   const timeoutOb = Observable.timer(500)
   return Observable.forkJoin(observable, timeoutOb).map(arr => arr[0])

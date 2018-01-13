@@ -12,7 +12,7 @@
 
 <script>
 import {store} from '@/backend'
-import {minAwait} from '@/helpers'
+import {minAwait, BWK_NAMES} from '@/helpers'
 import {Observable} from 'rxjs/Observable'
 import 'rxjs/add/observable/fromPromise'
 export default {
@@ -24,20 +24,9 @@ export default {
       waiting: false,
       done: false,
       timeout: undefined,
-      items: [
-        {text: '075 - Mitte', value: '075'},
-        {text: '076 - Pankow', value: '076'},
-        {text: '077 - Reinickendorf', value: '077'},
-        {text: '078 - Spandau', value: '078'},
-        {text: '079 - Steglitz/Zehlendorf', value: '079'},
-        {text: '080 - Charlottenburg/Wilmersdorf', value: '080'},
-        {text: '081 - Tempelhof/Schöneberg', value: '081'},
-        {text: '082 - Neukölln', value: '082'},
-        {text: '083 - Friedrichshain/Kreuzb.', value: '083'},
-        {text: '084 - Treptow/Köpenick', value: '084'},
-        {text: '085 - Marzahn/Hellersdorf', value: '085'},
-        {text: '086 - Lichtenberg', value: '086'}
-      ]
+      items: Object.keys(BWK_NAMES).map(function (key) {
+        return {value: key, text: key + ' - ' + BWK_NAMES[key]}
+      })
     }
   },
   watch: {
