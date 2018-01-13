@@ -5,7 +5,7 @@
         Battle For Berlin
       </v-toolbar-title>
       <v-spacer />
-      <v-btn icon @click="resetDiff">
+      <v-btn icon @click="resetDiff" :disabled="count === 0">
         <v-icon>restore_page</v-icon>
       </v-btn>
       <v-btn @click="route = 'onboarding'" icon v-if="route === 'map'">
@@ -31,21 +31,27 @@
 <script>
 import Onboarding from './components/Onboarding'
 import LeafletMap from './components/LeafletMap'
-import {reset} from './backend'
+import {store} from './backend'
 export default {
   name: 'app',
   data () {
     return {
       route: 'onboarding',
-      districts: undefined
+      districts: undefined,
+      count: 0
     }
+  },
+  mounted () {
+    store.diffCount.subscribe(count => {
+      this.count = count
+    })
   },
   methods: {
     skipOnboarding () {
       this.route = 'map'
     },
     resetDiff () {
-      reset()
+      store.reset()
     }
   },
   components: {Onboarding, LeafletMap}
