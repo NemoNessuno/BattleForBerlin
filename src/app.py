@@ -2,7 +2,9 @@ from flask import Flask, render_template, jsonify, request
 
 from database.models import (
     MergedDistrict,
-    MergedDistrictDiff)
+    MergedDistrictDiff,
+    Diff
+    )
 
 from database.db_helper import (
     get_district_geojson,
@@ -11,6 +13,8 @@ from database.db_helper import (
     get_simplified_json,
     truncate_diffs
 )
+
+from database.db_handler import db_session
 
 app = Flask(__name__)
 
@@ -40,6 +44,9 @@ def reset():
     truncate_diffs()
     return jsonify({'msg': 'diffs deleted'})
 
+@app.route('/api/diff/count', methods=['GET'])
+def get_diff_count():
+    return jsonify({'count': int(db_session.query(Diff.bwk).count())})
 
 @app.route('/api/county/<countyid>')
 def simple_county(countyid):
