@@ -9,7 +9,6 @@
 
 <script>
   import L from 'leaflet'
-  import 'leaflet.pm'
   import DistrictDetails from './DistrictDetails'
   import {DistrictLayer} from '@/layers'
   import {store} from '@/backend'
