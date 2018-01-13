@@ -97,13 +97,6 @@ def truncate_diffs():
     db_session.commit()
 
 
-def get_results():
-    return {
-        'real': get_results_from_table(MergedDistrict),
-        'diff': get_results_from_table(MergedDistrictDiff)
-    }
-
-
 def get_results_from_table(table):
     query = db_session.query(
         table.bwk,
