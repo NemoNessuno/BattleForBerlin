@@ -61,7 +61,7 @@
       this.countyWrapper = new DistrictLayer()
       this.countyWrapper.updateDistricts(this.counties)
       this.countyWrapper.onSelection(function (values) {
-        this.selectDistrict(values.geometry.properties.bwk)
+        this.selectCounty(values.geometry.properties.bwk)
       }.bind(this))
       this.controls = L.control.layers(this.map)
       this.controls = L.control.layers({
