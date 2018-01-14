@@ -1,12 +1,12 @@
 <template>
 <v-dialog
-  v-model="visible"
+  v-model="gerryManderVisible"
   fullscreen
   transition="dialog-bottom-transition"
   :overlay="false">
   <v-card>
     <v-toolbar class="primary">
-      <v-btn icon @click.native="close">
+      <v-btn icon>
         <v-icon>close</v-icon>
       </v-btn>
       <v-toolbar-title>
@@ -25,19 +25,16 @@
 </template>
 
 <script>
-import closeActionMixin from '@/mixins/closeActionMixin'
 import Candidate from './Candidate'
+import {mapState, mapGetters} from 'vuex'
 export default {
   name: 'gerry-mander',
-  mixins: [closeActionMixin],
-  props: {
-    district: {type: Object, required: true},
-    visible: {type: Boolean, required: true}
-  },
   computed: {
+    ...mapState(['gerryManderVisible']),
+    ...mapGetters(['currentCounty']),
     candidates () {
-      Object.keys(this.district.candidates).map(function (party) {
-        return this.district.candidates[party]
+      Object.keys(this.currentCounty.candidates).map(function (party) {
+        return this.currentCounty.candidates[party]
       }.bind(this))
     }
   },

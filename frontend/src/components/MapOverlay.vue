@@ -29,12 +29,10 @@
 
 <script>
 import {maxProp} from '@/helpers'
-import closeActionMixin from '@/mixins/closeActionMixin'
 import StackedBarChart from './StackedBarChart'
 export default {
   mame: 'map-overlay',
   props: {result: {type: Object, required: true}},
-  mixins: [closeActionMixin],
   data () {
     return {
       headers: [
@@ -54,6 +52,11 @@ export default {
         {name: 'FDP', result: this.result.fdp, winner: this.winnner === 'fdp'},
         {name: 'Die Linke', result: this.result.die_linke, winner: this.winner === 'die_linke'}
       ]
+    }
+  },
+  methods: {
+    close () {
+      this.$emit('close')
     }
   },
   components: {StackedBarChart}
