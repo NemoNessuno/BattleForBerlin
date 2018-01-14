@@ -20,7 +20,8 @@
     </v-toolbar>
     <v-content>
       <onboarding v-if="route === 'onboarding'" @skip="skipOnboarding" />
-      <leaflet-map v-if="route === 'map'" />
+      <leaflet-map v-if="route === 'map'" :style="{height: mapHeight}" class="supermap" />
+      <gerry-mander v-if="currentCounty" />
     </v-content>
     <v-footer v-if="route !== 'map'">
       <span>&copy; 2017, S&ouml;ren Titze, Christian Windolf</span>
@@ -32,7 +33,7 @@
 import Onboarding from './components/Onboarding'
 import LeafletMap from './components/LeafletMap'
 import GerryMander from './components/GerryMander'
-import {mapState, mapActions} from 'vuex'
+import {mapState, mapActions, mapGetters} from 'vuex'
 export default {
   name: 'app',
   data () {
@@ -41,7 +42,15 @@ export default {
     }
   },
   computed: {
-    ...mapState(['diffCount'])
+    mapHeight () {
+      if (this.gerryManderVisible) {
+        return '0'
+      } else {
+        return 'calc(100vh - 70px)'
+      }
+    },
+    ...mapState(['diffCount', 'gerryManderVisible']),
+    ...mapGetters(['currentCounty'])
   },
   mounted () {
     this.loadDistricts()
@@ -62,4 +71,7 @@ export default {
 .github-link-img
   height: 1.5em
   width: 1.5em
+
+.supermap
+  transition: height 0.3s ease
 </style>

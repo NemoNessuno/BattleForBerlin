@@ -1,16 +1,11 @@
 <template>
-<v-dialog
-  v-model="gerryManderVisible"
-  fullscreen
-  transition="dialog-bottom-transition"
-  :overlay="false">
-  <v-card>
+  <div>
     <v-toolbar class="primary">
-      <v-btn icon>
+      <v-btn icon @click.native="setGerryManderVisible(false)">
         <v-icon>close</v-icon>
       </v-btn>
       <v-toolbar-title>
-        {{district.bwk}} - {{bezirk}}
+        {{currentCounty.bwk}} - {{bezirk}}
       </v-toolbar-title>
     </v-toolbar>
     <v-container grid-list-md>
@@ -19,25 +14,26 @@
         </candidate>
       </v-layout>
     </v-container>
-  </v-card>
-</v-dialog>
-
+  </div>
 </template>
 
 <script>
 import Candidate from './Candidate'
-import {mapState, mapGetters} from 'vuex'
+import {mapState, mapGetters, mapMutations} from 'vuex'
+import {BWK_NAMES} from '@/helpers'
 export default {
   name: 'gerry-mander',
   computed: {
     ...mapState(['gerryManderVisible']),
     ...mapGetters(['currentCounty']),
+    bezirk () { return BWK_NAMES[this.currentCounty.bwk] },
     candidates () {
-      Object.keys(this.currentCounty.candidates).map(function (party) {
+      return Object.keys(this.currentCounty.candidates).map(function (party) {
         return this.currentCounty.candidates[party]
       }.bind(this))
     }
   },
+  methods: mapMutations(['setGerryManderVisible']),
   components: {Candidate}
 }
 </script>

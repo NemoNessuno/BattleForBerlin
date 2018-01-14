@@ -2,11 +2,11 @@
   <v-flex md3>
     <v-card>
       <v-toolbar :style="{'background-color': partyColor}">
-        {{description.name}} ({{description.party}})
+        {{candidate.name}} ({{candidate.party}})
       </v-toolbar>
       <v-card-text>
         <v-avatar size="48px">
-          <img v-bind:src="description.image" alt="description.name" />
+          <img v-bind:src="candidate.image" alt="description.name" />
         </v-avatar>
       </v-card-text>
     </v-card>
@@ -22,7 +22,7 @@
     },
     computed: {
       partyColor () {
-        return PARTY_COLORS[this.description.party]
+        return PARTY_COLORS[this.candidate.party]
       }
     }
   }
