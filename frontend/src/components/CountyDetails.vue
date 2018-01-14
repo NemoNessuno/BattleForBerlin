@@ -1,27 +1,32 @@
 <template>
-  <map-overlay :result="district.result" @close="close">
-    <v-toolbar dark slot="title" card>
+  <map-overlay :result="currentDistrict.result" @close="unselectItem">
+    <v-toolbar dark slot="title" >
       <v-btn icon @click.native="close">
         <v-icon>close</v-icon>
       </v-btn>
-      <v-toolbar-title>{{district.bwk}} - {{bezirk}}</v-toolbar-title>
+      <v-toolbar-title>{{currentDistrict.bwk}} - {{bezirk}}</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn icon @click.native="dialog = true">
+        <v-icon>poll</v-icon>
+      </v-btn>
     </v-toolbar>
   </map-overlay>
 </template>
 
 <script>
 import MapOverlay from './MapOverlay'
-import closeActionMixin from '@/mixins/closeActionMixin'
+import GerryMander from './GerryMander'
 import {BWK_NAMES} from '@/helpers'
+import {mapGetters, mapMutations} from 'vuex'
 export default {
   name: 'county-details',
-  props: {district: {type: Object, required: true}},
-  mixins: [closeActionMixin],
   computed: {
     bezirk () {
-      return BWK_NAMES[this.district.bwk]
-    }
+      return BWK_NAMES[this.currentDistrict.bwk]
+    },
+    ...mapGetters(['currentDistrict'])
   },
-  components: {MapOverlay}
+  methods: mapMutations(['unselectItem']),
+  components: {MapOverlay, GerryMander}
 }
 </script>

@@ -1,13 +1,11 @@
 <template>
   <div id="map" name="slide-in">
     <district-details
-      v-if="selectedDistrict"
-      @close="unselect"
-      :district="selectedDistrict" />
+      v-if="currentDistrict"
+      @close="unselectItem" />
     <county-details
-      v-if="selectedCounty"
-      @close="unselect"
-      :district="selectedCounty" />
+      v-if="currentCounty"
+      @close="unselectItem" />
   </div>
 </template>
 
@@ -16,7 +14,7 @@
   import DistrictDetails from './DistrictDetails'
   import CountyDetails from './CountyDetails'
   import {DistrictLayer} from '@/layers'
-  import {store} from '@/backend'
+  import {mapState, mapMutations, mapGetters} from 'vuex'
   const tileLayerAPI = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}'
   const accessToken = 'pk.eyJ1IjoibmVtb25lc3N1bm8iLCJhIjoiY2phM3FvbGRkM2x6MTM0cGN1M3h6dHcyYiJ9.Gie5hDNbis60D17BFvH31Q'
   export default {
@@ -25,10 +23,13 @@
       return {
         map: undefined,
         controls: undefined,
-        selectedDistrict: undefined,
-        selectedCounty: undefined,
-        mergedWrapper: undefined
+        mergedWrapper: undefined,
+        countyWrapper: undefined
       }
+    },
+    computed: {
+      ...mapState(['districts, counties']),
+      ...mapGetters(['currentDistrict', 'currentCounty'])
     },
     mounted () {
       const tileLayer = L.tileLayer(tileLayerAPI, {
@@ -53,26 +54,14 @@
         layers: [tileLayer]
       })
       this.mergedWrapper = new DistrictLayer()
-      this.mergedWrapper.setDistricts(store.districts)
+      this.mergedWrapper.updateDistricts(this.districts)
       this.mergedWrapper.onSelection(function (values) {
-        if (values) {
-          this.selectedDistrict = values.geometry.properties
-          this.selectedCounty = undefined
-        } else {
-          this.selectedDistrict = undefined
-          this.selectedCounty = undefined
-        }
+        this.selectDistrict(values.geometry.properties.identifier)
       }.bind(this))
       this.countyWrapper = new DistrictLayer()
-      this.countyWrapper.setDistricts(store.counties)
+      this.countyWrapper.updateDistricts(this.counties)
       this.countyWrapper.onSelection(function (values) {
-        if (values) {
-          this.selectedDistrict = undefined
-          this.selectedCounty = values.geometry.properties
-        } else {
-          this.selectedDistrict = undefined
-          this.selectedCounty = undefined
-        }
+        this.selectDistrict(values.geometry.properties.bwk)
       }.bind(this))
       this.controls = L.control.layers(this.map)
       this.controls = L.control.layers({
@@ -81,14 +70,7 @@
       }, {}, {collapsed: false}).addTo(this.map)
       this.mergedWrapper.layers.addTo(this.map)
     },
-    methods: {
-      unselect () {
-        this.selectedDistrict = undefined
-        this.selectedCounty = undefined
-        this.mergedWrapper.reset()
-        this.countyWrapper.reset()
-      }
-    },
+    methods: mapMutations(['selectDistrict', 'selectCounty', 'unselectItem']),
     components: {DistrictDetails, CountyDetails}
   }
 </script>

@@ -5,7 +5,7 @@
         Battle For Berlin
       </v-toolbar-title>
       <v-spacer />
-      <v-btn icon @click="resetDiff" :disabled="count === 0">
+      <v-btn icon @click="reset" :disabled="diffCount === 0">
         <v-icon>restore_page</v-icon>
       </v-btn>
       <v-btn @click="route = 'onboarding'" icon v-if="route === 'map'">
@@ -31,30 +31,30 @@
 <script>
 import Onboarding from './components/Onboarding'
 import LeafletMap from './components/LeafletMap'
-import {store} from './backend'
+import GerryMander from './components/GerryMander'
+import {mapState, mapActions} from 'vuex'
 export default {
   name: 'app',
   data () {
     return {
-      route: 'onboarding',
-      districts: undefined,
-      count: 0
+      route: 'onboarding'
     }
   },
+  computed: {
+    ...mapState(['diffCount'])
+  },
   mounted () {
-    store.diffCount.subscribe(count => {
-      this.count = count
-    })
+    this.loadDistricts()
+    this.loadCounties()
+    this.loadDiffCount()
   },
   methods: {
     skipOnboarding () {
       this.route = 'map'
     },
-    resetDiff () {
-      store.reset()
-    }
+    ...mapActions(['reset', 'loadCounties', 'loadDistricts', 'loadDiffCount'])
   },
-  components: {Onboarding, LeafletMap}
+  components: {Onboarding, LeafletMap, GerryMander}
 }
 </script>
 

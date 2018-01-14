@@ -12,21 +12,22 @@ export class DistrictLayer {
     this.config.emphazisedStyle = this.config.emphazisedStyle || {
       style () { return {color: '#0078FF', weight: 1, opacity: 0.7} }
     }
+    this.layers = L.layerGroup([])
   }
 
-  setDistricts (districts$) {
-    this.layers = L.layerGroup([])
+  updateDistricts (districts) {
+    if (!districts) {
+      return
+    }
     const $this = this
-    this.subscription = districts$.subscribe(districts => {
-      this.layers.clearLayers()
-      districts.forEach(function (district) {
-        const layer = L.geoJSON(district, this.config.defaultStyle)
-        layer.on('click', function ({layer}) {
-          $this.selectDistrict.bind($this)(layer)
-        })
-        this.layers.addLayer(layer)
-      }.bind(this))
-    })
+    this.layers.clearLayers()
+    districts.forEach(function (district) {
+      const layer = L.geoJSON(district, this.config.defaultStyle)
+      layer.on('click', function ({layer}) {
+        $this.selectDistrict.bind($this)(layer)
+      })
+      this.layers.addLayer(layer)
+    }.bind(this))
   }
 
   selectDistrict (layer) {

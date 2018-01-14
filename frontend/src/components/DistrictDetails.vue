@@ -17,24 +17,25 @@
 </template>
 
 <script>
-  import closeActionMixin from '@/mixins/closeActionMixin'
   import MapOverlay from './MapOverlay'
   import SelectBwk from './SelectBWK'
+  import {mapGetters, mapMutations} from 'vuex'
   export default {
     name: 'DistrictDetails',
     props: {
       district: {type: Object, required: true}
     },
-    mixins: [closeActionMixin],
     data () {
       return {
         dialog: false
       }
     },
     computed: {
-      bwk () { return this.district.bwk || '' },
-      districtId () { return this.district.identifier || '' }
+      bwk () { return this.currentDistrict.bwk || '' },
+      districtId () { return this.currentDistrict.identifier || '' },
+      ...mapGetters(['currentDistrict'])
     },
+    methods: mapMutations(['unselectItem']),
     components: {MapOverlay, SelectBwk}
   }
 </script>

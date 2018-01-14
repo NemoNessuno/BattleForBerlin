@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import {store} from '@/backend'
 import {minAwait, BWK_NAMES} from '@/helpers'
 import {Observable} from 'rxjs/Observable'
+import {mapActions} from 'vuex'
 import 'rxjs/add/observable/fromPromise'
 export default {
   name: 'select-bwk',
@@ -31,9 +31,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['changeDistrict']),
     changeBwk (val) {
       this.waiting = true
-      const fetcher = Observable.fromPromise(store.changeDistrict(this.identifier, val))
+      const fetcher = Observable.fromPromise(this.changeDistrict({identifier: this.identifier, bwk: val}))
       minAwait(fetcher).subscribe(
         function () { this.waiting = false }.bind(this),
         function (error) {
