@@ -4,7 +4,7 @@ import mutations from './mutations'
 
 const state = {
   counties: undefined,
-  countyPropes: undefined,
+  countyProps: undefined,
   districts: undefined,
   districtProps: undefined,
   diffCount: 0,
