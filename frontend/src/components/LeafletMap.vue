@@ -56,12 +56,20 @@
       this.mergedWrapper = new DistrictLayer()
       this.mergedWrapper.updateDistricts(this.districts)
       this.mergedWrapper.onSelection(function (values) {
-        this.selectDistrict(values.geometry.properties.identifier)
+        if (!values) {
+          this.unselectItem()
+        } else {
+          this.selectDistrict(values.geometry.properties.identifier)
+        }
       }.bind(this))
       this.countyWrapper = new DistrictLayer()
       this.countyWrapper.updateDistricts(this.counties)
       this.countyWrapper.onSelection(function (values) {
-        this.selectCounty(values.geometry.properties.bwk)
+        if (!values) {
+          this.unselectItem()
+        } else {
+          this.selectCounty(values.geometry.properties.bwk)
+        }
       }.bind(this))
       this.controls = L.control.layers(this.map)
       this.controls = L.control.layers({
