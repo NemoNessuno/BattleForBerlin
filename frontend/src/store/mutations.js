@@ -17,8 +17,8 @@ export default {
     state.diffCount = count
   },
   addDiff (state, diff) {
-    state.diff = state.diff.concat([diff])
-    state.diffCount = state.diff.length
+    state.diffs = state.diffs.concat([diff])
+    state.diffCount = state.diffs.length
   },
   selectDistrict (state, identifier) {
     state.selectedCounty = undefined

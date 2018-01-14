@@ -32,8 +32,8 @@ export default {
         return resp
       })
   },
-  changeDistrict ({commit, dispatch}, {districtId, bwk}) {
-    const body = JSON.stringify({identifier: districtId, bwk})
+  changeDistrict ({commit, dispatch}, {identifier, bwk}) {
+    const body = JSON.stringify({identifier, bwk})
     const headers = new Headers({
       'Content-Type': 'application/json',
       'Accept': 'application/json, text/plain, */*'
@@ -41,7 +41,7 @@ export default {
     return fetch('/api/diff/create', {method: 'post', body, headers})
       .then(resp => resp.json())
       .then(resp => {
-        commit('addDiff', {districtId, bwk})
+        commit('addDiff', {identifier, bwk})
         return resp
       })
   }
