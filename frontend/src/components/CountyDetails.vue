@@ -1,10 +1,10 @@
 <template>
-  <map-overlay :result="currentDistrict.result" @close="unselectItem">
+  <map-overlay :result="currentCounty.result" @close="unselectItem">
     <v-toolbar dark slot="title" >
       <v-btn icon @click.native="close">
         <v-icon>close</v-icon>
       </v-btn>
-      <v-toolbar-title>{{currentDistrict.bwk}} - {{bezirk}}</v-toolbar-title>
+      <v-toolbar-title>{{currentCounty.bwk}} - {{bezirk}}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn icon @click.native="dialog = true">
         <v-icon>poll</v-icon>
@@ -22,9 +22,9 @@ export default {
   name: 'county-details',
   computed: {
     bezirk () {
-      return BWK_NAMES[this.currentDistrict.bwk]
+      return BWK_NAMES[this.currentCounty.bwk]
     },
-    ...mapGetters(['currentDistrict'])
+    ...mapGetters(['currentCounty'])
   },
   methods: mapMutations(['unselectItem']),
   components: {MapOverlay, GerryMander}
