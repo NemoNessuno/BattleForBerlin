@@ -4,9 +4,11 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import App from './App'
 import {store} from './backend'
+import districtNameMixin from './mixins/districtNameMixin'
 
 Vue.use(Vuetify)
 Vue.config.productionTip = false
+Vue.mixin(districtNameMixin)
 store.init()
 
 /* eslint-disable no-new */

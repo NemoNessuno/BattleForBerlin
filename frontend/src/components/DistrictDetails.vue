@@ -20,7 +20,6 @@
   import closeActionMixin from '@/mixins/closeActionMixin'
   import MapOverlay from './MapOverlay'
   import SelectBwk from './SelectBWK'
-  import {BWK_NAMES} from '@/helpers'
   export default {
     name: 'DistrictDetails',
     props: {
@@ -34,8 +33,7 @@
     },
     computed: {
       bwk () { return this.district.bwk || '' },
-      districtId () { return this.district.identifier || '' },
-      bezirk () { return BWK_NAMES[this.district.bwk] }
+      districtId () { return this.district.identifier || '' }
     },
     components: {MapOverlay, SelectBwk}
   }
