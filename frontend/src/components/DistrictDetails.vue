@@ -1,7 +1,7 @@
 <template>
   <map-overlay :result="district.result" @close="close">
     <v-toolbar slot="title" extended dense card>
-      <v-btn icon @click.native="close">
+      <v-btn icon @click.native="unselectItem">
         <v-icon>close</v-icon>
       </v-btn>
       <v-toolbar-title>Wahlbezirk {{districtId}}</v-toolbar-title>
