@@ -24,7 +24,6 @@ export default {
       value: this.bwk,
       waiting: false,
       done: false,
-      timeout: undefined,
       items: Object.keys(BWK_NAMES).map(function (key) {
         return {value: key, text: key + ' - ' + BWK_NAMES[key]}
       })
