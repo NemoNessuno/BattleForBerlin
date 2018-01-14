@@ -31,5 +31,8 @@ export default {
   unselectItem (state) {
     state.selectedCounty = undefined
     state.selectedDistrict = undefined
+  },
+  setGerryManderVisible (state, visible) {
+    state.gerryManderVisible = visible
   }
 }

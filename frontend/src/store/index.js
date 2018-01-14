@@ -10,7 +10,8 @@ const state = {
   diffCount: 0,
   diffs: [],
   selectedDistrict: undefined,
-  selectedCounty: undefined
+  selectedCounty: undefined,
+  gerryManderVisible: false
 }
 
 export default {
