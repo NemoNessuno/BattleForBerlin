@@ -57,7 +57,7 @@ def get_county_geojson():
         geojson = json.loads(geom)
         geojson['properties'] = {
                 'bwk': bwk,
-                'candidates': {candidate.party: candidate.get_json() for candidate in candidates},
+                'candidates': {candidate.party_key(): candidate.get_json() for candidate in candidates},
                 'result': {
                     'cdu': int(cdu),
                     'spd': int(spd),

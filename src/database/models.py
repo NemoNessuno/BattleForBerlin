@@ -6,7 +6,6 @@ from sqlalchemy import Column, Integer, String
 from db_handler import Base, db_session
 from src.database.data_extraction_helper import get_description_json
 
-
 class District:
     identifier = Column(String(5), unique=True, primary_key=True)
     bezname = Column(String(200))
@@ -104,13 +103,20 @@ class Candidate(Base):
     def get_json(self):
         return {
             "name": self.get_full_name(),
-            "party": self.party,
+            "party": self.party_key(),
             "list index": self.liste,
             "bwk": self.bwk,
             "image": self.img_url,
             "profile_url": self.profile_url,
             "description": self.description_url
         }
+
+    def party_key(self):
+        if self.party == 'GRÜNE':
+            return 'gruene'
+        if self.party == 'DIE LINKE':
+            return 'die_linke'
+        return self.party.lower()
 
     def get_description(self):
         return get_description_json(self.description_url)
