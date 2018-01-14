@@ -1,5 +1,5 @@
 <template>
-  <map-overlay :result="currentDistrict.result" @close="close">
+  <map-overlay :result="currentDistrict.result" @close="unselectItem">
     <v-toolbar slot="title" extended dense card>
       <v-btn icon @click.native="unselectItem">
         <v-icon>close</v-icon>
@@ -23,9 +23,6 @@
   import {BWK_NAMES} from '@/helpers'
   export default {
     name: 'DistrictDetails',
-    props: {
-      district: {type: Object, required: true}
-    },
     data () {
       return {
         dialog: false
