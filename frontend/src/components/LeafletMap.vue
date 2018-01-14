@@ -28,7 +28,7 @@
       }
     },
     computed: {
-      ...mapState(['districts, counties']),
+      ...mapState(['districts', 'counties']),
       ...mapGetters(['currentDistrict', 'currentCounty'])
     },
     mounted () {
@@ -71,6 +71,14 @@
       this.mergedWrapper.layers.addTo(this.map)
     },
     methods: mapMutations(['selectDistrict', 'selectCounty', 'unselectItem']),
+    watch: {
+      districts (newVal) {
+        this.mergedWrapper.updateDistricts(newVal)
+      },
+      counties (newVal) {
+        this.countyWrapper.updateDistricts(newVal)
+      }
+    },
     components: {DistrictDetails, CountyDetails}
   }
 </script>
