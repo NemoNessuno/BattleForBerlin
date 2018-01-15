@@ -1,13 +1,16 @@
 <template>
   <v-flex md3>
     <v-card>
-      <v-toolbar :style="{'background-color': partyColor}">
-        {{candidate.name}} ({{candidate.party}})
+      <v-toolbar :class="candidate.party">
+        <v-toolbar-title>
+          {{partyTitle }}
+        </v-toolbar-title>
       </v-toolbar>
-      <v-card-text>
-        <v-avatar size="48px">
-          <img v-bind:src="candidate.image" alt="description.name" />
+      <v-card-text class="white" style="color: black">
+        <v-avatar size="64px">
+          <img v-bind:src="candidate.image" alt="candidate.name" />
         </v-avatar>
+          {{candidate.name}}
       </v-card-text>
     </v-card>
   </v-flex>
@@ -15,6 +18,14 @@
 
 <script>
   import {PARTY_COLORS} from '@/helpers'
+  const PARTY_NAMES = {
+    cdu: 'CDU',
+    spd: 'SPD',
+    gruene: 'Bündnis 90/Die Grünen',
+    die_linke: 'Die Linke',
+    afd: 'AfD',
+    fdp: 'FDP'
+  }
   export default {
     name: 'candidate',
     props: {
@@ -23,6 +34,9 @@
     computed: {
       partyColor () {
         return PARTY_COLORS[this.candidate.party]
+      },
+      partyTitle () {
+        return PARTY_NAMES[this.candidate.party]
       }
     }
   }

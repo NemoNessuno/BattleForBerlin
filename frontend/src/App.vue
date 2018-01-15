@@ -74,4 +74,18 @@ export default {
 
 .supermap
   transition: height 0.3s ease
+
+.toolbar.afd
+  background-color: #2B9FDB
+.toolbar.gruene 
+  background-color: #4E8935
+.toolbar.spd 
+  background-color: #DB0E2A
+.toolbar.cdu 
+  background-color: #000000
+.toolbar.fdp 
+  color: #FB0078
+  background-color: #FEE943
+.toolbar.die_linke
+  background-color: #CC008A
 </style>
