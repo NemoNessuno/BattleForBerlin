@@ -1,7 +1,7 @@
 <template>
   <map-overlay :result="currentCounty.result" @close="unselectItem">
     <v-toolbar dark slot="title" >
-      <v-btn icon @click.native="close">
+      <v-btn icon @click.native="unselectItem">
         <v-icon>close</v-icon>
       </v-btn>
       <v-toolbar-title>{{currentCounty.bwk}} - {{bezirk}}</v-toolbar-title>
