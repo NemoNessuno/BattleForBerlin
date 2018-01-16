@@ -42,6 +42,7 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="sass" scoped>
+img 
+  object-fit: contain
 </style>
