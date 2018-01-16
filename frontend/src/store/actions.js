@@ -42,6 +42,7 @@ export default {
       .then(resp => resp.json())
       .then(resp => {
         commit('addDiff', {identifier, bwk})
+        dispatch('loadCounties')
         return resp
       })
   }
