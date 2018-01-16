@@ -1,16 +1,23 @@
 <template>
-  <v-flex md3>
+  <v-flex md4>
     <v-card>
       <v-toolbar :class="candidate.party">
         <v-toolbar-title>
           {{partyTitle }}
         </v-toolbar-title>
       </v-toolbar>
-      <v-card-text class="white" style="color: black">
-        <v-avatar size="64px">
-          <img v-bind:src="candidate.image" alt="candidate.name" />
-        </v-avatar>
-          {{candidate.name}}
+      <v-card-text class="white black--text" style="color: black">
+        <v-list class="white" style="color: black">
+          <v-list-tile avatar>
+            <v-list-tile-avatar>
+              <img v-bind:src="candidate.image" alt="candidate.name" />
+            </v-list-tile-avatar>
+            <v-list-tile-content style="color: black">
+              {{candidate.name}}
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+          {{questions}} {{answers}}
       </v-card-text>
     </v-card>
   </v-flex>
@@ -30,6 +37,29 @@
     name: 'candidate',
     props: {
       candidate: {type: Object, required: true}
+    },
+    data () {
+      return {
+        questions: 0,
+        answers: 0,
+        error: false
+      }
+    },
+    mounted () {
+      const $this = this
+      if (this.candidate.description && this.candidate.name === 'Frank Henkel') {
+        let desc = this.candidate.description.replace('https://www.abgeordnetenwatch.de/api/parliament/bundestag/profile/', '')
+        desc = desc.replace('/profile.json', '')
+        fetch('/api/candidate/' + desc)
+          .then(resp => resp.json())
+          .then(({profile}) => {
+            $this.questions = profile.meta.questions
+            $this.answers = profile.meta.answers
+          })
+          .catch((error) => {
+            $this.error = true
+          })
+      }
     },
     computed: {
       partyColor () {
