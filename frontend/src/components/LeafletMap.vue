@@ -1,5 +1,5 @@
 <template>
-  <div id="map" name="slide-in">
+  <div id="map" name="slide-in" ref="map">
     <district-details
       v-if="currentDistrict"
       @close="unselectItem" />
@@ -77,6 +77,11 @@
         'Wahlkreise': this.countyWrapper.layers
       }, {}, {collapsed: false}).addTo(this.map)
       this.mergedWrapper.layers.addTo(this.map)
+      this.$nextTick(() => {
+        this.$refs.map.nativeElement.addEventListener('transitionend', () => {
+          this.map.invalidateSize()
+        })
+      })
     },
     methods: mapMutations(['selectDistrict', 'selectCounty', 'unselectItem']),
     watch: {
