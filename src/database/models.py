@@ -55,7 +55,7 @@ class District:
         }
 
     def __repr__(self):
-        return '<District %s %s>' % (self.identifier, self.geom)
+        return '<District %s bwk: %s result: %s>' % (self.identifier, self.bwk, self.get_result_dict())
 
 
 class Neighbours(Base):
@@ -70,6 +70,13 @@ class Neighbours(Base):
 
 class MergedDistrict(District, Base):
     __tablename__ = 'merged_districts'
+    neighbours = None
+
+    def fill_neighbours(self):
+        neighbour = Neighbours.query.filter(Neighbours.identifier == self.identifier).first()
+        self.neighbours = []
+        for id in neighbour.neighbours.replace(' ', '').split(','):
+            self.neighbours.append(MergedDistrict.query.filter(MergedDistrict.identifier == id).first())
 
 
 class MergedDistrictDiff(District, Base):
