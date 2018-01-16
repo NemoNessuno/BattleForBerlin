@@ -77,8 +77,8 @@
         'Wahlkreise': this.countyWrapper.layers
       }, {}, {collapsed: false}).addTo(this.map)
       this.mergedWrapper.layers.addTo(this.map)
-      this.$nextTick(() => {
-        this.$refs.map.nativeElement.addEventListener('transitionend', () => {
+      this.$nextTick().then(() => {
+        this.$refs.map.addEventListener('transitionend', () => {
           this.map.invalidateSize()
         })
       })
