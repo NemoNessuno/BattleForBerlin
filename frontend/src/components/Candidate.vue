@@ -44,5 +44,5 @@
 
 <style lang="sass" scoped>
 img 
-  object-fit: contain
+  object-fit: cover
 </style>
