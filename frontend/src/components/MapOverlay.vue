@@ -71,16 +71,14 @@ h3.headline, h4.subheading
   font-weight: bold
 
 .detail-wrapper
-  position: absolute
-  left: 1em
+  position: relative
+  margin-left: 10px
+  margin-top: 10pt
+  float: left
   width: 30em
   z-index: 1000
-  @media(min-height: 800px)
-    top: 10em
-  @media(max-height: 800px)
-    top: 8em
-    height: 37em
-    overflow-y: scroll
+  max-height: calc(100vh - 100px)
+  overflow-y: auto
   .overlay-title
     padding: 0
 </style>

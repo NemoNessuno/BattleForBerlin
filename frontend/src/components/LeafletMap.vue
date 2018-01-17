@@ -51,6 +51,7 @@
         zoom: 10,
         maxzoom: 13,
         doubleClickZoom: false,
+        zoomControl: false,
         layers: [tileLayer]
       })
       this.mergedWrapper = new DistrictLayer()
