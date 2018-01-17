@@ -5,6 +5,11 @@
         <v-toolbar-title>
           {{partyTitle }}
         </v-toolbar-title>
+        <v-spacer>
+        </v-spacer>
+          <v-btn icon :class="candidate.party" :href="candidate.profile_url" tag="a">
+            <v-icon>open_in_new</v-icon>
+          </v-btn>
       </v-toolbar>
       <v-card-text class="white black--text" style="color: black">
         <v-list class="white" style="color: black">
@@ -12,7 +17,7 @@
             <v-list-tile-avatar>
               <img v-bind:src="candidate.image" alt="candidate.name" />
             </v-list-tile-avatar>
-            <v-list-tile-content style="color: black">
+            <v-list-tile-content style="color: black" class="headline">
               {{candidate.name}}
             </v-list-tile-content>
           </v-list-tile>
@@ -57,6 +62,7 @@
             $this.answers = profile.meta.answers
           })
           .catch((error) => {
+            console.error(error)
             $this.error = true
           })
       }
