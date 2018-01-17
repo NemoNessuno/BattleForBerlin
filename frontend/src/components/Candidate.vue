@@ -7,9 +7,18 @@
         </v-toolbar-title>
         <v-spacer>
         </v-spacer>
-          <v-btn icon :class="candidate.party" :href="candidate.profile_url" tag="a">
+        <v-tooltip bottom>
+          <v-btn
+            icon
+            :class="candidate.party"
+            :href="candidate.profile_url"
+            tag="a"
+            slot="activator"
+            target="_blank">
             <v-icon>open_in_new</v-icon>
           </v-btn>
+          <span>Profil auf Abgeordnetenwatch</span>
+        </v-tooltip>
       </v-toolbar>
       <v-card-text class="white black--text" style="color: black">
         <v-list class="white" style="color: black">
