@@ -20,6 +20,15 @@
       <h1 class="display-2 fu-lightblue show bfb">
         A Gerrymandering Tool
       </h1>
+      <div class="button-wrapper" >
+        <v-btn raised class="blue elevation-4 welcome-button" large>
+          Start
+        </v-btn>
+        <v-btn raised light large class="elevation-4 welcome-button">
+          Gerrymandering?
+          <v-icon right>info</v-icon>
+        </v-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -36,6 +45,13 @@
     opacity: 0
   to
     opacity: 1
+
+@keyframes flyin
+  from
+    transform: translateX(70vw)
+  to
+    transform: translateX(0)
+
 div.welcome-wrapper
   background-color: white
   width: 100%
@@ -79,4 +95,13 @@ h1.fu-lightblue
 h1.fu-darkblue
   color: #003366
 
+.welcome-button
+  width: 14em
+
+.button-wrapper
+  animation: flyin 0.3s 1s
+  animation-timing-function: ease
+  animation-fill-mode: backwards
+  text-align: center
+  margin-top: 2em
 </style>
