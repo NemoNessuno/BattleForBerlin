@@ -5,3 +5,5 @@ psycopg2==2.7.3
 urllib3==1.22
 beautifulsoup4==4.6.0
 pandas==0.21.0
+requests==2.18.4
+fake-useragent==0.1.8
