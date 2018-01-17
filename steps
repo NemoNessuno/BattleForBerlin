@@ -63,3 +63,22 @@ ST_isValid(geom2);) <- Tu das lieber nicht das macht die shapes kaputt!
     SET neighbours = neighbours.neighbours
     FROM neighbours
     WHERE neighbours.identifier = identifier
+ 9. Algorithmus Idee:
+    Eingabe: BWK, Designierter Sieger (Partei), Derzeitiges Ergebnis (inklusive derzeitiger Diffs)
+    Ausgabe: Liste von Schritten bis der designierte Sieger im BWK gewinnt oder
+             leere Liste wenn unmöglich
+    1. Entferne alle derzeitigen Bezirke des BWK
+    Solange Anzahl Schritte < 10000 oder kein Kandidat
+     4. Überprüfe ob derzeitiger Sieger = designierter Sieger
+       Ja:
+         Solange es Bezirke gibt, die keinem Wahlkreis zugeordnet sind:
+           
+           
+      Nein: 
+        1. Ermittle "Randbezirke" und deren Nachbarn ausserhalb des BWKs (Randbezirk = Bezirk,
+           der mindestens einen Nachbarn hat, der nicht zum BWK gehört) als Kandidatenliste
+        2. Sortiere Kandidatenliste nach dem größten positiven Delta 
+        3. Finde Kandidaten der keine Auswirkung auf Ergebnisse der anderen
+           Wahlbezirke hat, wenn es keinen gibt nimm den ersten Kandidaten
+        4. Trage Schritt (Hinzufügen oder Entfernen von Kandidat) in die Ergebnisliste ein 
+

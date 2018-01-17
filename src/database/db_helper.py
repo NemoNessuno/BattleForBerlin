@@ -21,30 +21,8 @@ def get_district_geojson(district):
 
     return geojsons
 
-def get_county_geojson():
-#    l_query = db_session.query(
-#        LetterDistrict.bwk,
-#        functions.ST_AsGeoJSON(functions.ST_Union(LetterDistrict.geom)).label("geom"),
-#        *sum_party_results(LetterDistrict)
-#    ).group_by(LetterDistrict.bwk)
-#
-#    u_query = db_session.query(
-#        UrnDistrict.bwk,
-#        *sum_party_results(UrnDistrict)
-#    ).group_by(UrnDistrict.bwk)
-#
-#    u_results = u_query.all()
-#    u_dict = {r[0]: r for r in u_results}
-#    geojsons = []
-#    for row in l_query.all():
-#        geojson = json.loads(row.geom)
-#        u_result = u_dict[row.bwk]
-#        geojson["properties"] = {
-#            "bwk": row.bwk,
-#            "u_result": dict((party, getattr(u_result, party)) for party in PARTIES),
-#            "l_result": dict((party, getattr(row, party)) for party in PARTIES)
-#        }
 
+def get_county_geojson():
     query = db_session.query(
         MergedDistrictDiff.bwk,
         functions.ST_AsGeoJSON(functions.ST_Union(functions.ST_Transform(MergedDistrictDiff.geom, 4326))).label("geom"),
