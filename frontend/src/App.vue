@@ -22,9 +22,9 @@
       <!--
       <onboarding v-if="route === 'onboarding'" @skip="skipOnboarding" />
       -->
-      <welcome></welcome>
-      <leaflet-map v-if="route === 'map'" :style="{height: mapHeight}" class="supermap" />
-      <gerry-mander v-if="currentCounty" />
+      <leaflet-map :style="{height: mapHeight}" class="supermap" />
+      <welcome v-if="route === 'welcome'"></welcome>
+      <gerry-mander v-if="route === 'gerrymander'" />
     </v-content>
     <v-footer v-if="route !== 'map'">
       <span>&copy; 2017, S&ouml;ren Titze, Christian Windolf</span>
@@ -40,20 +40,15 @@ import Welcome from './components/Welcome'
 import {mapState, mapActions, mapGetters} from 'vuex'
 export default {
   name: 'app',
-  data () {
-    return {
-      route: 'onboarding'
-    }
-  },
   computed: {
     mapHeight () {
-      if (this.gerryManderVisible) {
-        return '0'
-      } else {
+      if (this.route === 'map') {
         return 'calc(100vh - 70px)'
+      } else {
+        return '0'
       }
     },
-    ...mapState(['diffCount', 'gerryManderVisible']),
+    ...mapState(['diffCount', 'gerryManderVisible', 'route']),
     ...mapGetters(['currentCounty'])
   },
   mounted () {

@@ -11,7 +11,8 @@ const state = {
   diffs: [],
   selectedDistrict: undefined,
   selectedCounty: undefined,
-  gerryManderVisible: false
+  gerryManderVisible: false,
+  route: 'welcome'
 }
 
 export default {

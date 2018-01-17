@@ -21,10 +21,10 @@
         A Gerrymandering Tool
       </h1>
       <div class="button-wrapper" >
-        <v-btn raised class="blue elevation-4 welcome-button" large>
+        <v-btn raised class="blue elevation-4 welcome-button" large @click.native="goToMap">
           Start
         </v-btn>
-        <v-btn raised light large class="elevation-4 welcome-button">
+        <v-btn raised light large class="elevation-4 welcome-button" @click.native="goToAbout">
           Gerrymandering?
           <v-icon right>info</v-icon>
         </v-btn>
@@ -34,8 +34,10 @@
 </template>
 
 <script>
+  import { mapMutations } from 'vuex'
   export default {
-    name: 'welcome'
+    name: 'welcome',
+    methods: mapMutations(['goToMap', 'goToAbout'])
   }
 </script>
 
@@ -57,6 +59,7 @@ div.welcome-wrapper
   width: 100%
   display: flex
   padding: 1em
+  height: calc(100vh - 100px)
 div.title-wrapper
   padding-top: 50px
 div.svg-wrapper

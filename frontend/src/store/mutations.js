@@ -34,5 +34,14 @@ export default {
   },
   setGerryManderVisible (state, visible) {
     state.gerryManderVisible = visible
+  },
+  goToMap (state) {
+    state.route = 'map'
+  },
+  goToGerryMander (state) {
+    state.route = 'gerrymander'
+  },
+  goToAbout (state) {
+    state.route = 'about'
   }
 }
