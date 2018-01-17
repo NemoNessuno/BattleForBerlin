@@ -67,6 +67,9 @@ export default {
 </script>
 
 <style lang="sass">
+html
+  overflow-y: hidden
+
 .github-link-img
   height: 1.5em
   width: 1.5em
@@ -87,4 +90,10 @@ export default {
   background-color: #FEE943
 .toolbar.die_linke, .btn.die_linke
   background-color: #CC008A
+
+.leaflet-control-layers, .application .leaflet-control-zoom a
+  background-color: #444444
+  color: white
+  form.leaflet-control-layers-scrollbar
+    overflow-y: hidden
 </style>
