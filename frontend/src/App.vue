@@ -19,7 +19,10 @@
       </v-btn>
     </v-toolbar>
     <v-content>
+      <!--
       <onboarding v-if="route === 'onboarding'" @skip="skipOnboarding" />
+      -->
+      <welcome></welcome>
       <leaflet-map v-if="route === 'map'" :style="{height: mapHeight}" class="supermap" />
       <gerry-mander v-if="currentCounty" />
     </v-content>
@@ -33,6 +36,7 @@
 import Onboarding from './components/Onboarding'
 import LeafletMap from './components/LeafletMap'
 import GerryMander from './components/GerryMander'
+import Welcome from './components/Welcome'
 import {mapState, mapActions, mapGetters} from 'vuex'
 export default {
   name: 'app',
@@ -63,7 +67,7 @@ export default {
     },
     ...mapActions(['reset', 'loadCounties', 'loadDistricts', 'loadDiffCount'])
   },
-  components: {Onboarding, LeafletMap, GerryMander}
+  components: {Onboarding, LeafletMap, GerryMander, Welcome}
 }
 </script>
 
