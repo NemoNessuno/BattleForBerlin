@@ -28,7 +28,9 @@ export default {
     bezirk () { return BWK_NAMES[this.currentCounty.bwk] },
     candidates () {
       return Object.keys(this.currentCounty.candidates).map(function (party) {
-        return this.currentCounty.candidates[party]
+        const candidate = this.currentCounty.candidates[party]
+        candidate.votes = this.currentCounty.result[party]
+        return candidate
       }.bind(this))
     }
   },
