@@ -1,22 +1,19 @@
 <template>
-<div class="bar-wrapper"><div
-:style="cdu" class="party-result"
-/><div
-:style="spd"
-class="party-result" /><div
-:style="gruene"
-class="party-result" /><div
-class="party-result"
-:style="fdp" /><div
-class="party-result"
-:style="linke" /><div
-class="party-result"
-:style="afd" />
+<div class="bar-wrapper">
+  <div class="party-result"
+    v-for="(party, index) of sortedResult"
+    :class="party.party"
+    :style="{width: party.width}"
+    :key="'bar.' + party.party"
+    >
+    <span v-if="party.percentage > 10" class="percentage">
+      {{Math.round(party.percentage)}}%
+    </span>
+    </div>
 </div>
 
 </template>
 <script>
-import {PARTY_COLORS} from '@/helpers'
 export default {
   name: 'stacked-bar-chart',
   props: {result: {type: Object, required: true}},
@@ -24,66 +21,43 @@ export default {
     totalVotes () {
       return Object.keys(this.result).map(key => this.result[key]).reduce((acc, val) => acc + val, 0)
     },
-    percentages () {
-      const vals = {}
-      let totals = 0
-      Object.keys(this.result).forEach(key => {
-        vals[key] = Math.round((this.result[key] / this.totalVotes) * 1000) / 10
-        totals += vals[key]
+    sortedResult () {
+      let list = Object.keys(this.result).map(key => {
+        const result = {votes: this.result[key], party: key}
+        result.percentage = (result.votes / this.totalVotes) * 100
+        return result
+      }).sort(function (a, b) {
+        if (a.votes < b.votes) {
+          return 1
+        } else if (a.votes === b.votes) {
+          return 0
+        } else {
+          return -1
+        }
       })
-      if (totals > 100) {
-        vals.afd = vals.afd - (totals - 100)
-      }
-      return vals
-    },
-    cdu () {
-      return {
-        width: this.percentages.cdu + '%',
-        'background-color': PARTY_COLORS.cdu
-      }
-    },
-    spd () {
-      return {
-        width: this.percentages.spd + '%',
-        'background-color': PARTY_COLORS.spd
-      }
-    },
-    gruene () {
-      return {
-        width: this.percentages.gruene + '%',
-        'background-color': PARTY_COLORS.gruene
-      }
-    },
-    fdp () {
-      return {
-        width: this.percentages.fdp + '%',
-        'background-color': PARTY_COLORS.fdp
-      }
-    },
-    linke () {
-      return {
-        width: this.percentages.die_linke + '%',
-        'background-color': PARTY_COLORS.die_linke
-      }
-    },
-    afd () {
-      return {
-        width: this.percentages.afd + '%',
-        'background-color': PARTY_COLORS.afd
-      }
+      const total = list.slice(0, 5).reduce(function (acc, item) { return acc + item.percentage }, 0)
+      list[5].percentage = 100 - total
+      list = list.map(function (item) {
+        item.width = item.percentage + '%'
+        return item
+      })
+      return list
     }
   }
 }
 </script>
 
-<style scoped>
-.bar-wrapper {
-  height: 2em;
-}
-.party-result {
-  height: 2em;
-  display: inline-block;
-  transition: width 0.3s ease;
+<style lang="sass" scoped>
+.bar-wrapper
+  height: 2.5em
+  line-height: 2.5em
+  width: 100%
 
-}
+.party-result
+  display: inline-block
+  height: 100%
+  transition: width 0.3s ease
+  text-align: right
+  padding-right: 2px
+  vertical-align: top
 </style>

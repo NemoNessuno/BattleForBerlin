@@ -77,18 +77,18 @@ html
 .supermap
   transition: height 0.3s ease
 
-.toolbar.afd, .btn.afd
+.toolbar.afd, .btn.afd, .afd
   background-color: #2B9FDB
-.toolbar.gruene, .btn.gruene
+.toolbar.gruene, .btn.gruene, .gruene
   background-color: #4E8935
-.toolbar.spd, .btn.spd
+.toolbar.spd, .btn.spd, .spd
   background-color: #DB0E2A
-.toolbar.cdu, .btn.cdu
+.toolbar.cdu, .btn.cdu, .cdu
   background-color: #000000
-.toolbar.fdp, .btn.fdp
+.toolbar.fdp, .btn.fdp, .fdp
   color: #FB0078
   background-color: #FEE943
-.toolbar.die_linke, .btn.die_linke
+.toolbar.die_linke, .btn.die_linke, .die_linke
   background-color: #CC008A
 
 .leaflet-control-layers, .application .leaflet-control-zoom a
