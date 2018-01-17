@@ -6,7 +6,7 @@
       </v-btn>
       <v-toolbar-title>{{currentCounty.bwk}} - {{bezirk}}</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon @click.native="setGerryManderVisible(true)">
+      <v-btn icon @click.native="goToGerryMander">
         <v-icon>poll</v-icon>
       </v-btn>
     </v-toolbar>
@@ -26,7 +26,7 @@ export default {
     },
     ...mapGetters(['currentCounty'])
   },
-  methods: mapMutations(['unselectItem', 'setGerryManderVisible']),
+  methods: mapMutations(['unselectItem', 'goToGerryMander']),
   components: {MapOverlay, GerryMander}
 }
 </script>

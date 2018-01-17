@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-toolbar class="primary">
-      <v-btn icon @click.native="setGerryManderVisible(false)">
+      <v-btn icon @click.native="goToMap">
         <v-icon>close</v-icon>
       </v-btn>
       <v-toolbar-title>
@@ -19,12 +19,11 @@
 
 <script>
 import Candidate from './Candidate'
-import {mapState, mapGetters, mapMutations} from 'vuex'
+import {mapGetters, mapMutations} from 'vuex'
 import {BWK_NAMES} from '@/helpers'
 export default {
   name: 'gerry-mander',
   computed: {
-    ...mapState(['gerryManderVisible']),
     ...mapGetters(['currentCounty']),
     bezirk () { return BWK_NAMES[this.currentCounty.bwk] },
     candidates () {
@@ -33,7 +32,7 @@ export default {
       }.bind(this))
     }
   },
-  methods: mapMutations(['setGerryManderVisible']),
+  methods: mapMutations(['goToMap']),
   components: {Candidate}
 }
 </script>
