@@ -31,7 +31,7 @@ export default {
         const candidate = this.currentCounty.candidates[party]
         candidate.votes = this.currentCounty.result[party]
         return candidate
-      }.bind(this))
+      }.bind(this)).sort(function (a, b) { return b.votes - a.votes })
     }
   },
   methods: mapMutations(['goToMap']),
