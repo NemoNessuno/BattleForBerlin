@@ -47,7 +47,7 @@
     },
     mounted () {
       const $this = this
-      if (this.candidate.description && this.candidate.name === 'Frank Henkel') {
+      if (this.candidate.description) {
         let desc = this.candidate.description.replace('https://www.abgeordnetenwatch.de/api/parliament/bundestag/profile/', '')
         desc = desc.replace('/profile.json', '')
         fetch('/api/candidate/' + desc)
@@ -73,6 +73,6 @@
 </script>
 
 <style lang="sass" scoped>
-img 
+img
   object-fit: cover
 </style>
