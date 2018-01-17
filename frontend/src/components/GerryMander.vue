@@ -8,6 +8,9 @@
         {{currentCounty.bwk}} - {{bezirk}}
       </v-toolbar-title>
     </v-toolbar>
+    <div class="elevation-3 summary cyan">
+      <h2>Stimmen {{total}} </h2>
+    </div>
     <v-container grid-list-md>
       <v-layout row wrap>
         <candidate v-for="candidate of candidates" :candidate="candidate" :key="'can.' + candidate.name">
@@ -26,15 +29,35 @@ export default {
   computed: {
     ...mapGetters(['currentCounty']),
     bezirk () { return BWK_NAMES[this.currentCounty.bwk] },
+    total () {
+      return Object.keys(this.currentCounty.result).map(function (party) {
+        return this.currentCounty.result[party]
+      }.bind(this)).reduce(function (acc, val) {
+        return acc + val
+      }, 0)
+    },
     candidates () {
-      return Object.keys(this.currentCounty.candidates).map(function (party) {
-        const candidate = this.currentCounty.candidates[party]
+      let candidateList = Object.keys(this.currentCounty.candidates).map(function (party) {
+        const candidate = {...this.currentCounty.candidates[party]}
         candidate.votes = this.currentCounty.result[party]
         return candidate
       }.bind(this)).sort(function (a, b) { return b.votes - a.votes })
+      candidateList = candidateList.map(function (candidate, index) {
+        candidate.winner = index === 0
+        candidate.total = this.total
+        return candidate
+      }.bind(this))
+      return candidateList
     }
   },
   methods: mapMutations(['goToMap']),
   components: {Candidate}
 }
 </script>
+
+<style lang="sass" scoped>
+.summary
+  margin: 1em auto
+  padding: 0.7em
+  width: 95%
+</style>

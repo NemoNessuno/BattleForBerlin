@@ -1,5 +1,5 @@
 <template>
-  <v-flex md4>
+  <v-flex md6 lg4>
     <v-card>
       <v-toolbar :class="candidate.party">
         <v-toolbar-title>
@@ -20,8 +20,8 @@
           <span>Profil auf Abgeordnetenwatch</span>
         </v-tooltip>
       </v-toolbar>
-      <v-card-text class="white black--text" style="color: black">
-        <v-list class="white" style="color: black">
+      <v-card-text class="white black--text" >
+        <v-list class="white">
           <v-list-tile avatar>
             <v-list-tile-avatar>
               <img v-bind:src="candidate.image" alt="candidate.name" />
@@ -31,7 +31,31 @@
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
-          {{questions}} {{answers}}
+        <v-divider></v-divider>
+        <v-list>
+          <v-list-tile avatar>
+            <v-list-tile-avatar style="color:black">
+              <v-icon>question_answer</v-icon>
+            </v-list-tile-avatar>
+            <v-list-tile-content>
+              <v-list-tile-title>
+                <span v-if="!loaded">
+                  fetching
+                </span>
+                <span v-if="loaded && error">
+                  failed
+                </span>
+                <span v-if="loaded && !error">
+                  {{answered}} % der Fragen beantwortet
+                </span>
+              </v-list-tile-title>
+              <v-list-tile-subtitle>
+                <v-propgress-linear :indeterminate="true" v-if="!loaded" />
+                <v-propgress-linear v-model="answers" v-else />
+              </v-list-tile-subtitle>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
       </v-card-text>
     </v-card>
   </v-flex>
@@ -56,7 +80,8 @@
       return {
         questions: 0,
         answers: 0,
-        error: false
+        error: false,
+        loaded: false
       }
     },
     mounted () {
@@ -69,10 +94,12 @@
           .then(({profile}) => {
             $this.questions = profile.meta.questions
             $this.answers = profile.meta.answers
+            $this.loaded = true
           })
           .catch((error) => {
             console.error(error)
             $this.error = true
+            $this.loaded = true
           })
       }
     },
@@ -82,6 +109,12 @@
       },
       partyTitle () {
         return PARTY_NAMES[this.candidate.party]
+      },
+      answered () {
+        if (this.answers === 0) {
+          return 0
+        }
+        return Math.round(this.answers/this.questions) * 100
       }
     }
   }

@@ -68,7 +68,7 @@ export default {
 
 <style lang="sass">
 html
-  overflow-y: hidden
+  overflow-y: auto
 
 .github-link-img
   height: 1.5em
