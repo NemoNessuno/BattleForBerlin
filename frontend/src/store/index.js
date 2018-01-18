@@ -1,9 +1,9 @@
+import {COUNTY_KEYS} from './constants'
 import actions from './actions'
 import getters from './getters'
 import mutations from './mutations'
 
 const state = {
-  counties: undefined,
   countyProps: undefined,
   districts: undefined,
   districtProps: undefined,
@@ -14,6 +14,10 @@ const state = {
   gerryManderVisible: false,
   route: 'welcome'
 }
+
+COUNTY_KEYS.forEach(function (key) {
+  state[key] = undefined
+})
 
 export default {
   state,

@@ -53,6 +53,7 @@ export default {
   line-height: 2.5em
   width: 100%
   white-space: nowrap
+  overflow-x: hidden
 
 .party-result
   display: inline-block

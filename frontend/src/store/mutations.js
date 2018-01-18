@@ -7,10 +7,13 @@ export default {
     })
   },
   setCounties (state, counties) {
-    state.counties = counties
-    state.countyProps = {}
+    if (!state.countyProps) {
+      state.countyProps = {}
+    }
     counties.forEach(function (county) {
-      state.countyProps[county.properties.bwk] = county.properties
+      const bwk = county.properties.bwk
+      state.countyProps[bwk] = county.properties
+      state['county_' + bwk] = county
     })
   },
   setDiffCount (state, count) {
