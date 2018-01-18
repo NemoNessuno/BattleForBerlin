@@ -114,7 +114,7 @@
         if (this.answers === 0) {
           return 0
         }
-        return Math.round(this.answers/this.questions) * 100
+        return Math.round(this.answers / this.questions) * 100
       }
     }
   }
