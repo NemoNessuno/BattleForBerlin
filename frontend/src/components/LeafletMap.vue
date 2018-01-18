@@ -13,7 +13,8 @@
   import L from 'leaflet'
   import DistrictDetails from './DistrictDetails'
   import CountyDetails from './CountyDetails'
-  import {DistrictLayer} from '@/layers'
+  import {DistrictLayer, CountyLayer} from '@/layers'
+  import {COUNTY_KEYS} from '@/store/constants'
   import {mapState, mapMutations, mapGetters} from 'vuex'
   const tileLayerAPI = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}'
   const accessToken = 'pk.eyJ1IjoibmVtb25lc3N1bm8iLCJhIjoiY2phM3FvbGRkM2x6MTM0cGN1M3h6dHcyYiJ9.Gie5hDNbis60D17BFvH31Q'
@@ -28,7 +29,7 @@
       }
     },
     computed: {
-      ...mapState(['districts', 'counties']),
+      ...mapState(['districts'].concat(COUNTY_KEYS)),
       ...mapGetters(['currentDistrict', 'currentCounty'])
     },
     mounted () {
@@ -63,8 +64,10 @@
           this.selectDistrict(values.geometry.properties.identifier)
         }
       }.bind(this))
-      this.countyWrapper = new DistrictLayer()
-      this.countyWrapper.updateDistricts(this.counties)
+      this.countyWrapper = new CountyLayer()
+      for (let key of COUNTY_KEYS) {
+        this.countyWrapper.updateCounty(this[key])
+      }
       this.countyWrapper.onSelection(function (values) {
         if (!values) {
           this.unselectItem()
@@ -83,14 +86,16 @@
           this.map.invalidateSize()
         })
       })
+      for (let key of COUNTY_KEYS) {
+        this.$watch(key, function (newVal) {
+          this.countyWrapper.updateCounty(newVal)
+        })
+      }
     },
     methods: mapMutations(['selectDistrict', 'selectCounty', 'unselectItem']),
     watch: {
       districts (newVal) {
         this.mergedWrapper.updateDistricts(newVal)
-      },
-      counties (newVal) {
-        this.countyWrapper.updateDistricts(newVal)
       }
     },
     components: {DistrictDetails, CountyDetails}

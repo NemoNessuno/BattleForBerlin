@@ -56,6 +56,31 @@ export class DistrictLayer extends BaseLayer {
   }
 }
 
+export class CountyLayer extends BaseLayer {
+  constructor () {
+    super()
+    this._countyLayers = {}
+  }
+
+  updateCounty (county) {
+    if (!county) {
+      return
+    }
+    console.log('updateCounty', county)
+    const bwk = county.properties.bwk
+    if (this._countyLayers[bwk]) {
+      this._countyLayers[bwk].remove()
+    }
+    const $this = this
+    const layer = L.geoJSON(county, this.config.defaultStyle)
+    layer.on('click', function ({layer}) {
+      $this.selectDistrict.bind($this)(layer)
+    })
+    this.layers.addLayer(layer)
+    this._countyLayers[bwk] = layer
+  }
+}
+
 function styleDistrict ({geometry}) {
   const {properties} = geometry
   const winner = maxProp(properties.result)
