@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request, Response
+from flask import Flask, render_template, jsonify, request, Response, send_file
 import requests
 
 from database.models import (
@@ -66,6 +66,11 @@ def proxy_candidate(candidate):
     resp = Response(payload)
     resp.headers['Content-Type'] = 'application/json'
     return resp
+
+@app.route('/api/gerrymander', methods=['POST'])
+def gerry_mander():
+    print(request.get_json().keys())
+    return send_file('../data/test.json')
 
 if __name__ == '__main__':
     app.debug = True
