@@ -2,9 +2,9 @@ import L from 'leaflet'
 
 import {maxProp, PARTY_COLORS} from './helpers'
 
-export class DistrictLayer {
-  constructor (config, editable = false) {
-    this.config = config || {}
+class BaseLayer {
+  constructor () {
+    this.config = {}
     this._cb = function () {}
     this.config.defaultStyle = this.config.defaultStyle || {
       style: styleDistrict
@@ -13,21 +13,6 @@ export class DistrictLayer {
       style () { return {color: '#0078FF', weight: 1, opacity: 0.7} }
     }
     this.layers = L.layerGroup([])
-  }
-
-  updateDistricts (districts) {
-    if (!districts) {
-      return
-    }
-    const $this = this
-    this.layers.clearLayers()
-    districts.forEach(function (district) {
-      const layer = L.geoJSON(district, this.config.defaultStyle)
-      layer.on('click', function ({layer}) {
-        $this.selectDistrict.bind($this)(layer)
-      })
-      this.layers.addLayer(layer)
-    }.bind(this))
   }
 
   selectDistrict (layer) {
@@ -51,6 +36,23 @@ export class DistrictLayer {
 
   onSelection (cb) {
     this._cb = cb
+  }
+}
+
+export class DistrictLayer extends BaseLayer {
+  updateDistricts (districts) {
+    if (!districts) {
+      return
+    }
+    const $this = this
+    this.layers.clearLayers()
+    districts.forEach(function (district) {
+      const layer = L.geoJSON(district, this.config.defaultStyle)
+      layer.on('click', function ({layer}) {
+        $this.selectDistrict.bind($this)(layer)
+      })
+      this.layers.addLayer(layer)
+    }.bind(this))
   }
 }
 
