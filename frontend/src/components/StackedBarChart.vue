@@ -52,6 +52,7 @@ export default {
   height: 2.5em
   line-height: 2.5em
   width: 100%
+  white-space: nowrap
 
 .party-result
   display: inline-block
