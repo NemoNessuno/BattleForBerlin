@@ -27,7 +27,7 @@
               <img v-bind:src="candidate.image" alt="candidate.name" v-if="showImage" />
             </v-list-tile-avatar>
             <v-list-tile-content style="color: black" class="headline">
-              {{candidate.name}}
+              {{degree}} {{candidate.name}}
             </v-list-tile-content>
           </v-list-tile>
           <v-list-tile avatar>
@@ -44,6 +44,14 @@
               <span v-else>
                 Listenplatz unbekannt
               </span>
+            </v-list-tile-content>
+          </v-list-tile>
+          <v-list-tile>
+            <v-list-tile-avatar class="black--text">
+              <v-icon class="black--text">school</v-icon>
+            </v-list-tile-avatar>
+            <v-list-tile-content class="black--text">
+              {{educationString}}
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -83,6 +91,8 @@
         error: false,
         loaded: false,
         rank: undefined,
+        degree: '',
+        education: 'fetching',
         showImage: false
       }
     },
@@ -98,6 +108,8 @@
           .then(resp => resp.json())
           .then(({profile}) => {
             $this.rank = parseInt(profile.list.position)
+            $this.degree = profile.personal.degree
+            $this.education = profile.personal.education
             $this.loaded = true
           })
           .catch((error) => {
@@ -113,6 +125,15 @@
       },
       partyTitle () {
         return PARTY_NAMES[this.candidate.party]
+      },
+      educationString () {
+        if (!this.education) {
+          return 'unbekannt'
+        }
+        if (this.education.length < 50) {
+          return this.education
+        }
+        return this.education.substring(0, 49) + '...'
       }
     },
     methods: {
