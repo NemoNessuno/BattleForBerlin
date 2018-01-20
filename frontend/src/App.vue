@@ -19,9 +19,7 @@
       </v-btn>
     </v-toolbar>
     <v-content>
-      <!--
-      <onboarding v-if="route === 'onboarding'" @skip="skipOnboarding" />
-      -->
+      <algorithm-progress v-if="algorithmProgress" />
       <leaflet-map :style="{height: mapHeight}" class="supermap" />
       <welcome v-if="route === 'welcome'"></welcome>
       <gerry-mander v-if="route === 'gerrymander'" />
@@ -33,6 +31,7 @@
 </template>
 
 <script>
+import AlgorithmProgress from './components/AlgorithmProgress'
 import Onboarding from './components/Onboarding'
 import LeafletMap from './components/LeafletMap'
 import GerryMander from './components/GerryMander'
@@ -64,7 +63,7 @@ export default {
     },
     ...mapActions(['reset', 'loadCounties', 'loadDistricts', 'loadDiffCount'])
   },
-  components: {Onboarding, LeafletMap, GerryMander, Welcome}
+  components: {Onboarding, LeafletMap, GerryMander, Welcome, AlgorithmProgress}
 }
 </script>
 
