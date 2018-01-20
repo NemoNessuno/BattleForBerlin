@@ -8,10 +8,10 @@
       <v-btn icon @click="reset" :disabled="diffCount === 0">
         <v-icon>restore_page</v-icon>
       </v-btn>
-      <v-btn @click="route = 'onboarding'" icon v-if="route === 'map'">
+      <v-btn @click="goToAbout" icon v-if="route === 'map'">
         <v-icon>info_outline</v-icon>
       </v-btn>
-      <v-btn @click="route = 'map'" icon v-if="route === 'onboarding'">
+      <v-btn @click="goToMap" icon v-if="route === 'about'">
         <v-icon>map</v-icon>
       </v-btn>
       <v-btn href="https://github.com/NemoNessuno/BattleForBerlin" icon>
@@ -22,6 +22,7 @@
       <algorithm-progress v-if="algorithmProgress" />
       <leaflet-map :style="{height: mapHeight}" class="supermap" />
       <welcome v-if="route === 'welcome'"></welcome>
+      <onboarding v-if="route === 'about'" />
       <gerry-mander v-if="route === 'gerrymander'" />
     </v-content>
     <v-footer v-if="route !== 'map'">
@@ -36,7 +37,7 @@ import Onboarding from './components/Onboarding'
 import LeafletMap from './components/LeafletMap'
 import GerryMander from './components/GerryMander'
 import Welcome from './components/Welcome'
-import {mapState, mapActions, mapGetters} from 'vuex'
+import {mapState, mapActions, mapGetters, mapMutations} from 'vuex'
 export default {
   name: 'app',
   computed: {
@@ -61,6 +62,7 @@ export default {
     skipOnboarding () {
       this.route = 'map'
     },
+    ...mapMutations(['goToMap', 'goToAbout']),
     ...mapActions(['reset', 'loadCounties', 'loadDistricts', 'loadDiffCount'])
   },
   components: {Onboarding, LeafletMap, GerryMander, Welcome, AlgorithmProgress}
