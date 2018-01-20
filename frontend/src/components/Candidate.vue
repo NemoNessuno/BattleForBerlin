@@ -24,35 +24,26 @@
         <v-list class="white">
           <v-list-tile avatar>
             <v-list-tile-avatar>
-              <img v-bind:src="candidate.image" alt="candidate.name" />
+              <img v-bind:src="candidate.image" alt="candidate.name" v-if="showImage" />
             </v-list-tile-avatar>
             <v-list-tile-content style="color: black" class="headline">
               {{candidate.name}}
             </v-list-tile-content>
           </v-list-tile>
-        </v-list>
-        <v-divider></v-divider>
-        <v-list>
           <v-list-tile avatar>
-            <v-list-tile-avatar style="color:black">
-              <v-icon>question_answer</v-icon>
+            <v-list-tile-avatar class="black--text">
+              <v-icon class="black--text">sort</v-icon>
             </v-list-tile-avatar>
-            <v-list-tile-content>
-              <v-list-tile-title>
-                <span v-if="!loaded">
-                  fetching
-                </span>
-                <span v-if="loaded && error">
-                  failed
-                </span>
-                <span v-if="loaded && !error">
-                  {{answered}} % der Fragen beantwortet
-                </span>
-              </v-list-tile-title>
-              <v-list-tile-sub-title>
-                <v-progress-linear :indeterminate="true" v-if="!loaded" />
-                <v-progress-linear v-model="answered" v-else />
-              </v-list-tile-sub-title>
+            <v-list-tile-content class="black--text">
+              <span v-if="!loaded">
+                fetching
+              </span>
+              <span v-else-if="loaded && rank">
+                Listenplatz {{rank}}
+              </span>
+              <span v-else>
+                Listenplatz unbekannt
+              </span>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -89,13 +80,16 @@
     },
     data () {
       return {
-        questions: 0,
-        answers: 0,
         error: false,
-        loaded: false
+        loaded: false,
+        rank: undefined,
+        showImage: false
       }
     },
     mounted () {
+      window.setTimeout(function () {
+        this.showImage = true
+      }.bind(this), Math.round(Math.random() * 500))
       const $this = this
       if (this.candidate.description) {
         let desc = this.candidate.description.replace('https://www.abgeordnetenwatch.de/api/parliament/bundestag/profile/', '')
@@ -103,8 +97,7 @@
         fetch('/api/candidate/' + desc)
           .then(resp => resp.json())
           .then(({profile}) => {
-            $this.questions = profile.meta.questions
-            $this.answers = profile.meta.answers
+            $this.rank = parseInt(profile.list.position)
             $this.loaded = true
           })
           .catch((error) => {
@@ -120,12 +113,6 @@
       },
       partyTitle () {
         return PARTY_NAMES[this.candidate.party]
-      },
-      answered () {
-        if (this.answers === 0) {
-          return 0
-        }
-        return Math.round(this.answers / this.questions) * 100
       }
     },
     methods: {
