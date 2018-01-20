@@ -57,6 +57,10 @@
           </v-list-tile>
         </v-list>
       </v-card-text>
+      <v-card-actions class="white">
+        <v-spacer />
+        <v-btn flat :disabled="candidate.winner" class="orange--text">Lass mich gewinnen!</v-btn>
+      </v-card-actions>
     </v-card>
   </v-flex>
 </template>
