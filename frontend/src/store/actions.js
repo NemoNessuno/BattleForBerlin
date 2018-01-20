@@ -73,6 +73,7 @@ export default {
       }
       return obs.concat(Observable.timer(500).mapTo(value))
     }, Observable.timer(1000))
+    await dispatch('loadDiffCount')
     delayedRenderer.subscribe(
       function (item) {
         if (typeof item === 'number') {
