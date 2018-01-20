@@ -49,10 +49,10 @@
                   {{answered}} % der Fragen beantwortet
                 </span>
               </v-list-tile-title>
-              <v-list-tile-subtitle>
-                <v-propgress-linear :indeterminate="true" v-if="!loaded" />
-                <v-propgress-linear v-model="answers" v-else />
-              </v-list-tile-subtitle>
+              <v-list-tile-sub-title>
+                <v-progress-linear :indeterminate="true" v-if="!loaded" />
+                <v-progress-linear v-model="answered" v-else />
+              </v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
