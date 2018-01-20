@@ -1,4 +1,10 @@
 import L from 'leaflet'
+import {Observable} from 'rxjs/Observable'
+import 'rxjs/add/observable/empty'
+import 'rxjs/add/observable/of'
+import 'rxjs/add/observable/timer'
+import 'rxjs/add/operator/concat'
+import 'rxjs/add/operator/mapTo'
 
 import {maxProp, PARTY_COLORS} from './helpers'
 
@@ -44,15 +50,29 @@ export class DistrictLayer extends BaseLayer {
     if (!districts) {
       return
     }
+    const chunks = []
+    for (let i = 0; i < districts.length; i += 50) {
+      chunks.push(districts.slice(i, i + 50))
+    }
     const $this = this
     this.layers.clearLayers()
-    districts.forEach(function (district) {
-      const layer = L.geoJSON(district, this.config.defaultStyle)
-      layer.on('click', function ({layer}) {
-        $this.selectDistrict.bind($this)(layer)
-      })
-      this.layers.addLayer(layer)
-    }.bind(this))
+    const schedule = chunks.map(function (chunk, index) {
+      if (index === 0) {
+        return Observable.of(chunk)
+      }
+      return Observable.timer(300).mapTo(chunk)
+    }).reduce(function (obs, val) {
+      return obs.concat(val)
+    }, Observable.empty())
+    schedule.subscribe(function (chunk) {
+      chunk.forEach(function (district) {
+        const layer = L.geoJSON(district, this.config.defaultStyle)
+        layer.on('click', function ({layer}) {
+          $this.selectDistrict.bind($this)(layer)
+        })
+        this.layers.addLayer(layer)
+      }.bind($this))
+    })
   }
 }
 
