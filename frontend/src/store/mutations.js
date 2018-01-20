@@ -46,5 +46,8 @@ export default {
   },
   goToAbout (state) {
     state.route = 'about'
+  },
+  setAlgorithmProgress (state, progress) {
+    state.algorithmProgress = progress
   }
 }

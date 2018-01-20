@@ -12,7 +12,8 @@ const state = {
   selectedDistrict: undefined,
   selectedCounty: undefined,
   gerryManderVisible: false,
-  route: 'welcome'
+  route: 'welcome',
+  algorithmProgress: undefined
 }
 
 COUNTY_KEYS.forEach(function (key) {

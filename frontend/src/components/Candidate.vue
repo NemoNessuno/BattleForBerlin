@@ -59,13 +59,20 @@
       </v-card-text>
       <v-card-actions class="white">
         <v-spacer />
-        <v-btn flat :disabled="candidate.winner" class="orange--text">Lass mich gewinnen!</v-btn>
+        <v-btn
+          flat
+          :disabled="candidate.winner"
+          @click.native="run"
+          class="orange--text">
+          Lass mich gewinnen!
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-flex>
 </template>
 
 <script>
+  import {mapMutations, mapActions} from 'vuex'
   import {PARTY_COLORS} from '@/helpers'
   const PARTY_NAMES = {
     cdu: 'CDU',
@@ -119,6 +126,17 @@
           return 0
         }
         return Math.round(this.answers / this.questions) * 100
+      }
+    },
+    methods: {
+      ...mapActions(['gerryMander']),
+      ...mapMutations(['goToMap']),
+      run () {
+        this.gerryMander({
+          bwk: this.candidate.bwk,
+          party: this.candidate.party
+        })
+        this.goToMap()
       }
     }
   }
