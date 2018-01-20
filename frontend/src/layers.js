@@ -66,7 +66,6 @@ export class CountyLayer extends BaseLayer {
     if (!county) {
       return
     }
-    console.log('updateCounty', county)
     const bwk = county.properties.bwk
     if (this._countyLayers[bwk]) {
       this._countyLayers[bwk].remove()
