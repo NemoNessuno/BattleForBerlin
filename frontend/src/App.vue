@@ -43,12 +43,14 @@ export default {
   computed: {
     mapHeight () {
       if (this.route === 'map') {
-        return 'calc(100vh - 70px)'
-      } else {
-        return '0'
+        if (!this.algorithmProgress) {
+          return 'calc(100vh - 70px)'
+        }
+        return 'calc(100vh - 100px)'
       }
+      return '0'
     },
-    ...mapState(['diffCount', 'gerryManderVisible', 'route']),
+    ...mapState(['diffCount', 'gerryManderVisible', 'route', 'algorithmProgress']),
     ...mapGetters(['currentCounty'])
   },
   mounted () {
