@@ -1,7 +1,8 @@
 import {Observable} from 'rxjs/Observable'
+import 'rxjs/add/observable/of'
 import 'rxjs/add/observable/timer'
-import 'rxjs/add/operator/mapTo'
 import 'rxjs/add/operator/concat'
+import 'rxjs/add/operator/mapTo'
 
 export default {
   loadCounties ({commit}) {
@@ -67,6 +68,9 @@ export default {
     data = data.map(function (value, index) { return {value, index} })
     commit('setAlgorithmProgress', {shfits: 0, totalShifts: data.length, reset: true})
     const delayedRenderer = data.reduce(function (obs, value) {
+      if (value.index === 0) {
+        return obs.concat(Observable.of(value))
+      }
       return obs.concat(Observable.timer(500).mapTo(value))
     }, Observable.timer(1000))
     delayedRenderer.subscribe(
