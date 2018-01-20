@@ -43,7 +43,7 @@ export default {
     mapHeight () {
       if (this.route === 'map') {
         if (!this.algorithmProgress) {
-          return 'calc(100vh - 70px)'
+          return 'calc(100vh - 71px)'
         }
         return 'calc(100vh - 100px)'
       }
