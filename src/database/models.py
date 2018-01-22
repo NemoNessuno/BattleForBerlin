@@ -17,6 +17,7 @@ class District:
     gruene = Column(Integer)
     afd = Column(Integer)
     fdp = Column(Integer)
+    neighbours = None
 
     def __init__(self, identifier=None, bezname=None,
                  bwk=None, geom=None,
@@ -32,6 +33,12 @@ class District:
         self.gruene = gruene
         self.afd = afd
         self.fdp = fdp
+
+    def fill_neighbours(self):
+        neighbour = Neighbours.query.filter(Neighbours.identifier == self.identifier).first()
+        self.neighbours = []
+        for id in neighbour.neighbours.replace(' ', '').split(','):
+            self.neighbours.append(MergedDistrict.query.filter(MergedDistrict.identifier == id).first())
 
     def get_geojson_dict(self):
         candidates = db_session.query(Candidate).filter(Candidate.bwk == self.bwk)
@@ -69,13 +76,6 @@ class Neighbours(Base):
 
 class MergedDistrict(District, Base):
     __tablename__ = 'merged_districts'
-    neighbours = None
-
-    def fill_neighbours(self):
-        neighbour = Neighbours.query.filter(Neighbours.identifier == self.identifier).first()
-        self.neighbours = []
-        for id in neighbour.neighbours.replace(' ', '').split(','):
-            self.neighbours.append(MergedDistrict.query.filter(MergedDistrict.identifier == id).first())
 
 
 class MergedDistrictDiff(District, Base):
