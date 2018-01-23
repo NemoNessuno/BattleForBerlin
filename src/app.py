@@ -16,6 +16,7 @@ from database.db_helper import (
 )
 
 from database.db_handler import db_session
+from src.database.gerrymandering_helper import get_gerrymandering_steps
 
 app = Flask(__name__)
 
@@ -45,9 +46,11 @@ def reset():
     truncate_diffs()
     return jsonify({'msg': 'diffs deleted'})
 
+
 @app.route('/api/diff/count', methods=['GET'])
 def get_diff_count():
     return jsonify({'count': int(db_session.query(Diff.bwk).count())})
+
 
 @app.route('/api/county/<countyid>')
 def simple_county(countyid):
@@ -60,6 +63,7 @@ def create_diff():
     upsert_diff(payload['identifier'], payload['bwk'])
     return jsonify({'msg': 'district changed'})
 
+
 @app.route('/api/candidate/<candidate>', methods=['GET'])
 def proxy_candidate(candidate):
     payload = requests.get('https://www.abgeordnetenwatch.de/api/parliament/bundestag/profile/%s/profile.json' % candidate)
@@ -67,10 +71,12 @@ def proxy_candidate(candidate):
     resp.headers['Content-Type'] = 'application/json'
     return resp
 
+
 @app.route('/api/gerrymander', methods=['POST'])
-def gerry_mander():
-    print(request.get_json().keys())
-    return send_file('../data/test.json')
+def gerrymander():
+    parameter = request.get_json()
+    return jsonify(get_gerrymandering_steps(parameter['bwk'], parameter['party']))
+
 
 if __name__ == '__main__':
     app.debug = True
