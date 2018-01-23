@@ -2,8 +2,10 @@ export default {
   setDistricts (state, districts) {
     state.districts = districts
     state.districtProps = {}
+    state.districtHash = {}
     districts.forEach(function (district) {
-      state.districtProps[district.properties.identifier] = district.properties
+      state.districtProps[district.properties.identifier] = {...district.properties}
+      state.districtHash[district.identifier] = {...district}
     })
   },
   setCounties (state, counties) {

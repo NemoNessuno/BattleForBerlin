@@ -13,7 +13,8 @@ const state = {
   selectedCounty: undefined,
   gerryManderVisible: false,
   route: 'welcome',
-  gerryManderAnimation: undefined
+  gerryManderAnimation: undefined,
+  districtHash: undefined
 }
 
 COUNTY_KEYS.forEach(function (key) {
