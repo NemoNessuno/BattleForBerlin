@@ -1,3 +1,4 @@
+#pylint: disable=missing-docstring
 import functools
 
 from src.database.db_handler import db_session
@@ -5,7 +6,7 @@ from src.database.db_helper import get_results_from_table
 from src.database.models import Diff, MergedDistrictDiff, MergedDistrict
 
 
-def gerrymander(party, bwk, new_county, old_county, original_size, diffs, county_result, results, steps):
+def gerrymander(party, bwk, new_county, old_county, original_size, diffs, county_result, results):
     steps = []
 
     # We try to expand our new county to a reasonable size...
