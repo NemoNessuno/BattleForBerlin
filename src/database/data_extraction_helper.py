@@ -1,13 +1,9 @@
 from __future__ import unicode_literals
 
 import json
-
 import urllib3
-from bs4 import BeautifulSoup
-from fake_useragent import UserAgent
 
 http = urllib3.PoolManager()
-ua = UserAgent()
 
 
 def get_http_request(url):

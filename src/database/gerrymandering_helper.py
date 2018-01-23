@@ -1,8 +1,8 @@
-#pylint: disable=missing-docstring
+# pylint: disable=missing-docstring
 import functools
 
 from src.database.db_handler import db_session
-from src.database.db_helper import get_results_from_table
+from src.database.db_helper import get_results_from_table, get_county_geojson
 from src.database.models import Diff, MergedDistrictDiff, MergedDistrict
 
 
@@ -29,13 +29,12 @@ def gerrymander(party, bwk, new_county, old_county, original_size, diffs, county
                 neighbour_county_winner = get_winning_party(results[neighbour_bwk])
 
                 # Check if still win with this new district and that the old county's result is not changed
-
                 if check_winning_party(new_county_result, party) and \
                         neighbour_bwk == bwk or \
                         check_winning_party(new_neighbour_county_result, neighbour_county_winner):
                     counter += 1
                     add_district_to_bwk(neighbour, bwk, diffs, neighbour_diff)
-#                    steps.append({'action': 'grow', 'targets': get_})
+                    steps.append({'action': 'grow', 'targets': get_county_geojson(set([neighbour_bwk, bwk]))})
                     new_new_county.append(neighbour)
                     county_result = new_county_result
                     results[neighbour_bwk] = new_neighbour_county_result
@@ -44,48 +43,45 @@ def gerrymander(party, bwk, new_county, old_county, original_size, diffs, county
 
         new_county = new_new_county
 
-    # If we found a working solution
-    if check_winning_party(county_result, party):
+    forced = False
 
-        forced = False
+    # Check if we still have districts we have to move around
+    while len(old_county) > 0:
+        changed = False
+        for district in old_county:
 
-        # Check if we still have districts we have to move around
-        while len(old_county) > 0:
-            changed = False
-            for district in old_county:
+            if district.neighbours is None:
+                district.fill_neighbours()
 
-                if district.neighbours is None:
-                    district.fill_neighbours()
+            # Check if we got a diff for the current district to check our districts current BWK
+            own_diff, own_bwk = get_bwk_and_diff(district, diffs)
 
-                # Check if we got a diff for the current district to check our districts current BWK
-                own_diff, own_bwk = get_bwk_and_diff(district, diffs)
+            # Search for neighbours who are in a different BWK
+            d_neighbours = get_neighbours(district, diffs, lambda _, n_bwk: own_bwk != n_bwk)
 
-                d_neighbours = get_neighbours(district, diffs, lambda _, n_bwk: own_bwk != n_bwk)
+            for neighbour, neighbour_diff, neighbour_bwk in d_neighbours:
+                # Try to make sure that the result in the neighbours BWK is unchanged when we add this district
+                old_winner = sorted(results[neighbour_bwk], key=lambda x: x[1], reverse=True)[0][0]
+                n_results = neighbour.get_result_dict()
+                # Add the votes of this district to the total result of the bwk
+                for key in n_results.keys():
+                    results[neighbour_bwk][key] += n_results[key]
+                # If the result in the BWK is unchanged
+                if forced or sorted(results[neighbour_bwk], key=lambda x: x[1], reverse=True)[0][0] == old_winner:
+                    add_district_to_bwk(district, neighbour_bwk, diffs, own_diff)
+                    old_county.remove(district)
+                    steps.append({'action': 'cleanup', 'targets': get_county_geojson(set([neighbour_bwk, bwk]))})
+                    changed = True
+                    forced = False
 
-                # Search for a neighbour who is in a different BWK
-                for neighbour, neighbour_diff, neighbour_bwk in d_neighbours:
-                    # Try to make sure that the result in the neighbours BWK is unchanged when we add this district
-                    old_winner = sorted(results[neighbour_bwk], key=lambda x: x[1], reverse=True)[0][0]
-                    n_results = neighbour.get_result_dict()
-                    # Add the votes of this district to the total result of the bwk
+                    break
+                else:
                     for key in n_results.keys():
-                        results[neighbour_bwk][key] += n_results[key]
-                    # If the result in the BWK is unchanged
-                    if forced or sorted(results[neighbour_bwk], key=lambda x: x[1], reverse=True)[0][0] == old_winner:
-                        add_district_to_bwk(district, neighbour_bwk, diffs, own_diff)
-
-                        old_county.remove(district)
-                        changed = True
-                        forced = False
-
-                        break
-                    else:
-                        for key in n_results.keys():
-                            results[neighbour.bwk][key] -= n_results[key]
-            # If we didn't find the perfect candidate just force the addition to the
-            # first potential BWK and try again
-            if not changed:
-                forced = True
+                        results[neighbour.bwk][key] -= n_results[key]
+        # If we didn't find the perfect candidate just force the addition to the
+        # first potential BWK and try again
+        if not changed:
+            forced = True
 
     return steps
 
@@ -127,37 +123,42 @@ def get_gerrymandering_steps(bwk, party):
     diffs = Diff.query.all()
     results = get_results_from_table(MergedDistrictDiff)
     old_county = [district for district in districts if district.bwk == bwk]
+    county_result = {key: 0 for key in districts[0].get_result_dict().keys()}
     if len(old_county) > 0:
         # Sort by highest delta
         old_county = sorted(old_county, key=functools.cmp_to_key(district_comparator))
-        steps.append({'action': 'search', 'candidates': [district.identifier for district in old_county]})
-        county_result = {key: 0 for key in old_county[0].get_result_dict().keys()}
+        append_search_step(old_county, steps)
         new_county_result = get_new_results(old_county[0], county_result)
         if check_winning_party(new_county_result, party):
-            steps[len(steps)-1]['winner'] = old_county[0].identifier
-            steps.append(gerrymander(party, bwk, [old_county[0]], old_county[1:], len(original_bwk_districts), diffs,
-                                     new_county_result, results))
-            return steps
+            steps[len(steps) - 1]['winner'] = old_county[0].identifier
+            return steps + gerrymander(party, bwk, [old_county[0]], old_county[1:], len(original_bwk_districts), diffs,
+                                       new_county_result, results)
 
     # If we found no working solution...
     # Check if we find a good seed in the original district
     # ...sort again for the biggest delta...
     original_bwk_districts = sorted(original_bwk_districts, key=functools.cmp_to_key(district_comparator))
+    append_search_step(original_bwk_districts, steps)
     new_county_result = get_new_results(original_bwk_districts[0], county_result)
     if check_winning_party(new_county_result, party):
         add_district_to_bwk(original_bwk_districts[0], bwk, diffs)
-        steps = gerrymander(party, bwk, [original_bwk_districts[0]], old_county, len(original_bwk_districts), diffs,
-                            new_county_result, results)
-        return steps
+        steps[len(steps) - 1]['winner'] = original_bwk_districts[0].identifier
+        return steps + gerrymander(party, bwk, [original_bwk_districts[0]], old_county, len(original_bwk_districts),
+                                   diffs, new_county_result, results)
 
     # If this does not work either check if we find any district anywhere
     districts = sorted(districts, key=functools.cmp_to_key(district_comparator))
+    append_search_step(districts, steps)
     new_county_result = get_new_results(districts[0], county_result)
     if check_winning_party(new_county_result, party):
         add_district_to_bwk(districts[0], bwk, diffs)
-        steps = gerrymander(party, bwk, [districts[0]], old_county, len(original_bwk_districts), diffs,
-                            new_county_result, results)
-        return steps
+        steps[len(steps) - 1]['winner'] = districts[0].identifier
+        return steps + gerrymander(party, bwk, [districts[0]], old_county, len(original_bwk_districts), diffs,
+                                   new_county_result, results)
+
+
+def append_search_step(candidates, steps):
+    steps.append({'action': 'search', 'candidates': [district.identifier for district in candidates]})
 
 
 def check_winning_party(voting_results, party):
@@ -220,4 +221,4 @@ def get_bwk_and_diff(district_to_check, diffs):
 
 
 if __name__ == '__main__':
-    get_gerrymandering_steps('076', 'afd')
+    print(get_gerrymandering_steps('076', 'afd'))
