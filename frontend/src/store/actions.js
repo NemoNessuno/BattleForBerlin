@@ -53,11 +53,6 @@ export default {
       })
   },
   async gerryMander ({commit, dispatch}, {bwk, party, withReset}) {
-    if (withReset) {
-      commit('setAlgorithmProgress', {shifts: 0, totalShifts: 0, reset: false})
-      await dispatch('reset')
-    }
-    commit('setAlgorithmProgress', {shifts: 0, totalShifts: 0, reset: true})
     const body = JSON.stringify({bwk, party})
     const headers = new Headers({
       'Content-Type': 'application/json',
@@ -65,31 +60,7 @@ export default {
     })
     const resp = await fetch('/api/gerrymander', {method: 'post', body, headers})
     let data = await resp.json()
-    data = data.map(function (value, index) { return {value, index} })
-    commit('setAlgorithmProgress', {shfits: 0, totalShifts: data.length, reset: true})
-    const delayedRenderer = data.reduce(function (obs, value) {
-      if (value.index === 0) {
-        return obs.concat(Observable.of(value))
-      }
-      return obs.concat(Observable.timer(500).mapTo(value))
-    }, Observable.timer(1000))
-    await dispatch('loadDiffCount')
-    delayedRenderer.subscribe(
-      function (item) {
-        if (typeof item === 'number') {
-          commit('setAlgorithmProgress', {shifts: 0, totalShifts: data.length, reset: true})
-          return
-        }
-        commit('setCounties', item.value)
-        const shifts = item.index + 1
-        commit('setAlgorithmProgress', {shifts, totalShifts: data.length, reset: true})
-      },
-      console.error,
-      function () {
-        Observable.timer(4000).subscribe(function () {
-          commit('setAlgorithmProgress', undefined)
-        })
-      }
-    )
+    commit('setGerrymanderAnimation', data)
+    return data
   }
 }

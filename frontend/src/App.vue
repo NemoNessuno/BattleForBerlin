@@ -19,7 +19,6 @@
       </v-btn>
     </v-toolbar>
     <v-content>
-      <algorithm-progress v-if="algorithmProgress" />
       <leaflet-map :style="{height: mapHeight}" class="supermap" />
       <welcome v-if="route === 'welcome'"></welcome>
       <onboarding v-if="route === 'about'" />
