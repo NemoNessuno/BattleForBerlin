@@ -30,15 +30,16 @@ def gerrymander(party, bwk, new_county, old_county, original_size, diffs, county
 
                 # Check if still win with this new district and that the old county's result is not changed
                 if check_winning_party(new_county_result, party) and \
-                        neighbour_bwk == bwk or \
-                        check_winning_party(new_neighbour_county_result, neighbour_county_winner):
+                        (neighbour_bwk == bwk or
+                         check_winning_party(new_neighbour_county_result, neighbour_county_winner)):
                     counter += 1
                     add_district_to_bwk(neighbour, bwk, diffs, neighbour_diff)
-                    steps.append({'action': 'grow', 'targets': get_county_geojson(set([neighbour_bwk, bwk]))})
+                    steps.append({'action': 'grow', 'targets': get_county_geojson({neighbour_bwk, bwk})})
                     new_new_county.append(neighbour)
                     county_result = new_county_result
-                    results[neighbour_bwk] = new_neighbour_county_result
-                    if neighbour in old_county:
+                    if neighbour_bwk != bwk:
+                        results[neighbour_bwk] = new_neighbour_county_result
+                    if any([oc.identifier == neighbour.identifier for oc in old_county]):
                         old_county.remove(neighbour)
 
         new_county = new_new_county
@@ -70,7 +71,7 @@ def gerrymander(party, bwk, new_county, old_county, original_size, diffs, county
                 if forced or sorted(results[neighbour_bwk], key=lambda x: x[1], reverse=True)[0][0] == old_winner:
                     add_district_to_bwk(district, neighbour_bwk, diffs, own_diff)
                     old_county.remove(district)
-                    steps.append({'action': 'cleanup', 'targets': get_county_geojson(set([neighbour_bwk, bwk]))})
+                    steps.append({'action': 'cleanup', 'targets': get_county_geojson({neighbour_bwk, bwk})})
                     changed = True
                     forced = False
 
@@ -221,4 +222,4 @@ def get_bwk_and_diff(district_to_check, diffs):
 
 
 if __name__ == '__main__':
-    print(get_gerrymandering_steps('076', 'afd'))
+    get_gerrymandering_steps('084', 'afd')
