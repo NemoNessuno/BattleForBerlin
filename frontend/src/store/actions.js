@@ -1,8 +1,3 @@
-import {Observable} from 'rxjs/Observable'
-import 'rxjs/add/observable/of'
-import 'rxjs/add/observable/timer'
-import 'rxjs/add/operator/concat'
-import 'rxjs/add/operator/mapTo'
 
 export default {
   loadCounties ({commit}) {
@@ -61,6 +56,7 @@ export default {
     const resp = await fetch('/api/gerrymander', {method: 'post', body, headers})
     let data = await resp.json()
     commit('setGerrymanderAnimation', data)
+    console.log('setgerrmanderanimation', data)
     return data
   }
 }

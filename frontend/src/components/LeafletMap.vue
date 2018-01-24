@@ -13,7 +13,7 @@
   import L from 'leaflet'
   import DistrictDetails from './DistrictDetails'
   import CountyDetails from './CountyDetails'
-  import {DistrictLayer, CountyLayer} from '@/layers'
+  import {DistrictLayer, CountyLayer, AnimationLayer} from '@/layers'
   import {COUNTY_KEYS} from '@/store/constants'
   import {mapState, mapMutations, mapGetters} from 'vuex'
   const tileLayerAPI = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}'
@@ -29,7 +29,7 @@
       }
     },
     computed: {
-      ...mapState(['districts'].concat(COUNTY_KEYS)),
+      ...mapState(['districts', 'gerrymanderAnimation'].concat(COUNTY_KEYS)),
       ...mapGetters(['currentDistrict', 'currentCounty'])
     },
     mounted () {
@@ -91,11 +91,19 @@
           this.countyWrapper.updateCounty(newVal)
         })
       }
+      this.animation = new AnimationLayer()
+      this.animation.installStore(this.$store)
     },
     methods: mapMutations(['selectDistrict', 'selectCounty', 'unselectItem']),
     watch: {
       districts (newVal) {
         this.mergedWrapper.updateDistricts(newVal)
+      },
+      gerrymanderAnimation (newVal) {
+        this.controls.remove()
+        this.mergedWrapper.layers.remove()
+        this.countyWrapper.layers.remove()
+        this.animation.layers.addTo(this.map)
       }
     },
     components: {DistrictDetails, CountyDetails}

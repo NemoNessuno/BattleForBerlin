@@ -13,7 +13,7 @@ const state = {
   selectedCounty: undefined,
   gerryManderVisible: false,
   route: 'welcome',
-  gerryManderAnimation: undefined,
+  gerrymanderAnimation: undefined,
   districtHash: undefined
 }
 

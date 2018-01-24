@@ -5,7 +5,7 @@ export default {
     state.districtHash = {}
     districts.forEach(function (district) {
       state.districtProps[district.properties.identifier] = {...district.properties}
-      state.districtHash[district.identifier] = {...district}
+      state.districtHash[district.properties.identifier] = {...district}
     })
   },
   setCounties (state, counties) {

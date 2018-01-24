@@ -100,6 +100,46 @@ export class CountyLayer extends BaseLayer {
   }
 }
 
+export class AnimationLayer {
+  constructor (store) {
+    this.store = undefined
+    this.layers = L.layerGroup([])
+    this._layerHash = {}
+  }
+
+  installStore (store) {
+    this.store = store
+    this.store.watch(
+      function (state) {
+        return state.gerrymanderAnimation
+      },
+      this.onChange.bind(this)
+    )
+  }
+
+  onChange (oldval, newval) {
+    if (!newval) {
+      return
+    }
+    window.setTimeout(() => this.onInit(newval[0]), 300)
+    window.setTimeout(() => this.onSelect(newval[0].winner), 2000)
+  }
+
+  onInit ({candidates}) {
+    this.layers.clearLayers()
+    for (let candidate of candidates) {
+      let shape = this.store.state.districtHash[candidate]
+      let layer = L.geoJSON(shape, {color: 'black', fillColor: 'yellow', weight: 1, fillOpacity: 0.5})
+      this._layerHash[candidate] = layer
+      this.layers.addLayer(layer)
+    }
+  }
+
+  onSelect (winner) {
+    this._layerHash[winner].setStyle({color: 'black', fillColor: 'green', weight: 1, fillOpacity: 1})
+  }
+}
+
 function styleDistrict ({geometry}) {
   const {properties} = geometry
   const winner = maxProp(properties.result)
