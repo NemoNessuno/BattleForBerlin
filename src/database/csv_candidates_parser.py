@@ -67,7 +67,7 @@ def update_or_insert(path):
     candidates = pd.read_csv(path, sep=';', header=[7])
 
     # Get candidates in first votes in Berlin
-    ber_candidates = candidates.loc[candidates[county_index].isin(range(75, 86))]
+    ber_candidates = candidates.loc[candidates[county_index].isin(range(75, 87))]
 
     # Define the parties we want are interested in
     parties = ['CDU', 'SPD', 'GR\xc3\x9cNE', 'DIE LINKE', 'AfD', 'FDP']

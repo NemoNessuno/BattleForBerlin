@@ -135,13 +135,15 @@ def get_gerrymandering_steps(bwk, party):
             return steps + gerrymander(party, bwk, [old_county[0]], old_county[1:], len(original_bwk_districts), diffs,
                                        new_county_result, results)
 
-    # If we found no working solution...
-    # Check if we find a good seed in the original district
-    # ...sort again for the biggest delta...
+    # If we found no working solution
+    # check if we find a good seed in the original district
     original_bwk_districts = sorted(original_bwk_districts, key=functools.cmp_to_key(district_comparator))
     append_search_step(original_bwk_districts, steps)
     new_county_result = get_new_results(original_bwk_districts[0], county_result)
     if check_winning_party(new_county_result, party):
+        original_district_bwk = get_bwk_and_diff(original_bwk_districts[0], diffs)[1]
+        results[original_district_bwk] = get_new_results(districts[0], results[original_district_bwk],
+                                                         factor=-1)
         add_district_to_bwk(original_bwk_districts[0], bwk, diffs)
         steps[len(steps) - 1]['winner'] = original_bwk_districts[0].identifier
         return steps + gerrymander(party, bwk, [original_bwk_districts[0]], old_county, len(original_bwk_districts),
@@ -152,6 +154,8 @@ def get_gerrymandering_steps(bwk, party):
     append_search_step(districts, steps)
     new_county_result = get_new_results(districts[0], county_result)
     if check_winning_party(new_county_result, party):
+        district_bwk = get_bwk_and_diff(districts[0], diffs)[1]
+        results[district_bwk] = get_new_results(districts[0], results[district_bwk], factor=-1)
         add_district_to_bwk(districts[0], bwk, diffs)
         steps[len(steps) - 1]['winner'] = districts[0].identifier
         return steps + gerrymander(party, bwk, [districts[0]], old_county, len(original_bwk_districts), diffs,
@@ -167,7 +171,10 @@ def check_winning_party(voting_results, party):
 
 
 def get_winning_party(voting_results):
-    return sorted(voting_results.items(), key=lambda x: x[1], reverse=True)[0][0]
+    if any(value > 0 for value in voting_results.values()):
+        return sorted(voting_results.items(), key=lambda x: x[1], reverse=True)[0][0]
+    else:
+        return False
 
 
 def get_new_results(district, sums, factor=1):
@@ -222,4 +229,4 @@ def get_bwk_and_diff(district_to_check, diffs):
 
 
 if __name__ == '__main__':
-    get_gerrymandering_steps('084', 'afd')
+    get_gerrymandering_steps('083', 'afd')
