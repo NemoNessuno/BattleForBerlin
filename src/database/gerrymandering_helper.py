@@ -39,8 +39,10 @@ def gerrymander(party, bwk, new_county, old_county, original_size, diffs, county
                     county_result = new_county_result
                     if neighbour_bwk != bwk:
                         results[neighbour_bwk] = new_neighbour_county_result
-                    if any([oc.identifier == neighbour.identifier for oc in old_county]):
-                        old_county.remove(neighbour)
+
+                    oc_district = next((x for x in old_county if x.identifier == neighbour.identifier), None)
+                    if oc_district:
+                        old_county.remove(oc_district)
 
         new_county = new_new_county
 
@@ -150,16 +152,28 @@ def get_gerrymandering_steps(bwk, party):
                                    diffs, new_county_result, results)
 
     # If this does not work either check if we find any district anywhere
-    districts = sorted(districts, key=functools.cmp_to_key(district_comparator))
-    append_search_step(districts, steps)
-    new_county_result = get_new_results(districts[0], county_result)
-    if check_winning_party(new_county_result, party):
-        district_bwk = get_bwk_and_diff(districts[0], diffs)[1]
-        results[district_bwk] = get_new_results(districts[0], results[district_bwk], factor=-1)
-        add_district_to_bwk(districts[0], bwk, diffs)
-        steps[len(steps) - 1]['winner'] = districts[0].identifier
-        return steps + gerrymander(party, bwk, [districts[0]], old_county, len(original_bwk_districts), diffs,
-                                   new_county_result, results)
+    # By checking the neighbours of the original district and then branching outward
+    alreadychecked = set([district.identifier for district in original_bwk_districts])
+    check_for_neighbours = original_bwk_districts
+    while len(check_for_neighbours) > 0:
+        districts_to_check = []
+        for district in check_for_neighbours:
+            districts_to_check += get_neighbours(district, diffs,
+                                                 lambda neighbour, _:
+                                                 neighbour not in districts_to_check
+                                                 and neighbour.identifier not in alreadychecked)
+
+        append_search_step(districts, steps)
+        for district, _, district_bwk in districts_to_check:
+            new_county_result = get_new_results(district, county_result)
+            if check_winning_party(new_county_result, party):
+                results[district_bwk] = get_new_results(district, results[district_bwk], factor=-1)
+                add_district_to_bwk(district, bwk, diffs)
+                steps[len(steps) - 1]['winner'] = district.identifier
+                return steps + gerrymander(party, bwk, [district], old_county, len(original_bwk_districts), diffs,
+                                           new_county_result, results)
+
+        check_for_neighbours = districts_to_check
 
 
 def append_search_step(candidates, steps):
@@ -188,9 +202,12 @@ def get_new_results(district, sums, factor=1):
 def get_neighbours(district, diffs, filter_function):
     # Get all neighbours that are not in the current districts BWK
     d_neighbours = []
+    if not district.neighbours:
+        district.fill_neighbours()
+
     for n in district.neighbours:
         n_diff, n_bwk = get_bwk_and_diff(n, diffs)
-        if filter_function(district, n_bwk):
+        if filter_function(n, n_bwk):
             d_neighbours.append((n, n_diff, n_bwk))
     return d_neighbours
 
@@ -229,4 +246,4 @@ def get_bwk_and_diff(district_to_check, diffs):
 
 
 if __name__ == '__main__':
-    get_gerrymandering_steps('083', 'afd')
+    get_gerrymandering_steps('077', 'spd')
