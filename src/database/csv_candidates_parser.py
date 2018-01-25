@@ -2,6 +2,8 @@
 import pandas as pd
 import json
 
+from bs4 import BeautifulSoup
+
 from src.database.data_extraction_helper import get_http_request
 from src.database.db_handler import engine, db_session
 from src.database.models import Candidate
@@ -88,6 +90,12 @@ def update_or_insert(path):
             name = candidate['Namenszusatz'] + ' ' + name
         img_url, profile_url, description_url = retrieve_online_information(name, surname, title, aw_url)
         img_url = img_url.replace("_146", "")  # Yep abgeordnetenwatch doesn't keep track of their image urls
+        img_request = get_http_request(img_url)
+        if img_request.status != 200:
+            profile_request = get_http_request(profile_url)
+            if profile_request.status == 200: # If not tough luck
+                profil_html = BeautifulSoup(profile_request.data, 'html.parser')
+                img_url = profil_html.find_all('figure', {'class': 'deputy__image'})[0].img['src']
         db_session.add(Candidate(name, surname, party, bwk, liste, img_url, profile_url, description_url))
 
     db_session.commit()
