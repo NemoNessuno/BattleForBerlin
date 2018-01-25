@@ -11,7 +11,6 @@ from database.db_helper import (
     get_district_geojson,
     get_county_geojson,
     upsert_diff,
-    get_simplified_json,
     truncate_diffs
 )
 
@@ -50,11 +49,6 @@ def reset():
 @app.route('/api/diff/count', methods=['GET'])
 def get_diff_count():
     return jsonify({'count': int(db_session.query(Diff.bwk).count())})
-
-
-@app.route('/api/county/<countyid>')
-def simple_county(countyid):
-    return get_simplified_json(countyid)
 
 
 @app.route('/api/diff/create', methods=['POST'])

@@ -22,40 +22,42 @@ def get_district_geojson(district):
     return geojsons
 
 
-def get_county_geojson():
-    query = db_session.query(
-        MergedDistrictDiff.bwk,
-        functions.ST_AsGeoJSON(functions.ST_Union(functions.ST_Transform(MergedDistrictDiff.geom, 4326))).label("geom"),
-        *sum_party_results(MergedDistrictDiff)
-    ).group_by(MergedDistrictDiff.bwk)
+def get_county_geojson(bwks=None):
+    # Please notice the missing filter statement!
+    if bwks:
+        query = db_session.query(
+            MergedDistrictDiff.bwk,
+            functions.ST_AsGeoJSON(functions.ST_Union(functions.ST_Transform(MergedDistrictDiff.geom, 4326))).label(
+                "geom"),
+            *sum_party_results(MergedDistrictDiff)
+        ).filter(MergedDistrictDiff.bwk.in_(bwks)).group_by(MergedDistrictDiff.bwk)
+    else:
+        query = db_session.query(
+            MergedDistrictDiff.bwk,
+            functions.ST_AsGeoJSON(functions.ST_Union(functions.ST_Transform(MergedDistrictDiff.geom, 4326))).label(
+                "geom"),
+            *sum_party_results(MergedDistrictDiff)
+        ).group_by(MergedDistrictDiff.bwk)
 
     geojsons = []
     for bwk, geom, cdu, spd, gruene, die_linke, fdp, afd in query.all():
         candidates = db_session.query(Candidate).filter(Candidate.bwk == bwk)
         geojson = json.loads(geom)
         geojson['properties'] = {
-                'bwk': bwk,
-                'candidates': {candidate.party_key(): candidate.get_json() for candidate in candidates},
-                'result': {
-                    'cdu': int(cdu),
-                    'spd': int(spd),
-                    'gruene': int(gruene),
-                    'die_linke': int(die_linke),
-                    'fdp': int(fdp),
-                    'afd': int(afd)
-                    }
-                }
+            'bwk': bwk,
+            'candidates': {candidate.party_key(): candidate.get_json() for candidate in candidates},
+            'result': {
+                'cdu': int(cdu),
+                'spd': int(spd),
+                'gruene': int(gruene),
+                'die_linke': int(die_linke),
+                'fdp': int(fdp),
+                'afd': int(afd)
+            }
+        }
         geojsons.append(geojson)
 
     return geojsons
-
-
-def get_simplified_json(bwk):
-    query = db_session.query(
-        functions.ST_AsGeoJSON(functions.ST_Simplify(functions.ST_Union(MergedDistrict.geom), 0.001, True))
-    ).filter(MergedDistrict.bwk == bwk)
-    result = query.all()
-    return list(result)[0]
 
 
 def sum_party_results(model):
