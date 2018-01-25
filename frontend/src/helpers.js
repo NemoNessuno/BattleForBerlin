@@ -1,7 +1,11 @@
 import {Observable} from 'rxjs/Observable'
+import 'rxjs/add/observable/interval'
+import 'rxjs/add/observable/from'
 import 'rxjs/add/observable/timer'
 import 'rxjs/add/observable/forkJoin'
 import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/mergeMap'
+import 'rxjs/add/operator/zip'
 
 export function maxProp (obj) {
   let maxKey = ''
@@ -42,4 +46,16 @@ export const BWK_NAMES = {
 export function minAwait (observable, timeout = 500) {
   const timeoutOb = Observable.timer(500)
   return Observable.forkJoin(observable, timeoutOb).map(arr => arr[0])
+}
+
+export function asyncChunks (inputData, period, chunkSize = 50) {
+  const chunks = []
+  for (let i = 0; i < inputData.length; i += chunkSize) {
+    chunks.push(inputData.slice(i, i + chunkSize))
+  }
+  return Observable.from(chunks).zip(Observable.interval(period), function (a, b) {
+    return a
+  }).mergeMap(function (chunk) {
+    return Observable.from(chunk)
+  })
 }
