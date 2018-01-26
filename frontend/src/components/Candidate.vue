@@ -31,18 +31,18 @@
             </v-list-tile-content>
           </v-list-tile>
           <v-list-tile avatar>
-            <v-list-tile-avatar class="black--text">
+            <v-list-tile-avatar :class="textClass">
               <v-icon class="black--text">sort</v-icon>
             </v-list-tile-avatar>
-            <v-list-tile-content class="black--text">
+            <v-list-tile-content :class="textClass">
               {{ranking}}
             </v-list-tile-content>
           </v-list-tile>
           <v-list-tile>
-            <v-list-tile-avatar class="black--text">
+            <v-list-tile-avatar :class="textClass">
               <v-icon class="black--text">school</v-icon>
             </v-list-tile-avatar>
-            <v-list-tile-content class="black--text">
+            <v-list-tile-content :class="textClass">
               {{educationString}}
             </v-list-tile-content>
           </v-list-tile>
@@ -84,7 +84,7 @@
         loaded: false,
         rank: undefined,
         degree: '',
-        education: 'fetching',
+        education: '',
         showImage: false
       }
     },
@@ -128,6 +128,9 @@
         return 'ohne Listenplatz'
       },
       educationString () {
+        if (!this.loaded) {
+          return 'lade ...'
+        }
         if (!this.education) {
           return 'unbekannt'
         }
@@ -135,6 +138,12 @@
           return this.education
         }
         return this.education.substring(0, 49) + '...'
+      },
+      textClass () {
+        if (this.loaded) {
+          return 'black--text'
+        }
+        return 'grey--text darken-2'
       }
     },
     methods: {
