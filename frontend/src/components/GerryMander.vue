@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-toolbar class="primary">
-      <v-btn icon @click.native="goToMap">
+      <v-btn icon to="/map">
         <v-icon>close</v-icon>
       </v-btn>
       <v-toolbar-title>
@@ -19,13 +19,15 @@
 
 <script>
 import Candidate from './Candidate'
-import {mapGetters, mapMutations} from 'vuex'
 import {BWK_NAMES} from '@/helpers'
 export default {
   name: 'gerry-mander',
+  mounted () {
+    console.log(this.$route.params)
+
+  },
   computed: {
-    ...mapGetters(['currentCounty']),
-    bezirk () { return BWK_NAMES[this.currentCounty.bwk] },
+    bezirk () { return BWK_NAMES[this.bwk] },
     candidates () {
       let candidateList = Object.keys(this.currentCounty.candidates).map(function (party) {
         const candidate = {...this.currentCounty.candidates[party]}
@@ -38,9 +40,12 @@ export default {
         return candidate
       }.bind(this))
       return candidateList
+    },
+    bwk () {
+      console.log(this.$route)
+      return this.$route.params.identifier
     }
   },
-  methods: mapMutations(['goToMap']),
   components: {Candidate}
 }
 </script>

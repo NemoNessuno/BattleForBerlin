@@ -6,7 +6,7 @@
       </v-btn>
       <v-toolbar-title>{{currentCounty.bwk}} - {{bezirk}}</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon @click.native="goToGerryMander">
+      <v-btn icon :to="'/votingdistrict/' + currentCounty.bwk">
         <v-icon>poll</v-icon>
       </v-btn>
     </v-toolbar>

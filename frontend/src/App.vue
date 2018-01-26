@@ -8,10 +8,7 @@
       <v-btn icon @click="reset" :disabled="diffCount === 0">
         <v-icon>restore_page</v-icon>
       </v-btn>
-      <v-btn @click="goToAbout" icon v-if="route === 'map'">
-        <v-icon>info_outline</v-icon>
-      </v-btn>
-      <v-btn @click="goToMap" icon v-if="route === 'about'">
+      <v-btn href="/info" icon v-if="route === 'about'">
         <v-icon>map</v-icon>
       </v-btn>
       <v-btn href="https://github.com/NemoNessuno/BattleForBerlin" icon>
@@ -19,10 +16,7 @@
       </v-btn>
     </v-toolbar>
     <v-content>
-      <leaflet-map :style="{height: mapHeight}" class="supermap" />
-      <welcome v-if="route === 'welcome'"></welcome>
-      <onboarding v-if="route === 'about'" />
-      <gerry-mander v-if="route === 'gerrymander'" />
+      <router-view></router-view>
     </v-content>
     <v-footer v-if="route !== 'map'">
       <span>&copy; 2017, S&ouml;ren Titze, Christian Windolf</span>
@@ -31,24 +25,10 @@
 </template>
 
 <script>
-import AlgorithmProgress from './components/AlgorithmProgress'
-import Onboarding from './components/Onboarding'
-import LeafletMap from './components/LeafletMap'
-import GerryMander from './components/GerryMander'
-import Welcome from './components/Welcome'
 import {mapState, mapActions, mapGetters, mapMutations} from 'vuex'
 export default {
   name: 'app',
   computed: {
-    mapHeight () {
-      if (this.route === 'map') {
-        if (!this.algorithmProgress) {
-          return 'calc(100vh - 71px)'
-        }
-        return 'calc(100vh - 100px)'
-      }
-      return '0'
-    },
     ...mapState(['diffCount', 'gerryManderVisible', 'route', 'algorithmProgress']),
     ...mapGetters(['currentCounty'])
   },
@@ -63,8 +43,7 @@ export default {
     },
     ...mapMutations(['goToMap', 'goToAbout']),
     ...mapActions(['reset', 'loadCounties', 'loadDistricts', 'loadDiffCount'])
-  },
-  components: {Onboarding, LeafletMap, GerryMander, Welcome, AlgorithmProgress}
+  }
 }
 </script>
 

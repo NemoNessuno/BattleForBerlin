@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-toolbar class="primary">
-      <v-btn icon @click.native="goToMap">
+      <v-btn icon to="/map">
         <v-icon>
           close
         </v-icon>

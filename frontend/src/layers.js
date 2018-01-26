@@ -1,12 +1,6 @@
 import L from 'leaflet'
-import {Observable} from 'rxjs/Observable'
-import 'rxjs/add/observable/empty'
-import 'rxjs/add/observable/of'
-import 'rxjs/add/observable/timer'
-import 'rxjs/add/operator/concat'
-import 'rxjs/add/operator/mapTo'
 
-import {maxProp, PARTY_COLORS} from './helpers'
+import {maxProp, PARTY_COLORS, asyncChunks} from './helpers'
 
 class BaseLayer {
   constructor () {
@@ -56,22 +50,12 @@ export class DistrictLayer extends BaseLayer {
     }
     const $this = this
     this.layers.clearLayers()
-    const schedule = chunks.map(function (chunk, index) {
-      if (index === 0) {
-        return Observable.of(chunk)
-      }
-      return Observable.timer(300).mapTo(chunk)
-    }).reduce(function (obs, val) {
-      return obs.concat(val)
-    }, Observable.empty())
-    schedule.subscribe(function (chunk) {
-      chunk.forEach(function (district) {
-        const layer = L.geoJSON(district, this.config.defaultStyle)
-        layer.on('click', function ({layer}) {
-          $this.selectDistrict.bind($this)(layer)
-        })
-        this.layers.addLayer(layer)
-      }.bind($this))
+    asyncChunks(districts, 400, 50).subscribe((district) => {
+      const layer = L.geoJSON(district, this.config.defaultStyle)
+      layer.on('click', function ({layer}) {
+        $this.selectDistrict.bind($this)(layer)
+      })
+      this.layers.addLayer(layer)
     })
   }
 }

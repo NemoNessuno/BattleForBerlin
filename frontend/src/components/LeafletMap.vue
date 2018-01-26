@@ -13,7 +13,7 @@
   import L from 'leaflet'
   import DistrictDetails from './DistrictDetails'
   import CountyDetails from './CountyDetails'
-  import {DistrictLayer, CountyLayer, AnimationLayer} from '@/layers'
+  import {DistrictLayer, CountyLayer} from '@/layers'
   import {COUNTY_KEYS} from '@/store/constants'
   import {mapState, mapMutations, mapGetters} from 'vuex'
   const tileLayerAPI = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}'
@@ -24,8 +24,8 @@
       return {
         map: undefined,
         controls: undefined,
-        mergedWrapper: undefined,
-        countyWrapper: undefined
+        districtLayer: new DistrictLayer(),
+        countyWrapper: new CountyLayer()
       }
     },
     computed: {
@@ -55,20 +55,19 @@
         zoomControl: false,
         layers: [tileLayer]
       })
-      this.mergedWrapper = new DistrictLayer()
-      this.mergedWrapper.updateDistricts(this.districts)
-      this.mergedWrapper.onSelection(function (values) {
+      this.districtLayer.updateDistricts(this.districts)
+      this.districtLayer.onSelection(function (values) {
         if (!values) {
           this.unselectItem()
         } else {
           this.selectDistrict(values.geometry.properties.identifier)
         }
       }.bind(this))
-      this.countyWrapper = new CountyLayer()
+      this.countyLayer = new CountyLayer()
       for (let key of COUNTY_KEYS) {
-        this.countyWrapper.updateCounty(this[key])
+        this.countyLayer.updateCounty(this[key])
       }
-      this.countyWrapper.onSelection(function (values) {
+      this.countyLayer.onSelection(function (values) {
         if (!values) {
           this.unselectItem()
         } else {
@@ -77,42 +76,29 @@
       }.bind(this))
       this.controls = L.control.layers(this.map)
       this.controls = L.control.layers({
-        'Wahlbezirke': this.mergedWrapper.layers,
-        'Wahlkreise': this.countyWrapper.layers
+        'Wahlbezirke': this.districtLayer.layers,
+        'Wahlkreise': this.countyLayer.layers
       }, {}, {collapsed: false}).addTo(this.map)
-      this.mergedWrapper.layers.addTo(this.map)
-      this.$nextTick().then(() => {
-        this.$refs.map.addEventListener('transitionend', () => {
-          this.map.invalidateSize()
-        })
-      })
+      this.countyLayer.layers.addTo(this.map)
       for (let key of COUNTY_KEYS) {
         this.$watch(key, function (newVal) {
-          this.countyWrapper.updateCounty(newVal)
+          this.countyLayer.updateCounty(newVal)
         })
       }
-      this.animation = new AnimationLayer()
-      this.animation.installStore(this.$store)
     },
     methods: mapMutations(['selectDistrict', 'selectCounty', 'unselectItem']),
     watch: {
       districts (newVal) {
-        this.mergedWrapper.updateDistricts(newVal)
-      },
-      gerrymanderAnimation (newVal) {
-        this.controls.remove()
-        this.mergedWrapper.layers.remove()
-        this.countyWrapper.layers.remove()
-        this.animation.layers.addTo(this.map)
+        this.districtLayer.updateDistricts(newVal)
       }
     },
     components: {DistrictDetails, CountyDetails}
   }
 </script>
 
-<style>
-#map {
-  margin: 0.3em;
-  border-radius: 5pt;
-}
+<style lang="sass">
+#map
+  margin: 0.3em
+  border-radius: 5pt
+  height: calc(100vh - 71px)
 </style>
