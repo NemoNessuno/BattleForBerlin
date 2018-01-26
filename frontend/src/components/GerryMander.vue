@@ -8,12 +8,15 @@
         {{bwk}} - {{bezirk}}
       </v-toolbar-title>
     </v-toolbar>
-    <v-container grid-list-md>
+    <v-container grid-list-md v-if="ready">
       <v-layout row wrap>
         <candidate v-for="candidate of candidates" :candidate="candidate" :key="'can.' + candidate.name">
         </candidate>
       </v-layout>
     </v-container>
+    <div v-else class="waiting">
+      <v-progress-circular :indeterminate="true" :size="120" :width="5" />
+    </div>
   </div>
 </template>
 
@@ -54,8 +57,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.summary
-  margin: 1em auto
-  padding: 0.7em
-  width: 95%
+.waiting
+  display: flex
+  justify-content: center
 </style>
