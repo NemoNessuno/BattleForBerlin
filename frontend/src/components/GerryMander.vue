@@ -5,7 +5,7 @@
         <v-icon>close</v-icon>
       </v-btn>
       <v-toolbar-title>
-        {{currentCounty.bwk}} - {{bezirk}}
+        {{bwk}} - {{bezirk}}
       </v-toolbar-title>
     </v-toolbar>
     <v-container grid-list-md>
@@ -20,18 +20,16 @@
 <script>
 import Candidate from './Candidate'
 import {BWK_NAMES} from '@/helpers'
+import {mapState} from 'vuex'
 export default {
   name: 'gerry-mander',
-  mounted () {
-    console.log(this.$route.params)
-
-  },
   computed: {
+    ...mapState(['countyProps']),
     bezirk () { return BWK_NAMES[this.bwk] },
     candidates () {
-      let candidateList = Object.keys(this.currentCounty.candidates).map(function (party) {
-        const candidate = {...this.currentCounty.candidates[party]}
-        candidate.votes = this.currentCounty.result[party]
+      let candidateList = Object.keys(this.countyProps[this.bwk].candidates).map(function (party) {
+        const candidate = {...this.countyProps[this.bwk].candidates[party]}
+        candidate.votes = this.countyProps[this.bwk].result[party]
         return candidate
       }.bind(this)).sort(function (a, b) { return b.votes - a.votes })
       candidateList = candidateList.map(function (candidate, index) {
