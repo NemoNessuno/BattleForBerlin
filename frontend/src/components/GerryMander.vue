@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-toolbar class="primary">
-      <v-btn icon to="/map">
+      <v-btn icon to="/map" :disabled="gerrymanderCandidate">
         <v-icon>close</v-icon>
       </v-btn>
       <v-toolbar-title>
