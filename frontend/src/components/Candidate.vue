@@ -47,8 +47,16 @@
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
+        <div class="waiting" v-if="waiting">
+          <div>
+          <v-progress-circular size="200" width="5" color="blue" :indeterminate="true" />
+          <p class="title black--text status-text" >
+            Berechne Bezirke
+          </p>
+          </div>
+        </div>
       </v-card-text>
-      <v-card-actions class="white">
+      <v-card-actions class="white" v-if="!waiting">
         <v-spacer />
         <v-btn
           flat
@@ -63,7 +71,6 @@
 </template>
 
 <script>
-  import {mapMutations, mapActions} from 'vuex'
   import {PARTY_COLORS} from '@/helpers'
   const PARTY_NAMES = {
     cdu: 'CDU',
@@ -76,7 +83,8 @@
   export default {
     name: 'candidate',
     props: {
-      candidate: {type: Object, required: true}
+      candidate: {type: Object, required: true},
+      waiting: {type: Boolean, default: false}
     },
     data () {
       return {
@@ -143,24 +151,34 @@
         if (this.loaded) {
           return 'black--text'
         }
-        return 'grey--text darken-2'
+        return 'grey--text'
       }
     },
     methods: {
-      ...mapActions(['gerryMander']),
-      ...mapMutations(['goToMap']),
       run () {
-        this.gerryMander({
-          bwk: this.candidate.bwk,
-          party: this.candidate.party
-        })
-        this.goToMap()
+        this.$emit('gerrymander', {bwk: this.candidate.bwk, party: this.candidate.party})
       }
     }
   }
 </script>
 
 <style lang="sass" scoped>
+@keyframes pulsation
+  from
+    opacity: 0.5
+  to
+    opacity: 0.95
 img
   object-fit: cover
+.waiting
+  display: flex
+  justify-content: center
+  text-align: center
+  p.status-text
+    margin-top: 0.5em
+    animation-name: pulsation
+    animation-duration: 1.5s
+    animation-direction: alternate
+    animation-iteration-count: infinite
+    animation-timing-function: ease
 </style>
