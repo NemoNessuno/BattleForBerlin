@@ -6,6 +6,7 @@ import 'rxjs/add/observable/forkJoin'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/mergeMap'
 import 'rxjs/add/operator/zip'
+import L from 'leaflet'
 
 export function maxProp (obj) {
   let maxKey = ''
@@ -57,5 +58,33 @@ export function asyncChunks (inputData, period, chunkSize = 50) {
     return a
   }).mergeMap(function (chunk) {
     return Observable.from(chunk)
+  })
+}
+
+const tileLayerAPI = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}'
+const accessToken = 'pk.eyJ1IjoibmVtb25lc3N1bm8iLCJhIjoiY2phM3FvbGRkM2x6MTM0cGN1M3h6dHcyYiJ9.Gie5hDNbis60D17BFvH31Q'
+
+export function buildLeafletMap (element) {
+  const tileLayer = L.tileLayer(tileLayerAPI, {
+    attribution: `Map data &copy;
+    <a href="http://openstreetmap.org">
+      OpenStreetMap
+    </a>
+    contributors,
+    <a href="http://creativecommons.org/licenses/by-sa/2.0/">
+      CC-BY-SA
+    </a>, Imagery ©
+    <a href="http://mapbox.com">Mapbox</a>`,
+    maxZoom: 18,
+    id: 'mapbox.streets',
+    accessToken
+  })
+  return L.map('map', {
+    center: [52.5200, 13.4050],
+    zoom: 10,
+    maxzoom: 13,
+    doubleClickZoom: false,
+    zoomControl: false,
+    layers: [tileLayer]
   })
 }
