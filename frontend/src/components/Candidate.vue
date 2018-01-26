@@ -35,15 +35,7 @@
               <v-icon class="black--text">sort</v-icon>
             </v-list-tile-avatar>
             <v-list-tile-content class="black--text">
-              <span v-if="!loaded">
-                fetching
-              </span>
-              <span v-else-if="loaded && rank">
-                Listenplatz {{rank}}
-              </span>
-              <span v-else>
-                Listenplatz unbekannt
-              </span>
+              {{ranking}}
             </v-list-tile-content>
           </v-list-tile>
           <v-list-tile>
@@ -125,6 +117,15 @@
       },
       partyTitle () {
         return PARTY_NAMES[this.candidate.party]
+      },
+      ranking () {
+        if (!this.loaded) {
+          return 'lade ...'
+        }
+        if (this.loaded && this.rank) {
+          return 'Listenplatz ' + this.rank
+        }
+        return 'ohne Listenplatz'
       },
       educationString () {
         if (!this.education) {
