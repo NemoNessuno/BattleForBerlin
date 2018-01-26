@@ -1,30 +1,36 @@
 <template>
   <div>
     <v-toolbar class="primary">
-      <v-btn icon to="/map" :disabled="gerrymanderCandidate">
+      <v-btn icon to="/map" :disabled="Boolean(gerrymanderCandidate)">
         <v-icon>close</v-icon>
       </v-btn>
       <v-toolbar-title>
         {{bwk}} - {{bezirk}}
       </v-toolbar-title>
     </v-toolbar>
-    <v-container grid-list-md v-if="ready && !gerrymanderCandidate">
-      <v-layout row wrap>
-        <candidate
-          v-for="candidate of candidates"
-          :candidate="candidate"
-          :key="'can.' + candidate.name"
-          @gerrymander="gerrymander"
-          >
-        </candidate>
-      </v-layout>
-    </v-container>
-    <div v-else-if="!ready" class="waiting">
-      <v-progress-circular :indeterminate="true" :size="120" :width="5" />
-    </div>
-    <div class="spinning-candidate" v-else>
-      <candidate :candidate="gerrymanderCandidate" :waiting="true" />
-    </div>
+    <transition name="zoom-in" mode="out-in">
+      <div v-if="ready">
+        <transition name="zoom-in" mode="out-in" >
+          <v-container grid-list-md v-if="!gerrymanderCandidate">
+            <v-layout row wrap>
+              <candidate
+                v-for="candidate of candidates"
+                :candidate="candidate"
+                :key="'can.' + candidate.name"
+                @gerrymander="gerrymander"
+                >
+              </candidate>
+            </v-layout>
+          </v-container>
+          <div class="spinning-candidate" v-else>
+            <candidate :candidate="gerrymanderCandidate" :waiting="true" />
+          </div>
+        </transition>
+      </div>
+      <div v-else class="waiting">
+        <v-progress-circular :indeterminate="true" :size="120" :width="5" />
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -76,9 +82,9 @@ export default {
   methods: {
     gerrymander (payload) {
       console.log(payload)
-      const waitFor = this.$store.dispatch('gerrymander', payload)
+      // const waitFor = this.$store.dispatch('gerrymander', payload)
       this.gerrymanderParty = payload.party
-      waitFor.then(console.log)
+      // waitFor.then(console.log)
     }
   },
   components: {Candidate}
@@ -94,4 +100,16 @@ export default {
   margin-top: 5em
   display: flex
   justify-content: center
+
+.zoom-in-enter, .zoom-in-leave-to
+  transform: scale(0.3)
+  opacity: 0.5
+
+.zoom-in-enter-to, .zoom-in-leave
+  transform: scale(1)
+  opacity: 1
+
+.zoom-in-enter-active, .zoom-in-leave-active
+  transition: all .8s ease
+
 </style>
