@@ -85,42 +85,47 @@ export class CountyLayer extends BaseLayer {
 }
 
 export class AnimationLayer {
-  constructor (store) {
-    this.store = undefined
+  constructor (districts) {
     this.layers = L.layerGroup([])
+    this.districts = districts
     this._layerHash = {}
   }
 
-  installStore (store) {
-    this.store = store
-    this.store.watch(
-      function (state) {
-        return state.gerrymanderAnimation
-      },
-      this.onChange.bind(this)
-    )
-  }
-
-  onChange (oldval, newval) {
-    if (!newval) {
-      return
+  runAnimation (animation) {
+    if (!animation) {
+      return Promise.resolve()
     }
-    window.setTimeout(() => this.onInit(newval[0]), 300)
-    window.setTimeout(() => this.onSelect(newval[0].winner), 2000)
+    return new Promise(function (resolve, reject) {
+      asyncChunks(animation, 500, 1).subscribe(function (step) {
+        if (step.action === 'search') {
+          this.onSearch(step)
+        }
+        if (step.action === 'grow') {
+          this.onGrow(step)
+        }
+      }.bind(this),
+      console.error,
+      () => resolve())
+    }.bind(this))
   }
 
-  onInit ({candidates}) {
+  onSearch ({candidates, winner}) {
     this.layers.clearLayers()
     for (let candidate of candidates) {
-      let shape = this.store.state.districtHash[candidate]
-      let layer = L.geoJSON(shape, {color: 'black', fillColor: 'yellow', weight: 1, fillOpacity: 0.5})
+      let shape = this.districts[candidate]
+      const fillColor = candidate === winner ? 'green' : 'yellow'
+      let layer = L.geoJSON(shape, {color: 'black', fillColor, weight: 1, fillOpacity: 0.5})
       this._layerHash[candidate] = layer
       this.layers.addLayer(layer)
     }
   }
 
-  onSelect (winner) {
-    this._layerHash[winner].setStyle({color: 'black', fillColor: 'green', weight: 1, fillOpacity: 1})
+  onGrow ({targets}) {
+    this.layers.clearLayers()
+    for (let target of targets) {
+      let layer = L.geoJSON(target, {style: styleDistrict})
+      this.layers.addLayer(layer)
+    }
   }
 }
 
