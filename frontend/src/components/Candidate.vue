@@ -49,7 +49,7 @@
         </v-list>
         <div class="waiting" v-if="waiting">
           <div>
-          <v-progress-circular size="200" width="5" color="blue" :indeterminate="true" />
+          <v-progress-circular :size="200" :width="5" color="blue" :indeterminate="true" />
           <p class="title black--text status-text" >
             Berechne Bezirke
           </p>
