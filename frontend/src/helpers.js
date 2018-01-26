@@ -65,6 +65,9 @@ const tileLayerAPI = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?acces
 const accessToken = 'pk.eyJ1IjoibmVtb25lc3N1bm8iLCJhIjoiY2phM3FvbGRkM2x6MTM0cGN1M3h6dHcyYiJ9.Gie5hDNbis60D17BFvH31Q'
 
 export function buildLeafletMap (element) {
+  if (!element) {
+    console.warn('buildLeafletMap() received undefined as argument')
+  }
   const tileLayer = L.tileLayer(tileLayerAPI, {
     attribution: `Map data &copy;
     <a href="http://openstreetmap.org">
@@ -79,7 +82,7 @@ export function buildLeafletMap (element) {
     id: 'mapbox.streets',
     accessToken
   })
-  return L.map('map', {
+  return L.map(element, {
     center: [52.5200, 13.4050],
     zoom: 10,
     maxzoom: 13,
