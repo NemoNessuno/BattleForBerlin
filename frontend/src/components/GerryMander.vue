@@ -26,7 +26,13 @@ export default {
   computed: {
     ...mapState(['countyProps']),
     bezirk () { return BWK_NAMES[this.bwk] },
+    ready () {
+      return Boolean(this.countyProps)
+    },
     candidates () {
+      if (!this.ready) {
+        return
+      }
       let candidateList = Object.keys(this.countyProps[this.bwk].candidates).map(function (party) {
         const candidate = {...this.countyProps[this.bwk].candidates[party]}
         candidate.votes = this.countyProps[this.bwk].result[party]
@@ -40,7 +46,6 @@ export default {
       return candidateList
     },
     bwk () {
-      console.log(this.$route)
       return this.$route.params.identifier
     }
   },
