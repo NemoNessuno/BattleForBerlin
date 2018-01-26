@@ -2,7 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import Vuex from 'vuex'
-import store from './store'
+import storeDefinition from './store'
 import Vuetify from 'vuetify'
 import VueRouter from 'vue-router'
 import App from './App'
@@ -13,11 +13,16 @@ Vue.use(Vuetify)
 Vue.use(VueRouter)
 Vue.config.productionTip = false
 
+const store = new Vuex.Store(storeDefinition)
+store.dispatch('loadDistricts')
+store.dispatch('loadCounties')
+store.dispatch('loadDiffCount')
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   template: '<App/>',
   components: { App },
-  store: new Vuex.Store(store),
+  store,
   router
 })

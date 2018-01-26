@@ -32,11 +32,6 @@ export default {
     ...mapState(['diffCount', 'gerryManderVisible', 'route', 'algorithmProgress']),
     ...mapGetters(['currentCounty'])
   },
-  mounted () {
-    this.loadDistricts()
-    this.loadCounties()
-    this.loadDiffCount()
-  },
   methods: {
     skipOnboarding () {
       this.route = 'map'
