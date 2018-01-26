@@ -32,7 +32,7 @@
       ...mapGetters(['currentDistrict', 'currentCounty'])
     },
     mounted () {
-      this.map = buildLeafletMap(this.$el.querySelector('#map'))
+      this.map = buildLeafletMap(this.$el)
       this.districtLayer.updateDistricts(this.districts)
       this.districtLayer.onSelection(function (values) {
         if (!values) {
