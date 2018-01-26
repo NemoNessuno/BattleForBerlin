@@ -16,7 +16,9 @@
       </v-btn>
     </v-toolbar>
     <v-content>
-      <router-view></router-view>
+      <transition mode="out-in">
+        <router-view></router-view>
+      </transition>
     </v-content>
     <v-footer v-if="route !== 'map'">
       <span>&copy; 2017, S&ouml;ren Titze, Christian Windolf</span>
@@ -72,4 +74,15 @@ html
   color: white
   form.leaflet-control-layers-scrollbar
     overflow-y: hidden
+
+.v-enter-active, .v-leave-active
+  transition: transform 0.3s ease
+.v-leave
+  transform: translateY(0)
+.v-leave-to
+  transform: translateY(100vh)
+.v-enter
+  transform: scale(0.3)
+.v-enter-to
+  transform: scale(1)
 </style>
