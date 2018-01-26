@@ -46,7 +46,7 @@ export default {
         return resp
       })
   },
-  async gerryMander ({commit, dispatch}, {bwk, party, withReset}) {
+  async gerrymander ({commit, dispatch}, {bwk, party, withReset}) {
     const body = JSON.stringify({bwk, party})
     const headers = new Headers({
       'Content-Type': 'application/json',
@@ -55,7 +55,6 @@ export default {
     const resp = await fetch('/api/gerrymander', {method: 'post', body, headers})
     let data = await resp.json()
     commit('setGerrymanderAnimation', data)
-    console.log('setgerrmanderanimation', data)
     return data
   }
 }
