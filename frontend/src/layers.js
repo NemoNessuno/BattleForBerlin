@@ -72,7 +72,7 @@ export class CountyLayer extends BaseLayer {
     }
     const bwk = county.properties.bwk
     if (this._countyLayers[bwk]) {
-      this._countyLayers[bwk].remove()
+      this.layers.removeLayer(this._countyLayers[bwk])
     }
     const $this = this
     const layer = L.geoJSON(county, this.config.defaultStyle)
