@@ -30,7 +30,7 @@
 
 <style lang="sass" scoped>
 #map2
-  height: 600px
+  height: calc(100vh - 71px)
   width: 100%
 
 </style>
