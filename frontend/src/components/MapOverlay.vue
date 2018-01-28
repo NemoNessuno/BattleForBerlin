@@ -21,7 +21,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn @click.native="close">Close</v-btn>
+        <v-btn to="/map">Close</v-btn>
       </v-card-actions>
     </v-card>
   </div>
