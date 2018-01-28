@@ -1,11 +1,9 @@
 <template>
   <div id="map" name="slide-in" ref="map">
     <district-details
-      v-if="currentDistrict"
-      @close="unselectItem" />
+      v-if="showDistrictDetails" />
     <county-details
-      v-if="currentCounty"
-      @close="unselectItem" />
+      v-if="showCountyDetails" />
   </div>
 </template>
 
@@ -25,29 +23,30 @@
         controls: undefined,
         districtLayer: new DistrictLayer(),
         countyWrapper: new CountyLayer()
-
       }
     },
     computed: {
-      ...mapState(['districts', 'gerrymanderAnimation', 'countyProps'].concat(COUNTY_KEYS)),
+      ...mapState(['districts', 'countyProps', 'districtProps'].concat(COUNTY_KEYS)),
       ...mapGetters(['currentDistrict']),
-      currentCounty () {
-        if (this.countyProps && this.$route.params.identifier && this.$route.params.identifier.length === 3) {
-          console.log(this.countyProps[this.$route.params.identifier])
-          return this.countyProps[this.$route.params.identifier]
-        }
-        return undefined
+      showCountyDetails () {
+        return this.countyProps &&
+          this.$route.params.identifier &&
+          this.$route.params.identifier.length === 3
+      },
+      showDistrictDetails () {
+        return this.districtProps &&
+          this.$route.params.identifier &&
+          this.$route.params.identifier.length === 4
       }
     },
     mounted () {
-      console.log('MOUNTED')
       this.map = buildLeafletMap(this.$el)
       this.districtLayer.updateDistricts(this.districts)
       this.districtLayer.onSelection(function (values) {
         if (!values) {
-          this.unselectItem()
+          this.$router.push('/map')
         } else {
-          this.selectDistrict(values.geometry.properties.identifier)
+          this.$router.push('/map/' + values.geometry.properties.identifier)
         }
       }.bind(this))
       this.countyLayer = new CountyLayer()

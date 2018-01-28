@@ -1,7 +1,7 @@
 <template>
-  <map-overlay :result="currentDistrict.result" @close="unselectItem">
+  <map-overlay :result="currentDistrict.result" >
     <v-toolbar slot="title" extended dense card>
-      <v-btn icon @click.native="unselectItem">
+      <v-btn icon to="/map">
         <v-icon>close</v-icon>
       </v-btn>
       <v-toolbar-title>Wahlbezirk {{districtId}}</v-toolbar-title>
@@ -19,7 +19,7 @@
 <script>
   import MapOverlay from './MapOverlay'
   import SelectBwk from './SelectBWK'
-  import {mapGetters, mapMutations} from 'vuex'
+  import {mapState} from 'vuex'
   import {BWK_NAMES} from '@/helpers'
   export default {
     name: 'DistrictDetails',
@@ -32,9 +32,11 @@
       bwk () { return this.currentDistrict.bwk || '' },
       districtId () { return this.currentDistrict.identifier || '' },
       bezirk () { return BWK_NAMES[this.bwk] },
-      ...mapGetters(['currentDistrict'])
+      ...mapState(['districtProps']),
+      currentDistrict () {
+        return this.districtProps[this.$route.params.identifier]
+      }
     },
-    methods: mapMutations(['unselectItem']),
     components: {MapOverlay, SelectBwk}
   }
 </script>
