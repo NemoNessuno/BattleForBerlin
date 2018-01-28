@@ -29,7 +29,7 @@ export default {
       return this.countyProps[this.$route.params.identifier]
     }
   },
-  methods: mapMutations(['unselectItem', 'goToGerryMander']),
+  methods: mapMutations(['unselectItem']),
   components: {MapOverlay, GerryMander}
 }
 </script>
