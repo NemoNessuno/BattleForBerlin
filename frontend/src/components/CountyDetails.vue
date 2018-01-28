@@ -17,14 +17,17 @@
 import MapOverlay from './MapOverlay'
 import GerryMander from './GerryMander'
 import {BWK_NAMES} from '@/helpers'
-import {mapGetters, mapMutations} from 'vuex'
+import {mapState, mapMutations} from 'vuex'
 export default {
   name: 'county-details',
   computed: {
+    ...mapState(['countyProps']),
     bezirk () {
       return BWK_NAMES[this.currentCounty.bwk]
     },
-    ...mapGetters(['currentCounty'])
+    currentCounty () {
+      return this.countyProps[this.$route.params.identifier]
+    }
   },
   methods: mapMutations(['unselectItem', 'goToGerryMander']),
   components: {MapOverlay, GerryMander}

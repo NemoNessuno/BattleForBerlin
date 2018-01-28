@@ -25,13 +25,22 @@
         controls: undefined,
         districtLayer: new DistrictLayer(),
         countyWrapper: new CountyLayer()
+
       }
     },
     computed: {
-      ...mapState(['districts', 'gerrymanderAnimation'].concat(COUNTY_KEYS)),
-      ...mapGetters(['currentDistrict', 'currentCounty'])
+      ...mapState(['districts', 'gerrymanderAnimation', 'countyProps'].concat(COUNTY_KEYS)),
+      ...mapGetters(['currentDistrict']),
+      currentCounty () {
+        if (this.countyProps && this.$route.params.identifier && this.$route.params.identifier.length === 3) {
+          console.log(this.countyProps[this.$route.params.identifier])
+          return this.countyProps[this.$route.params.identifier]
+        }
+        return undefined
+      }
     },
     mounted () {
+      console.log('MOUNTED')
       this.map = buildLeafletMap(this.$el)
       this.districtLayer.updateDistricts(this.districts)
       this.districtLayer.onSelection(function (values) {
@@ -47,9 +56,9 @@
       }
       this.countyLayer.onSelection(function (values) {
         if (!values) {
-          this.unselectItem()
+          this.$router.push('/map')
         } else {
-          this.selectCounty(values.geometry.properties.bwk)
+          this.$router.push('/map/' + values.geometry.properties.bwk)
         }
       }.bind(this))
       this.controls = L.control.layers(this.map)
@@ -68,6 +77,9 @@
     watch: {
       districts (newVal) {
         this.districtLayer.updateDistricts(newVal)
+      },
+      '$route' (to, from) {
+        console.log(to)
       }
     },
     components: {DistrictDetails, CountyDetails}
