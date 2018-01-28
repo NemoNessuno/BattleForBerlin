@@ -54,11 +54,6 @@ export default {
       ]
     }
   },
-  methods: {
-    close () {
-      this.$emit('close')
-    }
-  },
   components: {StackedBarChart}
 }
 </script>
