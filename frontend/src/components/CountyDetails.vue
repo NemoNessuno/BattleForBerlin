@@ -1,7 +1,7 @@
 <template>
-  <map-overlay :result="currentCounty.result" @close="unselectItem">
+  <map-overlay :result="currentCounty.result">
     <v-toolbar dark slot="title" >
-      <v-btn icon @click.native="unselectItem">
+      <v-btn icon to="/map" >
         <v-icon>close</v-icon>
       </v-btn>
       <v-toolbar-title>{{currentCounty.bwk}} - {{bezirk}}</v-toolbar-title>
@@ -17,7 +17,7 @@
 import MapOverlay from './MapOverlay'
 import GerryMander from './GerryMander'
 import {BWK_NAMES} from '@/helpers'
-import {mapState, mapMutations} from 'vuex'
+import {mapState} from 'vuex'
 export default {
   name: 'county-details',
   computed: {
@@ -29,7 +29,6 @@ export default {
       return this.countyProps[this.$route.params.identifier]
     }
   },
-  methods: mapMutations(['unselectItem']),
   components: {MapOverlay, GerryMander}
 }
 </script>

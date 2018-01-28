@@ -77,9 +77,6 @@
     watch: {
       districts (newVal) {
         this.districtLayer.updateDistricts(newVal)
-      },
-      '$route' (to, from) {
-        console.log(to)
       }
     },
     components: {DistrictDetails, CountyDetails}
