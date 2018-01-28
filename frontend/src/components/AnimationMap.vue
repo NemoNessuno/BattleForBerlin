@@ -11,6 +11,11 @@
       return {
       }
     },
+    created () {
+      if (!this.$store.state.gerrymanderAnimation) {
+        this.$router.push('/map')
+      }
+    },
     computed: {
       ...mapState(['gerrymanderAnimation', 'districtHash'])
     },
