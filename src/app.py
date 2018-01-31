@@ -90,7 +90,7 @@ def get_gerrymander_steps():
             gerrymandering_thread = None
         return result
     else:
-        return 'No gerrymandering process running at the moment'
+        return jsonify({'error': 'No gerrymandering process running at the moment'}), 404
 
 
 if __name__ == '__main__':
