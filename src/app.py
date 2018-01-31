@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request, Response, send_file
+from flask import Flask, render_template, jsonify, request, Response
 import requests
 
 from database.models import (
@@ -15,9 +15,11 @@ from database.db_helper import (
 )
 
 from database.db_handler import db_session
-from src.database.gerrymandering_helper import get_gerrymandering_steps
+from src.database.gerrymandering_algorithm import GerrymanderingThread
+from src.database.gerrymandering_helper import GerrymanderingQueue
 
 app = Flask(__name__)
+gerrymandering_thread = None
 
 
 @app.route('/')
@@ -68,8 +70,27 @@ def proxy_candidate(candidate):
 
 @app.route('/api/gerrymander', methods=['POST'])
 def gerrymander():
-    parameter = request.get_json()
-    return jsonify(get_gerrymandering_steps(parameter['bwk'], parameter['party']))
+    global gerrymandering_thread
+    if gerrymandering_thread:
+        return 'There is already a gerrymandering process running at the time'
+    else:
+        parameter = request.get_json()
+        gerrymandering_thread = GerrymanderingThread(bwk=parameter['bwk'], party=parameter['party'],
+                                                     queue=GerrymanderingQueue())
+        gerrymandering_thread.start()
+        return 'OK'
+
+
+@app.route('/api/gsteps', methods=['GET'])
+def get_gerrymander_steps():
+    global gerrymandering_thread
+    if gerrymandering_thread:
+        result = jsonify(gerrymandering_thread.queue.get_all())
+        if not gerrymandering_thread.isAlive():
+            gerrymandering_thread = None
+        return result
+    else:
+        return 'No gerrymandering process running at the moment'
 
 
 if __name__ == '__main__':
