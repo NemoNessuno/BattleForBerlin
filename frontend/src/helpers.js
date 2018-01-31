@@ -91,3 +91,13 @@ export function buildLeafletMap (element) {
     layers: [tileLayer]
   })
 }
+
+export function retryPromise (generator, timeout) {
+  return generator().catch(function () {
+    return new Promise(function (resolve, reject) {
+      window.setTimeout(function () {
+        retryPromise(generator, timeout).then(resolve)
+      }, timeout)
+    })
+  })
+}
