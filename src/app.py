@@ -72,7 +72,7 @@ def proxy_candidate(candidate):
 def gerrymander():
     global gerrymandering_thread
     if gerrymandering_thread:
-        return 'There is already a gerrymandering process running at the time'
+        return jsonify({'error': 'There is already a gerrymandering process running at the time'}), 423
     else:
         parameter = request.get_json()
         gerrymandering_thread = GerrymanderingThread(bwk=parameter['bwk'], party=parameter['party'],
