@@ -52,7 +52,19 @@ export default {
   setGerrymanderAnimation (state, gerrymanderAnimation) {
     state.gerrymanderAnimation = gerrymanderAnimation
   },
-  setAnimationActive (state, active) {
-    state.animationActive = active
+  resetG (state) {
+    state.gSteps = undefined
+    state.gStepsIndex = -1
+  },
+  pushGSteps (state, steps) {
+    state.gSteps = state.gSteps.concat(steps)
+  },
+  incrementGIndex (state) {
+    if (state.gSteps.length > state.gIndex + 2) {
+      state.gStepsIndex = state.gIndex + 1
+    }
+  },
+  setGActive (state, active) {
+    state.gActive = active
   }
 }

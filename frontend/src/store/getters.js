@@ -10,5 +10,8 @@ export default {
       return undefined
     }
     return state.countyProps[state.selectedCounty]
+  },
+  gComplete (state) {
+    return state.gSteps[state.gSteps.length - 1].action === 'stop'
   }
 }

@@ -64,5 +64,17 @@ export default {
     })
     let data = await resp.json()
     return data
+  },
+  runAnimation ({commit, state, getters}) {
+    commit('resetG')
+    const fetcher = Observable.interval(1000).mergeMap(() => {
+      Observable.fromPromise(fetch('/api/gsteps')).mergeMap(resp => {
+        if (resp.status === 404) {
+          return Observable.empty()
+        }
+        return Observable.of(resp)
+      }).map(resp => resp.json())
+    })
+    const incrementor = Observable.interval(500).do(() => commit('incremntGIndex'))
   }
 }
