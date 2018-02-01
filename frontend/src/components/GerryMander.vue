@@ -81,9 +81,9 @@ export default {
   },
   methods: {
     gerrymander (payload) {
-      console.log(payload)
       const waitFor = this.$store.dispatch('gerrymander', payload)
       this.gerrymanderParty = payload.party
+      this.$store.commit('setAnimationActive', true)
       waitFor.then(() => {
         this.$router.push('/animation')
       })
