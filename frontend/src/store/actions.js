@@ -1,4 +1,9 @@
 import {retryPromise} from '@/helpers'
+import {Observable} from 'rxjs/Observable'
+import 'rxjs/add/observable/interval'
+import 'rxjs/add/observable/merge'
+import 'rxjs/add/operator/do'
+import 'rxjs/add/operator/takeWhile'
 
 export default {
   loadCounties ({commit}) {
@@ -67,14 +72,23 @@ export default {
   },
   runAnimation ({commit, state, getters}) {
     commit('resetG')
-    const fetcher = Observable.interval(1000).mergeMap(() => {
-      Observable.fromPromise(fetch('/api/gsteps')).mergeMap(resp => {
-        if (resp.status === 404) {
-          return Observable.empty()
+    return new Promise(function (resolve, reject) {
+      const fetcher = Observable.interval(1000).mergeMap(() => {
+        Observable.fromPromise(fetch('/api/gsteps')).takeWhile(resp => {
+          return resp.status === 200
+        }).map(resp => resp.json()).do(data => commit('pushGSteps', data))
+      })
+      const incrementor = Observable.interval(500).takeWhile(() => {
+        if (state.gStepsIndex === -1) {
+          return true
         }
-        return Observable.of(resp)
-      }).map(resp => resp.json())
+        return state.gSteps && state.gSteps[state.gStepsIndex].action !== 'stop'
+      }).do(() => commit('incremntGIndex'))
+      Observable.merge(fetcher, incrementor).subscribe(
+        function () {},
+        console.error,
+        function () { resolve() }
+      )
     })
-    const incrementor = Observable.interval(500).do(() => commit('incremntGIndex'))
   }
 }
