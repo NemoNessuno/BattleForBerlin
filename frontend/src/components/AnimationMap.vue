@@ -3,22 +3,26 @@
 </template>
 <script>
   import {buildLeafletMap} from '../helpers'
-  import {AnimationLayer} from '../layers'
-  import {mapState} from 'vuex'
+  import {COUNTY_KEYS} from '@/store/constants'
+  import {SearchLayer, CountyLayer} from '../layers'
+  import {mapState, mapGetters} from 'vuex'
   export default {
     name: 'animation-map',
     data () {
       return {
-        animationIndex: 0
+        animationIndex: 0,
+        searchRender: undefined,
+        growRenderer: undefined
       }
     },
     created () {
-      if (!this.$store.state.animationActive) {
+      if (!this.gActive) {
         this.$router.push('/map')
       }
     },
     computed: {
-      ...mapState(['gerrymanderAnimation', 'districtHash', 'animationActive', 'gsteps']),
+      ...mapState(['gActive', 'districtHash'].concat(COUNTY_KEYS)),
+      ...mapGetters(['currentGStep']),
       stop () {
         if (!this.gsteps || this.gsteps.length > this.animationIndex + 1) {
           return false
@@ -28,9 +32,33 @@
     },
     mounted () {
       this.map = buildLeafletMap(this.$el)
-      this.renderer = new AnimationLayer(this.districtHash)
-      this.renderer.runAnimation(this.gerrymanderAnimation)
-      this.renderer.layers.addTo(this.map)
+      this.searchRenderer = new SearchLayer(this.districtHash)
+      this.searchRenderer.layers.addTo(this.map)
+      for (let key of COUNTY_KEYS) {
+        this.$watch(key, function (newVal) {
+          if (this.growRenderer) {
+            this.growRenderer.updateCounty(newVal)
+          }
+        })
+      }
+      this.$store.dispatch('runAnimation')
+    },
+    watch: {
+      currentGStep (newVal, oldVal) {
+        console.log(newVal)
+        if (!newVal) {
+          return
+        }
+        if (newVal.action === 'search') {
+          this.searchRenderer.setSearchLayer(newVal)
+          return
+        }
+        if (oldVal.action === 'search' && newVal.action === 'grow') {
+          this.map.removeLayer(this.searchRenderer.layers)
+          this.growRenderer = new CountyLayer()
+          this.map.addLayer(this.growRenderer.layers)
+        }
+      }
     }
   }
 </script>

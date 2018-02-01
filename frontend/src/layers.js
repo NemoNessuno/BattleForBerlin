@@ -91,7 +91,6 @@ export class SearchLayer {
   constructor (districts) {
     this.layers = L.layerGroup([])
     this.districts = districts
-    this._layerHash = {}
   }
 
   setSearchLayer ({candidates, winner}) {
@@ -100,7 +99,6 @@ export class SearchLayer {
       let shape = this.districts[candidate]
       const fillColor = candidate === winner ? 'green' : 'yellow'
       let layer = L.geoJSON(shape, {color: 'black', fillColor, weight: 1, fillOpacity: 0.5})
-      this._layerHash[candidate] = layer
       this.layers.addLayer(layer)
     }
   }

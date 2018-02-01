@@ -64,9 +64,7 @@ export default {
         throw new Error('there are still gerrymander steps available')
       }
     }), 2000)
-    const resp = await fetch('/api/gerrymander', {method: 'post', body, headers}).catch(() => {
-      fetch('/a[i/gsteps').then()
-    })
+    const resp = await fetch('/api/gerrymander', {method: 'post', body, headers})
     let data = await resp.json()
     return data
   },
@@ -74,16 +72,23 @@ export default {
     commit('resetG')
     return new Promise(function (resolve, reject) {
       const fetcher = Observable.interval(1000).mergeMap(() => {
-        Observable.fromPromise(fetch('/api/gsteps')).takeWhile(resp => {
-          return resp.status === 200
-        }).map(resp => resp.json()).do(data => commit('pushGSteps', data))
+        return Observable.fromPromise(fetch('/api/gsteps'))
+      }).takeWhile(resp => {
+        return resp.status === 200
+      }).mergeMap(resp => Observable.fromPromise(resp.json())).do(data => {
+        commit('pushGSteps', data)
       })
       const incrementor = Observable.interval(500).takeWhile(() => {
         if (state.gStepsIndex === -1) {
           return true
         }
         return state.gSteps && state.gSteps[state.gStepsIndex].action !== 'stop'
-      }).do(() => commit('incremntGIndex'))
+      }).do(() => {
+        commit('incrementGIndex')
+        if (state.gStepsIndex >= 0 && state.gSteps[state.gStepsIndex].action === 'grow') {
+          commit('setCounties', state.gSteps[state.gStepsIndex].targets)
+        }
+      })
       Observable.merge(fetcher, incrementor).subscribe(
         function () {},
         console.error,

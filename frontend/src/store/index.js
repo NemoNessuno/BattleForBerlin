@@ -7,6 +7,7 @@ const state = {
   countyProps: undefined,
   districts: undefined,
   districtProps: undefined,
+  districtHash: undefined,
   diffCount: 0,
   diffs: [],
   selectedDistrict: undefined,
@@ -14,7 +15,6 @@ const state = {
   gerryManderVisible: false,
   route: 'welcome',
   gerrymanderAnimation: undefined,
-  districtHash: undefined,
   gActive: false,
   gSteps: undefined,
   gIndex: -1
