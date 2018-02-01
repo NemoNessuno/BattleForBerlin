@@ -22,7 +22,7 @@
         map: undefined,
         controls: undefined,
         districtLayer: new DistrictLayer(),
-        countyWrapper: new CountyLayer()
+        countyLayer: new CountyLayer(true)
       }
     },
     computed: {
@@ -49,7 +49,6 @@
           this.$router.push('/map/' + values.geometry.properties.identifier)
         }
       }.bind(this))
-      this.countyLayer = new CountyLayer()
       for (let key of COUNTY_KEYS) {
         this.countyLayer.updateCounty(this[key])
       }

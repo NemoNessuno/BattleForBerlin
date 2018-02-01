@@ -61,9 +61,10 @@ export class DistrictLayer extends BaseLayer {
 }
 
 export class CountyLayer extends BaseLayer {
-  constructor () {
+  constructor (clickable) {
     super()
     this._countyLayers = {}
+    this.clickable = Boolean(clickable)
   }
 
   updateCounty (county) {
@@ -76,9 +77,11 @@ export class CountyLayer extends BaseLayer {
     }
     const $this = this
     const layer = L.geoJSON(county, this.config.defaultStyle)
-    layer.on('click', function ({layer}) {
-      $this.selectDistrict.bind($this)(layer)
-    })
+    if (this.clickable) {
+      layer.on('click', function ({layer}) {
+        $this.selectDistrict.bind($this)(layer)
+      })
+    }
     this.layers.addLayer(layer)
     this._countyLayers[bwk] = layer
   }
