@@ -14,7 +14,8 @@ const state = {
   gerryManderVisible: false,
   route: 'welcome',
   gerrymanderAnimation: undefined,
-  districtHash: undefined
+  districtHash: undefined,
+  animationActive: false
 }
 
 COUNTY_KEYS.forEach(function (key) {

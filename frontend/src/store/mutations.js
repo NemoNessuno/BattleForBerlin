@@ -51,5 +51,8 @@ export default {
   },
   setGerrymanderAnimation (state, gerrymanderAnimation) {
     state.gerrymanderAnimation = gerrymanderAnimation
+  },
+  setAnimationActive (state, active) {
+    state.animationActive = active
   }
 }
