@@ -57,6 +57,9 @@ export default {
     state.gStepsIndex = -1
   },
   pushGSteps (state, steps) {
+    if (!state.gSteps) {
+      state.gSteps = steps
+    }
     state.gSteps = state.gSteps.concat(steps)
   },
   incrementGIndex (state) {
