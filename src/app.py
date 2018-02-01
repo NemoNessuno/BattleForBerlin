@@ -78,7 +78,7 @@ def gerrymander():
         gerrymandering_thread = GerrymanderingThread(bwk=parameter['bwk'], party=parameter['party'],
                                                      queue=GerrymanderingQueue())
         gerrymandering_thread.start()
-        return 'OK'
+        return jsonify({'status': 'calculation initialized'})
 
 
 @app.route('/api/gsteps', methods=['GET'])
