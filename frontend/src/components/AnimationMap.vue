@@ -9,15 +9,22 @@
     name: 'animation-map',
     data () {
       return {
+        animationIndex: 0
       }
     },
     created () {
-      if (!this.$store.state.gerrymanderAnimation) {
+      if (!this.$store.state.animationActive) {
         this.$router.push('/map')
       }
     },
     computed: {
-      ...mapState(['gerrymanderAnimation', 'districtHash'])
+      ...mapState(['gerrymanderAnimation', 'districtHash', 'animationActive', 'gsteps']),
+      stop () {
+        if (!this.gsteps || this.gsteps.length > this.animationIndex + 1) {
+          return false
+        }
+        return this.animationIndex + 1 === this.gstep
+      }
     },
     mounted () {
       this.map = buildLeafletMap(this.$el)
