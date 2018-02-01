@@ -84,46 +84,20 @@ export class CountyLayer extends BaseLayer {
   }
 }
 
-export class AnimationLayer {
+export class SearchLayer {
   constructor (districts) {
     this.layers = L.layerGroup([])
     this.districts = districts
     this._layerHash = {}
   }
 
-  runAnimation (animation) {
-    if (!animation) {
-      return Promise.resolve()
-    }
-    return new Promise(function (resolve, reject) {
-      asyncChunks(animation, 500, 1).subscribe(function (step) {
-        if (step.action === 'search') {
-          this.onSearch(step)
-        }
-        if (step.action === 'grow') {
-          this.onGrow(step)
-        }
-      }.bind(this),
-      console.error,
-      () => resolve())
-    }.bind(this))
-  }
-
-  onSearch ({candidates, winner}) {
+  setSearchLayer ({candidates, winner}) {
     this.layers.clearLayers()
     for (let candidate of candidates) {
       let shape = this.districts[candidate]
       const fillColor = candidate === winner ? 'green' : 'yellow'
       let layer = L.geoJSON(shape, {color: 'black', fillColor, weight: 1, fillOpacity: 0.5})
       this._layerHash[candidate] = layer
-      this.layers.addLayer(layer)
-    }
-  }
-
-  onGrow ({targets}) {
-    this.layers.clearLayers()
-    for (let target of targets) {
-      let layer = L.geoJSON(target, {style: styleDistrict})
       this.layers.addLayer(layer)
     }
   }
