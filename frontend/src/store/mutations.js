@@ -60,7 +60,7 @@ export default {
     state.gSteps = state.gSteps.concat(steps)
   },
   incrementGIndex (state) {
-    if (state.gSteps.length > state.gIndex + 2) {
+    if (state.gSteps && state.gSteps.length > state.gIndex + 2) {
       state.gStepsIndex = state.gIndex + 1
     }
   },
