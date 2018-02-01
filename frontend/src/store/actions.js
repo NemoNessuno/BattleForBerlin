@@ -1,3 +1,5 @@
+import {retryPromise} from '@/helpers'
+
 export default {
   loadCounties ({commit}) {
     return fetch('/api/counties').then(resp => resp.json())
@@ -52,9 +54,15 @@ export default {
       'Content-Type': 'application/json',
       'Accept': 'application/json, text/plain, */*'
     })
-    const resp = await fetch('/api/gerrymander', {method: 'post', body, headers})
+    await retryPromise(() => fetch('/api/gsteps').then(resp => {
+      if (resp.status === 200) {
+        throw new Error('there are still gerrymander steps available')
+      }
+    }), 2000)
+    const resp = await fetch('/api/gerrymander', {method: 'post', body, headers}).catch(() => {
+      fetch('/a[i/gsteps').then()
+    })
     let data = await resp.json()
-    commit('setGerrymanderAnimation', data)
     return data
   }
 }
