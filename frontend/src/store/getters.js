@@ -1,3 +1,5 @@
+import {COUNTY_KEYS} from './constants'
+
 export default {
   currentDistrict (state) {
     if (!state.districtProps) {
@@ -22,5 +24,12 @@ export default {
       return undefined
     }
     return state.gSteps[state.gStepsIndex]
+  },
+  counties (state) {
+    const result = {}
+    for (let key of COUNTY_KEYS) {
+      result[key] = state[key]
+    }
+    return result
   }
 }
