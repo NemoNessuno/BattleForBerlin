@@ -87,13 +87,57 @@ export class CountyLayer extends BaseLayer {
   }
 }
 
-export class SearchLayer {
-  constructor (districts) {
+export class AnimationLayer {
+  constructor (districts, counties) {
     this.layers = L.layerGroup([])
     this.districts = districts
+    this.counties = counties
+    this.grow = new CountyLayer(false)
+    this.gSteps = []
   }
 
-  setSearchLayer ({candidates, winner}) {
+  run () {
+    const fetching = window.setInterval(() => {
+      fetch('/api/gsteps').then(resp => resp.json())
+        .then((steps) => {
+          this.gSteps = this.gSteps.concat(steps)
+          if (this.gSteps[this.gSteps.length - 1].action === 'stop') {
+            window.clearInterval(fetching)
+          }
+        })
+    }, 1000)
+    let gIndex = -1
+
+    const interating = window.setInterval(() => {
+      if (gIndex < this.gSteps.length - 2) {
+        gIndex = gIndex + 1
+        this.nextStep(gIndex)
+      }
+      if (gIndex > -1 && this.gSteps[gIndex].action === 'stop') {
+        window.clearInterval(interating)
+      }
+    }, 500)
+  }
+
+  nextStep (index) {
+    const gStep = this.gSteps[index]
+    if (gStep.action === 'search') {
+      this.onSearch(gStep)
+      return
+    }
+    if (this.gSteps[index - 1].action === 'search' && gStep.action === 'grow') {
+      this.layers.clearLayers()
+      this.layers.addLayer(this.grow.layers)
+      Object.keys(this.counties).map(key => this.counties[key]).forEach(county => {
+        this.grow.updateCounty(county)
+      })
+    }
+    if (gStep.action === 'grow') {
+      gStep.targets.forEach(county => this.grow.updateCounty(county))
+    }
+  }
+
+  onSearch ({candidates, winner}) {
     this.layers.clearLayers()
     for (let candidate of candidates) {
       let shape = this.districts[candidate]
