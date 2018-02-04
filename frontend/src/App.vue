@@ -1,44 +1,62 @@
 <template>
   <v-app id="bfb" dark>
     <v-toolbar dark>
-      <v-toolbar-title>
-        Battle For Berlin
-      </v-toolbar-title>
-      <v-spacer />
-      <v-btn icon @click="reset" :disabled="diffCount === 0">
-        <v-icon>restore_page</v-icon>
-      </v-btn>
-      <v-btn href="/info" icon v-if="route === 'about'">
-        <v-icon>map</v-icon>
-      </v-btn>
-      <v-btn href="https://github.com/NemoNessuno/BattleForBerlin" icon>
-        <img src="/static/images/github_logo.png" class="github-link-img" />
-      </v-btn>
+  <v-btn icon flat v-if="icon" to="/map">
+    <v-icon>{{icon}}</v-icon>
+  </v-btn>
+  <v-toolbar-title>
+    {{title}}
+  </v-toolbar-title>
+  <v-spacer />
+  <v-btn icon @click="reset" :disabled="diffCount === 0 || disabled">
+    <v-icon>restore_page</v-icon>
+  </v-btn>
+  <v-btn to="/info" icon v-if="$route.name === 'map'">
+    <v-icon>info</v-icon>
+  </v-btn>
+  <v-btn to="/map" icon v-if="$route.name === 'info'" >
+    <v-icon>map</v-icon>
+  </v-btn>
+  <v-btn href="https://github.com/NemoNessuno/BattleForBerlin" icon>
+    <img src="/static/images/github_logo.png" class="github-link-img" />
+  </v-btn>
     </v-toolbar>
     <v-content>
       <transition mode="out-in">
         <router-view></router-view>
       </transition>
     </v-content>
-    <v-footer v-if="route !== 'map'">
+    <v-footer v-if="!$route.meta.footerInvisible">
       <span>&copy; 2017, S&ouml;ren Titze, Christian Windolf</span>
     </v-footer>
   </v-app>
 </template>
 
 <script>
-import {mapState, mapActions, mapGetters, mapMutations} from 'vuex'
+import {mapState, mapActions} from 'vuex'
+import {BWK_NAMES} from './helpers'
 export default {
   name: 'app',
   computed: {
-    ...mapState(['diffCount', 'gerryManderVisible', 'route', 'algorithmProgress']),
-    ...mapGetters(['currentCounty'])
+    ...mapState(['diffCount']),
+    title () {
+      if (this.$route.name === 'gerrymander') {
+        const identifier = this.$route.params.identifier
+        return 'Bezirk ' + identifier + ' - ' + BWK_NAMES[identifier]
+      }
+      return this.$route.meta.title
+    },
+    icon () {
+      return this.$route.meta.icon
+    },
+    disabled () {
+      return this.$route.name === 'animation'
+    }
   },
   methods: {
     skipOnboarding () {
       this.route = 'map'
     },
-    ...mapMutations(['goToMap', 'goToAbout']),
     ...mapActions(['reset', 'loadCounties', 'loadDistricts', 'loadDiffCount'])
   }
 }
