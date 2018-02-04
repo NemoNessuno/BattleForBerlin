@@ -98,9 +98,15 @@ export class AnimationLayer {
 
   run () {
     const fetching = window.setInterval(() => {
-      fetch('/api/gsteps').then(resp => resp.json())
+      fetch('/api/gsteps').then(resp => {
+        if (resp.status !== 200) {
+          window.clearInterval(fetching)
+          throw new Error('gsteps crashed')
+        }
+        return resp.json()
+      })
         .then((steps) => {
-          this.gSteps = this.gSteps.concat(steps)
+          this.gSteps = steps
           if (this.gSteps[this.gSteps.length - 1].action === 'stop') {
             window.clearInterval(fetching)
           }
