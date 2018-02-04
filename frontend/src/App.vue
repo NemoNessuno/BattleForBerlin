@@ -38,11 +38,14 @@ import {BWK_NAMES} from './helpers'
 export default {
   name: 'app',
   computed: {
-    ...mapState(['diffCount']),
+    ...mapState(['diffCount', 'gStatus']),
     title () {
       if (this.$route.name === 'gerrymander') {
         const identifier = this.$route.params.identifier
         return 'Bezirk ' + identifier + ' - ' + BWK_NAMES[identifier]
+      }
+      if (this.$route.name === 'animation') {
+        return this.$route.meta.title + ' ' + this.gStatus
       }
       return this.$route.meta.title
     },
