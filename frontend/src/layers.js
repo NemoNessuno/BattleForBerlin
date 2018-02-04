@@ -138,7 +138,7 @@ export class AnimationLayer {
         this.grow.updateCounty(county)
       })
     }
-    if (gStep.action === 'grow') {
+    if (gStep.action === 'grow' || gStep.action === 'cleanup') {
       gStep.targets.forEach(county => this.grow.updateCounty(county))
     }
   }
