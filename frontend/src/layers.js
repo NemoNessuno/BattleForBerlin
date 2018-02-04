@@ -1,3 +1,4 @@
+import {Subject} from 'rxjs/Subject'
 import L from 'leaflet'
 
 import {maxProp, PARTY_COLORS, asyncChunks} from './helpers'
@@ -94,6 +95,11 @@ export class AnimationLayer {
     this.counties = counties
     this.grow = new CountyLayer(false)
     this.gSteps = []
+    this._status = new Subject()
+  }
+
+  get status () {
+    return this._status.asObservable()
   }
 
   run () {
@@ -127,6 +133,7 @@ export class AnimationLayer {
 
   nextStep (index) {
     const gStep = this.gSteps[index]
+    this._status.next(gStep.action)
     if (gStep.action === 'search') {
       this.onSearch(gStep)
       return
