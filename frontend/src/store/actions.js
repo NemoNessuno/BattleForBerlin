@@ -1,9 +1,4 @@
 import {retryPromise} from '@/helpers'
-import {Observable} from 'rxjs/Observable'
-import 'rxjs/add/observable/interval'
-import 'rxjs/add/observable/merge'
-import 'rxjs/add/operator/do'
-import 'rxjs/add/operator/takeWhile'
 
 export default {
   loadCounties ({commit}) {
@@ -67,33 +62,5 @@ export default {
     const resp = await fetch('/api/gerrymander', {method: 'post', body, headers})
     let data = await resp.json()
     return data
-  },
-  runAnimation ({commit, state, getters}) {
-    commit('resetG')
-    return new Promise(function (resolve, reject) {
-      const fetcher = Observable.interval(1000).mergeMap(() => {
-        return Observable.fromPromise(fetch('/api/gsteps'))
-      }).takeWhile(resp => {
-        return resp.status === 200
-      }).mergeMap(resp => Observable.fromPromise(resp.json())).do(data => {
-        commit('pushGSteps', data)
-      })
-      const incrementor = Observable.interval(500).takeWhile(() => {
-        if (state.gStepsIndex === -1) {
-          return true
-        }
-        return state.gSteps && state.gSteps[state.gStepsIndex].action !== 'stop'
-      }).do(() => {
-        commit('incrementGIndex')
-        if (state.gStepsIndex >= 0 && state.gSteps[state.gStepsIndex].action === 'grow') {
-          commit('setCounties', state.gSteps[state.gStepsIndex].targets)
-        }
-      })
-      Observable.merge(fetcher, incrementor).subscribe(
-        function () {},
-        console.error,
-        function () { resolve() }
-      )
-    })
   }
 }

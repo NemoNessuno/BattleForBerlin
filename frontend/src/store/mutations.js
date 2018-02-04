@@ -49,24 +49,6 @@ export default {
   goToAbout (state) {
     state.route = 'about'
   },
-  setGerrymanderAnimation (state, gerrymanderAnimation) {
-    state.gerrymanderAnimation = gerrymanderAnimation
-  },
-  resetG (state) {
-    state.gSteps = undefined
-    state.gStepsIndex = -1
-  },
-  pushGSteps (state, steps) {
-    if (!state.gSteps) {
-      state.gSteps = steps
-    }
-    state.gSteps = state.gSteps.concat(steps)
-  },
-  incrementGIndex (state) {
-    if (state.gSteps && state.gSteps.length > state.gIndex + 2) {
-      state.gStepsIndex = state.gIndex + 1
-    }
-  },
   setGActive (state, active) {
     state.gActive = active
   }
