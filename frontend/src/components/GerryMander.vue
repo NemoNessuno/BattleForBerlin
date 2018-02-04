@@ -1,13 +1,5 @@
 <template>
   <div>
-    <v-toolbar class="primary">
-      <v-btn icon to="/map" :disabled="Boolean(gerrymanderCandidate)">
-        <v-icon>close</v-icon>
-      </v-btn>
-      <v-toolbar-title>
-        {{bwk}} - {{bezirk}}
-      </v-toolbar-title>
-    </v-toolbar>
     <transition name="zoom-in" mode="out-in">
       <div v-if="ready">
         <transition name="zoom-in" mode="out-in" >
@@ -36,7 +28,6 @@
 
 <script>
 import Candidate from './Candidate'
-import {BWK_NAMES} from '@/helpers'
 import {mapState} from 'vuex'
 export default {
   name: 'gerry-mander',
@@ -47,7 +38,6 @@ export default {
   },
   computed: {
     ...mapState(['countyProps']),
-    bezirk () { return BWK_NAMES[this.bwk] },
     ready () {
       return Boolean(this.countyProps)
     },

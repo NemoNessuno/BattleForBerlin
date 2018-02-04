@@ -1,15 +1,5 @@
 <template>
   <div>
-    <v-toolbar class="primary">
-      <v-btn icon to="/map">
-        <v-icon>
-          close
-        </v-icon>
-      </v-btn>
-      <v-toolbar-title>
-        GerryMandering
-      </v-toolbar-title>
-    </v-toolbar>
     <v-container grid-list-md>
       <v-layout row wrap>
         <v-flex md3>
