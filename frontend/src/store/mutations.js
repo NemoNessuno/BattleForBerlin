@@ -51,5 +51,8 @@ export default {
   },
   setGActive (state, active) {
     state.gActive = active
+  },
+  setGStatus (state, status) {
+    state.gStatus = status
   }
 }

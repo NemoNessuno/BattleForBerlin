@@ -17,7 +17,8 @@ const state = {
   gerrymanderAnimation: undefined,
   gActive: false,
   gSteps: undefined,
-  gIndex: -1
+  gIndex: -1,
+  gStatus: undefined
 }
 
 COUNTY_KEYS.forEach(function (key) {
