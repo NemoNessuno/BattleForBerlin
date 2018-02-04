@@ -19,6 +19,8 @@ from src.database.gerrymandering_algorithm import GerrymanderingThread
 from src.database.gerrymandering_helper import GerrymanderingQueue
 
 app = Flask(__name__)
+# pipe curl into jq if you need a pretty printed result
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 gerrymandering_thread = None
 
 
