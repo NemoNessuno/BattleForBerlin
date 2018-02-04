@@ -83,19 +83,19 @@ class GerrymanderingQueue:
         self.queue = queue
 
     def put(self, item):
-        if self.queue is Queue.Queue:
+        if isinstance(self.queue, Queue.Queue):
             self.queue.put(item)
         else:
             self.queue.append(item)
 
     def get(self):
-        if self.queue is Queue.Queue:
+        if isinstance(self.queue, Queue.Queue):
             return self.queue.get()
         else:
             return self.queue[0]
 
     def get_all(self):
-        if self.queue is Queue.Queue:
+        if isinstance(self.queue, Queue.Queue):
             result = []
             while not self.queue.empty():
                 result.append(self.queue.get())
