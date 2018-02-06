@@ -126,6 +126,7 @@ export class AnimationLayer {
         this.nextStep(gIndex)
       }
       if (gIndex > -1 && this.gSteps[gIndex].action === 'stop') {
+        this._status.next('stop')
         window.clearInterval(interating)
       }
     }, 500)
