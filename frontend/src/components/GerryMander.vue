@@ -23,6 +23,12 @@
         <v-progress-circular :indeterminate="true" :size="120" :width="5" />
       </div>
     </transition>
+    <v-snackbar :timeout="6000" color="error" v-model="gerrymanderLocked">
+      Backend ist schon beschäftigt, versuche es später
+      <v-btn @click="gerrymanderLocked = false">
+        OK
+      </v-btn>
+    </v-snackbar>
   </div>
 </template>
 
@@ -33,7 +39,8 @@ export default {
   name: 'gerry-mander',
   data () {
     return {
-      gerrymanderParty: undefined
+      gerrymanderParty: undefined,
+      gerrymanderLocked: false
     }
   },
   computed: {
@@ -74,8 +81,13 @@ export default {
       const waitFor = this.$store.dispatch('gerrymander', payload)
       this.gerrymanderParty = payload.party
       this.$store.commit('setGActive', true)
-      waitFor.then(() => {
-        this.$router.push('/animation')
+      waitFor.then((resp) => {
+        if (resp.status === 423) {
+          this.gerrymanderLocked = true
+          this.gerrymanderParty = undefined
+        } else {
+          this.$router.push('/animation')
+        }
       })
     }
   },
