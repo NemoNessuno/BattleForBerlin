@@ -102,22 +102,22 @@ export class AnimationLayer {
     return this._status.asObservable()
   }
 
+  downloadSteps () {
+    fetch('/api/gsteps').then(resp => {
+      if (resp.status !== 200) {
+        throw new Error('gsteps returned a 404 error code')
+      }
+      return resp.json()
+    }).then(gsteps => {
+      this.gSteps = gsteps
+      if (this.gSteps[this.gSteps.length - 1].action !== 'stop') {
+        window.setTimeout(this.downloadSteps.bind(this), 1000)
+      }
+    })
+  }
+
   run () {
-    const fetching = window.setInterval(() => {
-      fetch('/api/gsteps').then(resp => {
-        if (resp.status !== 200) {
-          window.clearInterval(fetching)
-          throw new Error('gsteps crashed')
-        }
-        return resp.json()
-      })
-        .then((steps) => {
-          this.gSteps = steps
-          if (this.gSteps[this.gSteps.length - 1].action === 'stop') {
-            window.clearInterval(fetching)
-          }
-        })
-    }, 1000)
+    this.downloadSteps()
     let gIndex = -1
 
     const interating = window.setInterval(() => {
