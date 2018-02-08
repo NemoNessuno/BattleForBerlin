@@ -1,3 +1,5 @@
+from Queue import Queue
+
 from flask import Flask, render_template, jsonify, request, Response
 import requests
 
@@ -78,7 +80,7 @@ def gerrymander():
     else:
         parameter = request.get_json()
         gerrymandering_thread = GerrymanderingThread(bwk=parameter['bwk'], party=parameter['party'],
-                                                     queue=GerrymanderingQueue())
+                                                     queue=GerrymanderingQueue(Queue()))
         gerrymandering_thread.start()
         return jsonify({'status': 'calculation initialized'})
 
@@ -87,10 +89,12 @@ def gerrymander():
 def get_gerrymander_steps():
     global gerrymandering_thread
     if gerrymandering_thread:
-        result = jsonify(gerrymandering_thread.queue.get_all())
+        result = gerrymandering_thread.queue.get_all()
         if not gerrymandering_thread.isAlive():
+            # make sure we append all the stuffs
+            result += gerrymandering_thread.queue.get_all()
             gerrymandering_thread = None
-        return result
+        return jsonify(result)
     else:
         return jsonify({'error': 'No gerrymandering process running at the moment'}), 404
 

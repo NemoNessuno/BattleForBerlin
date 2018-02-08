@@ -90,9 +90,9 @@ class GerrymanderingQueue:
 
     def get(self):
         if isinstance(self.queue, Queue.Queue):
-            return self.queue.get()
+            return [self.queue.get()]
         else:
-            return self.queue[0]
+            return [self.queue[0]]
 
     def get_all(self):
         if isinstance(self.queue, Queue.Queue):

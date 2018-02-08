@@ -170,6 +170,7 @@ def get_gerrymandering_steps(bwk, party, steps=GerrymanderingQueue()):
 
         search_step = create_search_step(districts)
         for district, _, district_bwk in districts_to_check:
+            alreadychecked.add(district.identifier)
             new_county_result = get_new_results(district, county_result)
             if check_winning_party(new_county_result, party):
                 results[district_bwk] = get_new_results(district, results[district_bwk], factor=-1)
@@ -179,6 +180,7 @@ def get_gerrymandering_steps(bwk, party, steps=GerrymanderingQueue()):
                 return gerrymander(party, bwk, [district], old_county, len(original_bwk_districts), diffs,
                                    new_county_result, results, steps)
 
+        steps.put(search_step)
         check_for_neighbours = [district[0] for district in districts_to_check]
 
     # If we haven't found any suitable candidate return
@@ -202,4 +204,4 @@ class GerrymanderingThread(Thread):
 
 
 if __name__ == '__main__':
-    get_gerrymandering_steps('083', 'gruene')
+    get_gerrymandering_steps('084', 'afd')
