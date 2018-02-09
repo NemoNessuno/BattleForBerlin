@@ -1,7 +1,6 @@
 from Queue import Queue
 
 from flask import Flask, render_template, jsonify, request, Response
-import requests
 
 from database.models import (
     MergedDistrict,
@@ -63,13 +62,6 @@ def create_diff():
     upsert_diff(payload['identifier'], payload['bwk'])
     return jsonify({'msg': 'district changed'})
 
-
-@app.route('/api/candidate/<candidate>', methods=['GET'])
-def proxy_candidate(candidate):
-    payload = requests.get('https://www.abgeordnetenwatch.de/api/parliament/bundestag/profile/%s/profile.json' % candidate)
-    resp = Response(payload)
-    resp.headers['Content-Type'] = 'application/json'
-    return resp
 
 
 @app.route('/api/gerrymander', methods=['POST'])
