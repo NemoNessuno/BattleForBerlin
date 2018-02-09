@@ -109,7 +109,7 @@ export class AnimationLayer {
       }
       return resp.json()
     }).then(gsteps => {
-      this.gSteps = gsteps
+      this.gSteps = this.gSteps.concat(gsteps)
       if (this.gSteps[this.gSteps.length - 1].action !== 'stop') {
         window.setTimeout(this.downloadSteps.bind(this), 1000)
       }
@@ -120,14 +120,14 @@ export class AnimationLayer {
     this.downloadSteps()
     let gIndex = -1
 
-    const interating = window.setInterval(() => {
+    const iterating = window.setInterval(() => {
       if (gIndex < this.gSteps.length - 2) {
         gIndex = gIndex + 1
         this.nextStep(gIndex)
       }
       if (gIndex > -1 && this.gSteps[gIndex].action === 'stop') {
         this._status.next('stop')
-        window.clearInterval(interating)
+        window.clearInterval(iterating)
       }
     }, 500)
   }
