@@ -121,7 +121,7 @@ export class AnimationLayer {
     let gIndex = -1
 
     const iterating = window.setInterval(() => {
-      if (gIndex < this.gSteps.length - 2) {
+      if (gIndex < this.gSteps.length - 1) {
         gIndex = gIndex + 1
         this.nextStep(gIndex)
       }
