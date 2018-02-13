@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <v-container grid-list-md>
       <v-layout row wrap>
         <v-flex md3>
@@ -45,6 +45,7 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="sass" scoped>
+.container
+  display: block
 </style>
