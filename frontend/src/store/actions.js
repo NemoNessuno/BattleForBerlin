@@ -54,11 +54,6 @@ export default {
       'Content-Type': 'application/json',
       'Accept': 'application/json, text/plain, */*'
     })
-    await retryPromise(() => fetch('/api/gsteps').then(resp => {
-      if (resp.status === 200) {
-        throw new Error('there are still gerrymander steps available')
-      }
-    }), 2000)
     const resp = await fetch('/api/gerrymander', {method: 'post', body, headers})
     let data = await resp.json()
     return data
