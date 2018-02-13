@@ -85,5 +85,6 @@
 #map
   margin: 0.3em
   border-radius: 5pt
+  width: 100%
   height: calc(100vh - 71px)
 </style>
