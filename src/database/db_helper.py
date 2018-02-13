@@ -19,6 +19,7 @@ def get_district_geojson(district):
         geojson["properties"] = district.get_geojson_dict()
         geojsons.append(geojson)
 
+    db_session.commit()
     return geojsons
 
 
@@ -57,6 +58,7 @@ def get_county_geojson(bwks=None):
         }
         geojsons.append(geojson)
 
+    db_session.commit()
     return geojsons
 
 
@@ -85,4 +87,5 @@ def get_results_from_table(table):
     result = {}
     for row in query.all():
         result[row[0]] = dict(zip(PARTIES, [int(p) for p in row[1:]]))
+    db_session.commit()
     return result

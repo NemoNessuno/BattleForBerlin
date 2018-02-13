@@ -53,7 +53,9 @@ def reset():
 
 @app.route('/api/diff/count', methods=['GET'])
 def get_diff_count():
-    return jsonify({'count': int(db_session.query(Diff.bwk).count())})
+    result = db_session.query(Diff.bwk).count()
+    db_session.commit()
+    return jsonify({'count': int(result)})
 
 
 @app.route('/api/diff/create', methods=['POST'])
