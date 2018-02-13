@@ -1,7 +1,7 @@
 <template>
 <div class="bar-wrapper">
   <div class="party-result"
-    v-for="(party, index) of sortedResult"
+    v-for="party of sortedResult"
     :class="party.party"
     :style="{width: party.width}"
     :key="'bar.' + party.party"
