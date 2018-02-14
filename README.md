@@ -37,7 +37,10 @@ export FLASK_APP=app.py
 # * if your postgis is not on localhost or password is not postgres
 # * provide sqlalchemy compatible database url
 export BFB_DB_URL='postgres://user:password@hostname/db_name'
+# an ampersand may be your friend :)
 flask run #will block your terminal
+
+env FLASK_APP=candidates_proxy/app.py flask run -p5001 # will also block your terminal
 ```
 
 And finally the shiny frontend:
@@ -48,3 +51,12 @@ yarn dev # or npm run dev
 ```
 
 Open your browser at `localhost:8080` and have fun!
+
+Alternatively it is possible start the whole thing with `docker-compose`:
+
+```bash
+docker-compose build
+docker-compose up -d
+```
+
+Now open your browser in at `localhost`
