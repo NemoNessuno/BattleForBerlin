@@ -26,7 +26,7 @@ const routes = [
     }
   },
   {
-    path: '/info',
+    path: '/info/:slug?',
     component: Onboarding,
     meta: {
       title: 'Gerrymandering Information',
