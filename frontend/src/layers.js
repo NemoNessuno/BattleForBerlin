@@ -103,7 +103,7 @@ export class AnimationLayer {
   }
 
   downloadSteps () {
-    fetch('/api/gsteps').then(resp => {
+    fetch('/api/gsteps', {credentials: 'include'}).then(resp => {
       if (resp.status !== 200) {
         throw new Error('gsteps returned a 404 error code')
       }

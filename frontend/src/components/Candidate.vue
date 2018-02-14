@@ -104,7 +104,7 @@
       if (this.candidate.description) {
         let desc = this.candidate.description.replace('https://www.abgeordnetenwatch.de/api/parliament/bundestag/profile/', '')
         desc = desc.replace('/profile.json', '')
-        fetch('/api/candidate/' + desc)
+        fetch('/api/candidate/' + desc, {credentials: 'include'})
           .then(resp => resp.json())
           .then(({profile}) => {
             $this.rank = parseInt(profile.list.position)

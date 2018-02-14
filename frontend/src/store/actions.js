@@ -1,20 +1,22 @@
+const OPTIONS = {credentials: 'include'}
+
 export default {
   loadCounties ({commit}) {
-    return fetch('/api/counties').then(resp => resp.json())
+    return fetch('/api/counties', OPTIONS).then(resp => resp.json())
       .then(counties => {
         commit('setCounties', counties)
         return counties
       })
   },
   loadDistricts ({commit}) {
-    return fetch('/api/districts/merged_diff').then(resp => resp.json())
+    return fetch('/api/districts/merged_diff', OPTIONS).then(resp => resp.json())
       .then(districts => {
         commit('setDistricts', districts)
         return districts
       })
   },
   loadDiffCount ({commit}) {
-    return fetch('/api/diff/count').then(resp => resp.json())
+    return fetch('/api/diff/count', OPTIONS).then(resp => resp.json())
       .then(({count}) => {
         commit('setDiffCount', count)
         return count
@@ -25,7 +27,7 @@ export default {
     const headers = new Headers({
       'Accept': 'application/json'
     })
-    return fetch('/api/diff/reset', {method: 'post', body, headers}).then(resp => resp.json())
+    return fetch('/api/diff/reset', {method: 'post', body, headers, ...OPTIONS}).then(resp => resp.json())
       .then(resp => {
         commit('setDiffCount', 0)
         dispatch('loadCounties')
@@ -38,7 +40,7 @@ export default {
       'Content-Type': 'application/json',
       'Accept': 'application/json, text/plain, */*'
     })
-    return fetch('/api/diff/create', {method: 'post', body, headers})
+    return fetch('/api/diff/create', {method: 'post', body, headers, ...OPTIONS})
       .then(resp => resp.json())
       .then(resp => {
         commit('addDiff', {identifier, bwk})
@@ -52,7 +54,7 @@ export default {
       'Content-Type': 'application/json',
       'Accept': 'application/json, text/plain, */*'
     })
-    const resp = await fetch('/api/gerrymander', {method: 'post', body, headers})
+    const resp = await fetch('/api/gerrymander', {method: 'post', body, headers, ...OPTIONS})
     let data = await resp.json()
     return data
   }
