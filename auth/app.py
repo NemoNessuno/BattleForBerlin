@@ -10,7 +10,7 @@ def get_hash():
         return stream.read()
 
 app = Flask(__name__)
-app.secret_key = 'randomstring'
+app.secret_key = os.urandom(24)
 
 HASH = get_hash()
 
