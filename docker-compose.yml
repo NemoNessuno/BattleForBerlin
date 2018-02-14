@@ -25,6 +25,6 @@ services:
   auth:
     build: ./auth
     environment:
-      - 'HASH_FILE=/app/hash.txt'
+      - 'FLASK_DEBUG=1'
     volumes:
       - './auth/hash.txt:/app/hash.txt'
