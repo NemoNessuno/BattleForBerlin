@@ -3,6 +3,7 @@ FROM python:3.6-alpine3.7
 WORKDIR /app
 
 ADD ./requirements.txt ./app.py ./
+ADD ./templates/*.html ./templates/
 
 RUN apk update && \
   apk add build-base libffi-dev && \

@@ -8,7 +8,7 @@ def get_hash():
         return stream.read()
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+app.secret_key = 'randomstring'
 
 HASH = get_hash()
 
@@ -26,7 +26,10 @@ def get_login_form():
 def login():
     username = request.form.get('username')
     password = request.form.get('password')
+    host = request.host
+    proto = 'http' if os.environ.get('FLASK_DEBUG') == 1 else 'https'
+    base = proto + '://' + host
     if username == 'sudo' and bcrypt.checkpw(bytes(password, 'utf8'), HASH):
         session['authenticated'] = True
-        return redirect('/')
-    return redirect('/login')
+        return redirect(base + '/')
+    return redirect(base + '/auth/login')

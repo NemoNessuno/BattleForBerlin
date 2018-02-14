@@ -1,5 +1,3 @@
-import {retryPromise} from '@/helpers'
-
 export default {
   loadCounties ({commit}) {
     return fetch('/api/counties').then(resp => resp.json())
