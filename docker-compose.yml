@@ -17,6 +17,14 @@ services:
     depends_on:
       - backend
       - candidates_proxy
+      - auth
 
   candidates_proxy:
     build: ./candidates_proxy
+
+  auth:
+    build: ./auth
+    environment:
+      - 'HASH_FILE=/app/hash.txt'
+    volumes:
+      - './auth/hash.txt:/app/hash.txt'
