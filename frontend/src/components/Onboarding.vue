@@ -16,6 +16,9 @@
                 Was kann man damit machen?
               </v-list-content>
             </v-list-tile>
+            <v-list-tile href="https://github.com/NemoNessuno/BattleForBerlin/wiki/Gerrymandering-bei-deutschen-Bundestagswahlen">
+            Weitere Informationen
+            </v-list-tile>
           </v-list>
         </v-flex>
         <v-flex md6>
