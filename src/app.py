@@ -90,6 +90,10 @@ def get_gerrymander_steps():
     else:
         return jsonify({'error': 'No gerrymandering process running at the moment'}), 404
 
+@app.after_request
+def close_session(response):
+    db_session.commit()
+    return response
 
 if __name__ == '__main__':
     app.debug = True
